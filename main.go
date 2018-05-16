@@ -17,7 +17,7 @@ var op string
 const (
 	MaxArgsCount = 4
 	// Change your server name
-	ServerName = "BigStone"
+	ServerName = "WhatList"
 	PidFileDir = "./run/"
 )
 

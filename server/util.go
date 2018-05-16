@@ -340,3 +340,27 @@ func FenToYuan(fen int) float64 {
 	yuan, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", float64(fen)/100), 64)
 	return yuan
 }
+
+//判断是否包含
+func sliceStringContains(src []string, value string) bool {
+	isContain := false
+	for _, srcValue := range src {
+		if srcValue == value {
+			isContain = true
+			break
+		}
+	}
+	return isContain
+}
+
+//判断是否包含
+func sliceIntContains(src []int, value int) bool {
+	isContain := false
+	for _, srcValue := range src {
+		if srcValue == value {
+			isContain = true
+			break
+		}
+	}
+	return isContain
+}

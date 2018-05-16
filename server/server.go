@@ -2,6 +2,8 @@ package server
 
 import (
 	"fmt"
+	"github.com/OnebookTechnology/WhatList/mysqlservice"
+	"github.com/OnebookTechnology/WhatList/server/interface"
 	levelLogger "github.com/cxt90730/LevelLogger-go"
 	"github.com/gin-gonic/gin"
 	"github.com/robfig/config"
@@ -37,6 +39,7 @@ type Server struct {
 	loginSessionTimeout int
 	sessionTimeout      int
 
+	DB          _interface.ServerDB
 	HttpServer  *http.Server
 	TcpListener *net.TCPListener
 
@@ -68,6 +71,11 @@ func NewService(confPath, serverName string) (*Server, error) {
 	if err := server.createLogs(server.logDir); err != nil {
 		return nil, err
 	}
+
+	//DB
+	db := new(mysql.MysqlService)
+	db.InitialDB(confPath, "DB")
+	server.DB = db
 
 	//Server
 	gin.SetMode(gin.ReleaseMode)
