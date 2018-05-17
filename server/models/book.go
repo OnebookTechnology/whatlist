@@ -1,7 +1,5 @@
 package models
 
-import "math"
-
 type Book struct {
 	ISBN       uint64 `json:"isbn,omitempty"`
 	BookName   string `json:"book_name,omitempty"`
@@ -41,8 +39,12 @@ type Book struct {
 	// 书的评论次数
 	CommentTimes uint32 `json:"comment_times"`
 
+	BookIcon string `json:"book_icon"`
+	BookPic string `json:"book_pic"`
+	BookDetail string `json:"book_detail"`
 	Discount  float64 `json:"discount,omitempty"`
 	RealPrice float64 `json:"real_price,omitempty"`
+	Category  int     `json:"category"`
 	Field1    []int   `json:"field_1,omitempty"` //年龄id范围
 	Field2    int     `json:"field_2,omitempty"` //性别
 	Field3    int     `json:"field_3,omitempty"` //婚姻状况id
