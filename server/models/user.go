@@ -1,12 +1,7 @@
 package models
 
 type User struct {
-	UserId uint64 `json:"user_id"`
-	// phone number
-	PhoneNumber uint64 `json:"phone_number"`
-	// register time
-	RegisterTime string `json:"register_time"`
-
+	UserId              string  `json:"user_id"` //wxcode
 	NickName            string  `json:"nick_name"`
 	AvatarUrl           string  `json:"avatar_url"`
 	Gender              int     `json:"gender"`
@@ -15,9 +10,6 @@ type User struct {
 	Country             string  `json:"country"`
 	Language            string  `json:"language"`
 	RegisterRank        int64   `json:"register_rank"`
-	ReadCoin            uint64  `json:"read_coin"`
-	BorrowLeft          uint8   `json:"borrow_left"`
-	Vip                 uint8   `json:"vip"`
 	Hobby               []int   `json:"hobby"`             //喜好id
 	Field1              int     `json:"field_1,omitempty"` //年龄id
 	Field2              int     `json:"field_2,omitempty"` //性别

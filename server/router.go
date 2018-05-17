@@ -11,4 +11,6 @@ func LoadRouter(router *gin.Engine) {
 	})
 
 	router.GET("/recommend", recommend)
+	router.GET("/sign", Sign)
+	router.GET("/update", UpdateUserData)
 }
