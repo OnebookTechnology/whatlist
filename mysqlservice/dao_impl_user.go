@@ -43,6 +43,9 @@ func (m *MysqlService) FindUser(userId string) (*models.User, error) {
 	u := new(models.User)
 	var hobbies string
 	err := row.Scan(&u.UserId, &hobbies)
+	if err != nil {
+		return nil, err
+	}
 	hobbyArray := strings.Split(hobbies, ",")
 	if hobbyArray[0] == "" {
 		u.Hobby = nil

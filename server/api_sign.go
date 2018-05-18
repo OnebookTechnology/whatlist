@@ -36,6 +36,7 @@ func Sign(ctx *gin.Context) {
 			}
 			isNewUser = true
 			user, err = registerUser(user)
+			goto SUCCESS
 			if err != nil {
 				sendJsonResponse(ctx, Err, "db error when RegisterUser. err: %s", err.Error())
 				return
@@ -45,6 +46,7 @@ func Sign(ctx *gin.Context) {
 			return
 		}
 	}
+SUCCESS:
 	if user.Hobby == nil {
 		isNewUser = true
 	}
