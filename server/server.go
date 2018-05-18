@@ -131,6 +131,13 @@ func (s *Server) Start() error {
 	//Start server. The server will shutdown gracefully.
 	logger.Info("##### start server ######")
 
+	fmt.Println("Loading all books ...")
+	err := LoadAllBooks()
+	if err != nil {
+		logger.Error("Load all books error. err:", err)
+		return err
+	}
+	fmt.Println("Loading all books finished!")
 	if err := s.HttpServer.ListenAndServe(); err != nil {
 		logger.Error("Listen", ":"+strconv.Itoa(server.port), err)
 		return err

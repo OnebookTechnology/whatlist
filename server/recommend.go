@@ -16,8 +16,13 @@ type ListResult struct {
 	Weight []int
 }
 
-func LoadAllBooks() {
-	//BookList, err := server.DB.FindAllBooks()
+func LoadAllBooks() error {
+	var err error
+	BookList, err = server.DB.FindAllBooks()
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func doRecommend(user *models.User) {
