@@ -87,6 +87,9 @@ func (m *MysqlService) RegisterUser(user *models.User) (int64, error) {
 		}
 		return 0, err
 	}
-
+	err = tx.Commit()
+	if err != nil {
+		return 0, err
+	}
 	return lastId, nil
 }

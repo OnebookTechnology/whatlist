@@ -29,17 +29,18 @@ func Sign(ctx *gin.Context) {
 	var isNewUser = false
 	user, err = server.DB.FindUser(wxInfo.OpenId)
 	if err != nil {
+		logger.Debug("ready to register new user!")
 		//if NO user found, register user
 		if err == sql.ErrNoRows {
 			user = &models.User{
 				UserId: wxInfo.OpenId,
 			}
 			user, err = registerUser(user)
-			goto SUCCESS
 			if err != nil {
 				sendJsonResponse(ctx, Err, "db error when RegisterUser. err: %s", err.Error())
 				return
 			}
+			goto SUCCESS
 		} else {
 			sendJsonResponse(ctx, Err, "db error when FindUser. err: %s", err.Error())
 			return
