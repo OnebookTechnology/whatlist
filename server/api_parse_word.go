@@ -1,10 +1,12 @@
 package server
 
 import (
+	"baliance.com/gooxml/document"
 	"github.com/OnebookTechnology/whatlist/server/models"
 	"github.com/gin-gonic/gin"
 	"github.com/json-iterator/go"
 	"io"
+	"log"
 	"strconv"
 )
 
@@ -24,33 +26,33 @@ func ParseWord(c *gin.Context) {
 }
 
 func readWord(reader io.ReaderAt, size int) map[string]string {
-	//var params map[string]string
-	//params = make(map[string]string)
-	////doc, err := document.Open("C:\\Users\\陈曦\\Desktop\\断舍离.docx")
-	//doc, err := document.Read(reader, int64(size))
-	//if err != nil {
-	//	log.Fatalf("error opening document: %s", err)
-	//}
-	//table := doc.Tables()[0]
-	//var key = ""
-	//var value = ""
-	//// 解析word中的表格
-	//for _, row := range table.Rows() {
-	//	for cell_index, cell := range row.Cells() {
-	//		for _, paras := range cell.Paragraphs() {
-	//			// 获取Key值
-	//			if cell_index%2 == 0 {
-	//				key = paras.Runs()[0].Text()
-	//			} else {
-	//				for _, run := range paras.Runs() {
-	//					value = value + run.Text()
-	//				}
-	//			}
-	//		}
-	//		params[key] = value
-	//		value = ""
-	//	}
-	//}
+	var params map[string]string
+	params = make(map[string]string)
+	//doc, err := document.Open("C:\\Users\\陈曦\\Desktop\\断舍离.docx")
+	doc, err := document.Read(reader, int64(size))
+	if err != nil {
+		log.Fatalf("error opening document: %s", err)
+	}
+	table := doc.Tables()[0]
+	var key = ""
+	var value = ""
+	// 解析word中的表格
+	for _, row := range table.Rows() {
+		for cell_index, cell := range row.Cells() {
+			for _, paras := range cell.Paragraphs() {
+				// 获取Key值
+				if cell_index%2 == 0 {
+					key = paras.Runs()[0].Text()
+				} else {
+					for _, run := range paras.Runs() {
+						value = value + run.Text()
+					}
+				}
+			}
+			params[key] = value
+			value = ""
+		}
+	}
 	return nil
 }
 
