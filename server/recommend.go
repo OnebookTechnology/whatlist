@@ -134,7 +134,7 @@ func calculateWeightOfBook(user *models.User, book *models.Book) (weight int) {
 	//Field6 工作行业id
 	if user.Field6 == WorkAny {
 		weight += 1
-	} else if book.Field6 == user.Field6 {
+	} else if sliceIntContains(book.Field6, user.Field6) {
 		weight += 3
 	}
 

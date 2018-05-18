@@ -51,10 +51,10 @@ import (
 //Category   int     `json:"category"`
 //Field1     []int   `json:"field_1,omitempty"` //年龄id范围
 //Field2     int     `json:"field_2,omitempty"` //性别
-//Field3     int     `json:"field_3,omitempty"` //婚姻状况id
-//Field4     int     `json:"field_4,omitempty"` //教育程度
+//Field3     []int   `json:"field_3,omitempty"` //婚姻状况id
+//Field4     []int   `json:"field_4,omitempty"` //教育程度
 //Field5     []int   `json:"field_5,omitempty"` //收入id范围
-//Field6     int     `json:"field_6,omitempty"` //工作行业id
+//Field6     []int     `json:"field_6,omitempty"` //工作行业id
 //Field7     float64 `json:"field_7,omitempty"` //身高体重比例
 
 func (m *MysqlService) FindAllBooks() (map[int][]*models.Book, error) {
@@ -68,11 +68,11 @@ func (m *MysqlService) FindAllBooks() (map[int][]*models.Book, error) {
 	bookMap := make(map[int][]*models.Book)
 	for rows.Next() {
 		book := new(models.Book)
-		var age, income string
+		var age, income, marry, job, edu string
 		err = rows.Scan(&book.ISBN, &book.BookName, &book.AuthorName, &book.Press, &book.PublicationTime, &book.PrintTime, &book.Format, &book.Paper, &book.Pack,
 			&book.Suit, &book.Edition, &book.TableOfContent, &book.BookBriefIntro, &book.AuthorIntro, &book.ContentIntro, &book.EditorRecommend, &book.FirstClassification,
 			&book.SecondClassification, &book.TotalScore, &book.CommentTimes, &book.BookIcon, &book.BookPic, &book.BookDetail, &book.Category,
-			&age, &book.Field2, &book.Field3, &book.Field4, &income, &book.Field6, &book.Field7)
+			&age, &book.Field2, &marry, &edu, &income, &job, &book.Field7)
 		if err != nil {
 			return nil, err
 		}
@@ -86,6 +86,24 @@ func (m *MysqlService) FindAllBooks() (map[int][]*models.Book, error) {
 		for _, data := range incomeArray {
 			d, _ := strconv.Atoi(data)
 			book.Field5 = append(book.Field5, d)
+		}
+
+		marryArray := strings.Split(marry, ",")
+		for _, data := range marryArray {
+			d, _ := strconv.Atoi(data)
+			book.Field3 = append(book.Field3, d)
+		}
+
+		jobArray := strings.Split(job, ",")
+		for _, data := range jobArray {
+			d, _ := strconv.Atoi(data)
+			book.Field6 = append(book.Field6, d)
+		}
+
+		eduArray := strings.Split(edu, ",")
+		for _, data := range eduArray {
+			d, _ := strconv.Atoi(data)
+			book.Field4 = append(book.Field4, d)
 		}
 
 		if books, ok := bookMap[book.Category]; ok {

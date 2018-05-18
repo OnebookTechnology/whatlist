@@ -50,7 +50,7 @@ type Book struct {
 	Field3     []int   `json:"field_3,omitempty"` //婚姻状况id
 	Field4     []int   `json:"field_4,omitempty"` //教育程度
 	Field5     []int   `json:"field_5,omitempty"` //收入id范围
-	Field6     int     `json:"field_6,omitempty"` //工作行业id
+	Field6     []int   `json:"field_6,omitempty"` //工作行业id
 	Field7     float64 `json:"field_7,omitempty"` //身高体重比例
 }
 
