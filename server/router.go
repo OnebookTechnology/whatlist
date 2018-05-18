@@ -15,4 +15,5 @@ func LoadRouter(router *gin.Engine) {
 	router.GET("/update", UpdateUserData)
 
 	router.POST("/word", ParseWord)
+	router.POST("/addbook",AddBook)
 }
