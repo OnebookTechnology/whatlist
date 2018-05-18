@@ -1,6 +1,11 @@
 package mysql
 
-import "github.com/OnebookTechnology/whatlist/server/models"
+import (
+	"github.com/OnebookTechnology/whatlist/server/models"
+	"os/user"
+	"strconv"
+	"strings"
+)
 
 //ISBN       uint64 `json:"isbn,omitempty"`
 //BookName   string `json:"book_name,omitempty"`
@@ -61,15 +66,34 @@ func (m *MysqlService) FindAllBooks() (map[int][]*models.Book, error) {
 	if err != nil {
 		return nil, err
 	}
-	//bookMap := make(map[int][]*models.Book)
+	bookMap := make(map[int][]*models.Book)
 	for rows.Next() {
 		book := new(models.Book)
+		var age, income string
 		err = rows.Scan(&book.ISBN, &book.BookName, &book.AuthorName, &book.Press, &book.PublicationTime, &book.PrintTime, &book.Format, &book.Paper, &book.Pack,
 			&book.Suit, &book.Edition, &book.TableOfContent, &book.BookBriefIntro, &book.AuthorIntro, &book.ContentIntro, &book.EditorRecommend, &book.FirstClassification,
 			&book.SecondClassification, &book.TotalScore, &book.CommentTimes, &book.BookIcon, &book.BookPic, &book.BookDetail, &book.Category,
-			&book.Field1, &book.Field2, &book.Field3, &book.Field4, &book.Field5, &book.Field6, &book.Field7)
+			&age, &book.Field2, &book.Field3, &book.Field4, &income, &book.Field6, &book.Field7)
 		if err != nil {
 			return nil, err
+		}
+		ageArray := strings.Split(age, ",")
+		for _, data := range ageArray {
+			d, _ := strconv.Atoi(data)
+			book.Field1 = append(book.Field1, d)
+		}
+
+		incomeArray := strings.Split(income, ",")
+		for _, data := range incomeArray {
+			d, _ := strconv.Atoi(data)
+			book.Field5 = append(book.Field5, d)
+		}
+
+		if books, ok := bookMap[book.Category]; ok {
+			books = append(books, book)
+		} else {
+			books = append(books, book)
+			bookMap[book.Category] = books
 		}
 	}
 	return nil, err

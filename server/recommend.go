@@ -6,7 +6,7 @@ import (
 	"sync"
 )
 
-var BookList sync.Map        //map[int][]*models.Book
+var BookList map[int][]*models.Book
 var UserSuitMap sync.Map     //map[*models.User][]*models.Book
 var UserUnSuit30Map sync.Map //map[*models.User][]*models.Book
 var UserUnSuit10Map sync.Map //map[*models.User][]*models.Book
@@ -17,7 +17,7 @@ type ListResult struct {
 }
 
 func LoadAllBooks() {
-
+	BookList, err := server.DB.FindAllBooks()
 }
 
 func doRecommend(user *models.User) {
@@ -31,14 +31,14 @@ func doRecommend(user *models.User) {
 
 		//区分匹配喜好的books和不匹配的books
 		for _, tagId := range CategoryArray {
-			bookList, ok := BookList.Load(tagId)
+			bookList, ok := BookList[tagId]
 			if !ok {
 				continue
 			}
 			if sliceIntContains(user.Hobby, tagId) {
-				mySuitList.List = append(mySuitList.List, bookList.([]*models.Book)...)
+				mySuitList.List = append(mySuitList.List, bookList...)
 			} else {
-				myUnSuitList.List = append(myUnSuitList.List, bookList.([]*models.Book)...)
+				myUnSuitList.List = append(myUnSuitList.List, bookList...)
 			}
 
 		}

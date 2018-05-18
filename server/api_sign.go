@@ -89,17 +89,18 @@ type UpdateRequest struct {
 //Field5              int     `json:"field_5,omitempty"` //收入id
 //Field6              int     `json:"field_6,omitempty"` //工作行业id
 //Field7              float64 `json:"field_7,omitempty"` //身高体重比例
+
 func UpdateUserData(ctx *gin.Context) {
 	crossDomain(ctx)
 	userId := ctx.Query("user_id")
 	hobbies := ctx.Query("hobbies")
-	f1 := ctx.Query("field1")
-	f2 := ctx.Query("field2")
-	f3 := ctx.Query("field3")
-	f4 := ctx.Query("field4")
-	f5 := ctx.Query("field5")
-	f6 := ctx.Query("field6")
-	f7 := ctx.Query("field7")
+	f1 := ctx.Query("age")
+	f2 := ctx.Query("sex")
+	f3 := ctx.Query("marry")
+	f4 := ctx.Query("edu")
+	f5 := ctx.Query("income")
+	f6 := ctx.Query("job")
+	f7 := ctx.Query("ratio")
 	field1, _ := strconv.Atoi(f1)
 	field2, _ := strconv.Atoi(f2)
 	field3, _ := strconv.Atoi(f3)
