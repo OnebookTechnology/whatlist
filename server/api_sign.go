@@ -104,10 +104,16 @@ func UpdateUserData(ctx *gin.Context) {
 	field1, _ := strconv.Atoi(f1)
 	field2, _ := strconv.Atoi(f2)
 	field3, _ := strconv.Atoi(f3)
-	field4, _ := strconv.Atoi(f4)
+	field4, err := strconv.Atoi(f4)
+	if err != nil {
+		field4 = 0
+	}
 	field5, _ := strconv.Atoi(f5)
 	field6, _ := strconv.Atoi(f6)
-	field7, _ := strconv.ParseFloat(fmt.Sprintf("%s", f7), 64)
+	field7, err := strconv.ParseFloat(fmt.Sprintf("%s", f7), 64)
+	if err != nil {
+		field7 = 0
+	}
 	user := &models.User{
 		UserId: userId,
 		Field1: field1,
@@ -128,7 +134,7 @@ func UpdateUserData(ctx *gin.Context) {
 		user.Hobby = append(user.Hobby, hi)
 	}
 
-	err := server.DB.UpdateUser(userId, user)
+	err = server.DB.UpdateUser(userId, user)
 	if err != nil {
 		sendJsonResponse(ctx, Err, "db error when RegisterUser. err: %s", err.Error())
 		return
