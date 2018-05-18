@@ -48,7 +48,7 @@ func Sign(ctx *gin.Context) {
 	}
 	goto SUCCESS
 SUCCESS:
-	if user.Hobby == nil {
+	if user.Hobby == nil || len(user.Hobby) == 0 {
 		isNewUser = true
 	}
 	res := &VerifyVCodeResponse{
