@@ -34,14 +34,12 @@ const (
 const (
 	//年龄范围
 	AgeAny = iota
-	Age50
-	Age60
-	Age70
-	Age80
-	Age85
-	Age90
-	Age95
 	Age00
+	Age95
+	Age90
+	Age85
+	Age80
+	Age70
 
 	//性别
 	SexAny = iota

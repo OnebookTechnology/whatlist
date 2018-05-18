@@ -21,8 +21,13 @@ func (m *MysqlService) UpdateUser(userId string, u *models.User) error {
 	if err != nil {
 		return err
 	}
+	var hobbyStr string
+	for i := range u.Hobby {
+		hobbyStr = hobbyStr + strconv.Itoa(u.Hobby[i]) + ","
+	}
+
 	_, err = tx.Exec("UPDATE User SET hobby=?, field1=?, field2=?, field3=?, field4=?, field5=?, field6=?, field7=? WHERE user_id = ?",
-		u.Hobby, u.Field1, u.Field2, u.Field3, u.Field4, u.Field5, u.Field6, u.Field7, userId)
+		hobbyStr[:len(hobbyStr)-1], u.Field1, u.Field2, u.Field3, u.Field4, u.Field5, u.Field6, u.Field7, userId)
 	if err != nil {
 		return err
 	}
@@ -76,7 +81,7 @@ func (m *MysqlService) RegisterUser(user *models.User) (int64, error) {
 		return 0, err
 	}
 
-	row := tx.QueryRow("SELECT @@IDENTITY")
+	row := tx.QueryRow("select COUNT(*)  from `user`")
 	err = row.Scan(&lastId)
 	if err != nil {
 		err = tx.Rollback()

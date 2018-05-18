@@ -124,6 +124,7 @@ func UpdateUserData(ctx *gin.Context) {
 		Field6: field6,
 		Field7: field7,
 	}
+
 	hobbyArray := strings.Split(hobbies, ",")
 	if hobbyArray[0] == "" {
 		sendJsonResponse(ctx, Err, "hobbies is empty")
@@ -136,7 +137,7 @@ func UpdateUserData(ctx *gin.Context) {
 
 	err = server.DB.UpdateUser(userId, user)
 	if err != nil {
-		sendJsonResponse(ctx, Err, "db error when RegisterUser. err: %s", err.Error())
+		sendJsonResponse(ctx, Err, "db error when UpdateUser. err: %s", err.Error())
 		return
 	}
 
