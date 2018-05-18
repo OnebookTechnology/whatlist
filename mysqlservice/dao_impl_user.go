@@ -21,9 +21,7 @@ func (m *MysqlService) UpdateUser(userId string, u *models.User) error {
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec("UPDATE User SET nick_name=?, avatar_url=?, gender=?, city=?, province=?, country=?, language=?,"+
-		"hobby=?, field1=?, field2=?, field3=?, field4=?, field5=?, field6=?, field7=? WHERE user_id = ?",
-		u.NickName, u.AvatarUrl, u.Gender, u.City, u.Province, u.Country, u.Language,
+	_, err = tx.Exec("UPDATE User SET hobby=?, field1=?, field2=?, field3=?, field4=?, field5=?, field6=?, field7=? WHERE user_id = ?",
 		u.Hobby, u.Field1, u.Field2, u.Field3, u.Field4, u.Field5, u.Field6, u.Field7, userId)
 	if err != nil {
 		return err
