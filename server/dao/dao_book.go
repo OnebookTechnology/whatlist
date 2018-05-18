@@ -1,6 +1,6 @@
 package dao
 
-import "github.com/OnebookTechnology/WhatList/server/models"
+import "github.com/OnebookTechnology/whatlist/server/models"
 
 type BookDao interface {
 	// 添加图书

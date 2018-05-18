@@ -2,8 +2,8 @@ package server
 
 import (
 	"fmt"
-	"github.com/OnebookTechnology/WhatList/mysqlservice"
-	"github.com/OnebookTechnology/WhatList/server/interface"
+	"github.com/OnebookTechnology/whatlist/mysqlservice"
+	"github.com/OnebookTechnology/whatlist/server/interface"
 	levelLogger "github.com/cxt90730/LevelLogger-go"
 	"github.com/gin-gonic/gin"
 	"github.com/robfig/config"

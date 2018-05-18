@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/OnebookTechnology/WhatList/server/models"
+	"github.com/OnebookTechnology/whatlist/server/models"
 	"github.com/gin-gonic/gin"
 	"github.com/json-iterator/go"
 	"strconv"

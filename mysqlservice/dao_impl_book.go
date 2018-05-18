@@ -1,6 +1,6 @@
 package mysql
 
-import "github.com/OnebookTechnology/WhatList/server/models"
+import "github.com/OnebookTechnology/whatlist/server/models"
 
 //ISBN       uint64 `json:"isbn,omitempty"`
 //BookName   string `json:"book_name,omitempty"`

@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/OnebookTechnology/WhatList/server/models"
+	"github.com/OnebookTechnology/whatlist/server/models"
 	"sort"
 	"sync"
 )

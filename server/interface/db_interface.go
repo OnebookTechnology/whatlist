@@ -1,6 +1,6 @@
 package _interface
 
-import "github.com/OnebookTechnology/WhatList/server/dao"
+import "github.com/OnebookTechnology/whatlist/server/dao"
 
 type ServerDB interface {
 	InitialDB(confPath string, tagName string) error
