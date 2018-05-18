@@ -8,7 +8,7 @@ import (
 
 func LoadRouter(router *gin.Engine) {
 	router.GET("/whoami", func(context *gin.Context) {
-		context.String(http.StatusOK, "I am %s", server.ServerName, time.Now().String())
+		context.String(http.StatusOK, "I am %s. Time,%s", server.ServerName, time.Now().String())
 	})
 
 	router.GET("/recommend", recommend)

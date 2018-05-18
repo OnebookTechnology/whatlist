@@ -4,7 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/OnebookTechnology/BigStone/server"
+	"github.com/OnebookTechnology/whatlist/server"
 	"log"
 	"os"
 	"os/signal"
