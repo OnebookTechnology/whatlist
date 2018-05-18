@@ -16,7 +16,7 @@ func ParseWord (c *gin.Context) {
 	fileHeader := form.File["file"][0]
 	file, err := fileHeader.Open()
 	if err != nil {
-		log.Printf("fileHeader.Open() error. error: %s", err)
+		logger.Info("error: %s", err)
 	}
 	params := readWord(file, int(fileHeader.Size))
 	// 构造book object
