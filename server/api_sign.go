@@ -34,7 +34,6 @@ func Sign(ctx *gin.Context) {
 			user = &models.User{
 				UserId: wxInfo.OpenId,
 			}
-			isNewUser = true
 			user, err = registerUser(user)
 			goto SUCCESS
 			if err != nil {
@@ -46,6 +45,7 @@ func Sign(ctx *gin.Context) {
 			return
 		}
 	}
+	goto SUCCESS
 SUCCESS:
 	if user.Hobby == nil {
 		isNewUser = true
