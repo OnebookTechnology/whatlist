@@ -14,6 +14,12 @@ func LoadRouter(router *gin.Engine) {
 	router.GET("/sign", Sign)
 	router.GET("/update", UpdateUserData)
 
+	router.OPTIONS("word", func(c *gin.Context){
+		crossDomain(c)
+	})
+	router.OPTIONS("addbook", func(c *gin.Context){
+		crossDomain(c)
+	})
 	router.POST("/word", ParseWord)
 	router.POST("/addbook",AddBook)
 }
