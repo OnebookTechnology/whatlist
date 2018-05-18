@@ -16,6 +16,10 @@ type ListResult struct {
 	Weight []int
 }
 
+func LoadAllBooks() {
+
+}
+
 func doRecommend(user *models.User) {
 	if !IsNeedUpdateRecommend(user) {
 		return
