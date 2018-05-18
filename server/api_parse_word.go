@@ -103,7 +103,7 @@ func generateBookJson(params map[string]string) (*models.Book) {
 			}
 			break
 		case "ISBN":
-			isbn, _ := strconv.ParseUint(b, 10, 64)
+			isbn, _ := strconv.ParseUint(v, 10, 64)
 			b.ISBN = isbn
 			break
 		case "编辑推荐":
