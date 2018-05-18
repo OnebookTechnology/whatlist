@@ -1,8 +1,10 @@
 package dao
 
+import "github.com/OnebookTechnology/WhatList/server/models"
+
 type BookDao interface {
-	// 添加书
-	//AddBook(b *models.Book) error
+	// 添加图书
+	AddBook(book *models.Book) error
 	//// 删除书
 	//DeleteBook(ISBN uint64) error
 	//// 更新书
@@ -18,7 +20,7 @@ type BookDao interface {
 	//// 按照价格范围检索图书
 	//FindBookByPrice(lo, hi uint64) ([]*models.Book, error)
 	// find all books
-	FindAllBooks() error
+	FindAllBooks() (map[int][]*models.Book, error)
 
 	//FindAllBooksByCatalogAndPriceOrderByOnlineTime(catalog, lo, hi, pageNum, pageItems int) ([]*models.BookDisplay, error)
 	//FindAllBooksByCatalogAndPriceOrderBySales(catalog, lo, hi, pageNum, pageItems int) ([]*models.BookDisplay, error)
