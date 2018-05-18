@@ -113,14 +113,14 @@ func calculateWeightOfBook(user *models.User, book *models.Book) (weight int) {
 	//Field3 婚姻状况id
 	if user.Field3 == MarriageAny {
 		weight += 1
-	} else if book.Field3 == user.Field3 {
+	} else if sliceIntContains(book.Field3, user.Field3) {
 		weight += 3
 	}
 
 	//Field4 教育程度
 	if user.Field4 == AgeAny {
 		weight += 1
-	} else if book.Field4 == user.Field4 {
+	} else if sliceIntContains(book.Field4, user.Field4) {
 		weight += 3
 	}
 

@@ -134,6 +134,7 @@ func (s *Server) Start() error {
 	fmt.Println("Loading all books ...")
 	err := LoadAllBooks()
 	if err != nil {
+		fmt.Println("load books err:", err)
 		logger.Error("Load all books error. err:", err)
 		return err
 	}
