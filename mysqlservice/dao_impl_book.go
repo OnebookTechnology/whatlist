@@ -2,7 +2,6 @@ package mysql
 
 import (
 	"github.com/OnebookTechnology/whatlist/server/models"
-	"os/user"
 	"strconv"
 	"strings"
 )
