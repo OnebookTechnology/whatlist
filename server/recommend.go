@@ -17,7 +17,7 @@ type ListResult struct {
 }
 
 func LoadAllBooks() {
-	BookList, err := server.DB.FindAllBooks()
+	//BookList, err := server.DB.FindAllBooks()
 }
 
 func doRecommend(user *models.User) {
