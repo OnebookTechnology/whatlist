@@ -6,10 +6,11 @@ import (
 	"sync"
 )
 
+var UserMap sync.Map // map[string]*model.User
 var BookList map[int][]*models.Book
-var UserSuitMap sync.Map     //map[*models.User][]*models.Book
-var UserUnSuit30Map sync.Map //map[*models.User][]*models.Book
-var UserUnSuit10Map sync.Map //map[*models.User][]*models.Book
+var UserSuitMap sync.Map     //map[user_id][]*models.Book
+var UserUnSuit30Map sync.Map //map[user_id][]*models.Book
+var UserUnSuit10Map sync.Map //map[user_id][]*models.Book
 
 type ListResult struct {
 	List   []*models.Book

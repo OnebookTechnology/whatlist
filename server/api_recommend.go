@@ -1,14 +1,13 @@
 package server
 
 import (
+	"database/sql"
 	"github.com/OnebookTechnology/whatlist/server/models"
 	"github.com/gin-gonic/gin"
 	"github.com/json-iterator/go"
 	"strconv"
 	"sync"
 )
-
-var UserMap sync.Map //map[uint64]*models.User
 
 type RecommendResponse struct {
 	returnList []*models.Book
@@ -18,41 +17,50 @@ const ReturnCount = 10
 
 func recommend(ctx *gin.Context) {
 	crossDomain(ctx)
-	uidStr := ctx.Query("user_id")
+	user_id := ctx.Query("user_id")
 	pageNumStr := ctx.Query("page_num")
-	uid, err := strconv.ParseUint(uidStr, 10, 64)
-	if err != nil {
-		sendJsonResponse(ctx, Err, "recommend uid ParseUint err: %s", err.Error())
-		return
-	}
 	pageNum, err := strconv.ParseUint(pageNumStr, 10, 64)
 	if err != nil {
 		sendJsonResponse(ctx, Err, "recommend pageNum ParseUint err: %s", err.Error())
 		return
 	}
-	u, ok := UserMap.Load(uid)
+	var user *models.User
+
+	u, ok := UserMap.Load(user_id)
 	if !ok {
 		//TODO：查SQL，获取user
+		user, err = server.DB.FindUser(user_id)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				sendJsonResponse(ctx, NoResultErr, "db error when FindUser. err: %s", err.Error())
+				return
+			}
+			sendJsonResponse(ctx, Err, "db error when FindUser. err: %s", err.Error())
+			return
+		}
+		user.NeedUpdateRecommend = true
+	} else {
+		user = u.(*models.User)
 	}
-	user := u.(*models.User)
+
 	// update recommend maps
 	doRecommend(user)
 
-	sl, ok := UserSuitMap.Load(uid)
+	sl, ok := UserSuitMap.Load(user_id)
 	if !ok {
-		sendJsonResponse(ctx, Err, "recommend UserSuitMap is empty. uid: %s", uidStr)
+		sendJsonResponse(ctx, Err, "recommend UserSuitMap is empty. uid: %s", user_id)
 		return
 	}
 
-	usl30, ok := UserUnSuit30Map.Load(uid)
+	usl30, ok := UserUnSuit30Map.Load(user_id)
 	if !ok {
-		sendJsonResponse(ctx, Err, "recommend UserUnSuit30Map is empty. uid: %s", uidStr)
+		sendJsonResponse(ctx, Err, "recommend UserUnSuit30Map is empty. uid: %s", user_id)
 		return
 	}
 
-	usl10, ok := UserUnSuit10Map.Load(uid)
+	usl10, ok := UserUnSuit10Map.Load(user_id)
 	if !ok {
-		sendJsonResponse(ctx, Err, "recommend UserUnSuit10Map is empty. uid: %s", uidStr)
+		sendJsonResponse(ctx, Err, "recommend UserUnSuit10Map is empty. uid: %s", user_id)
 		return
 	}
 

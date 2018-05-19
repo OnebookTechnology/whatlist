@@ -29,6 +29,7 @@ const (
 	ApplyRepeatErr
 	BalanceNotEnoughErr
 	OutOfStockErr
+	NoResultErr
 )
 
 const (

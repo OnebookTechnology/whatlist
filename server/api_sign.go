@@ -50,12 +50,14 @@ func Sign(ctx *gin.Context) {
 SUCCESS:
 	if user.Hobby == nil || len(user.Hobby) == 0 {
 		isNewUser = true
+		user.NeedUpdateRecommend = true
 	}
 	res := &VerifyVCodeResponse{
 		UserInfo:  user,
 		IsNewUser: isNewUser,
 		UserRank:  user.RegisterRank,
 	}
+	UserMap.Store(user.UserId, user)
 	resStr, _ := jsoniter.MarshalToString(res)
 	sendJsonResponse(ctx, OK, resStr)
 	return
@@ -140,6 +142,8 @@ func UpdateUserData(ctx *gin.Context) {
 		sendJsonResponse(ctx, Err, "db error when UpdateUser. err: %s", err.Error())
 		return
 	}
+	user.NeedUpdateRecommend = true
+	UserMap.Store(user.UserId, user)
 
 	sendJsonResponse(ctx, OK, "ok")
 	return
