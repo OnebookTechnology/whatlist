@@ -33,7 +33,6 @@ func recommend(ctx *gin.Context) {
 		return
 	}
 	var user *models.User
-	fmt.Println(1)
 	u, ok := UserMap.Load(user_id)
 	if !ok {
 		//TODO：查SQL，获取user
@@ -50,10 +49,10 @@ func recommend(ctx *gin.Context) {
 	} else {
 		user = u.(*models.User)
 	}
-	fmt.Println(2)
 	// update recommend maps
 	doRecommend(user)
-	fmt.Println(3)
+
+	var suit, unsuit10, unsuit30 []*models.Book
 	sl, ok := UserSuitMap.Load(user_id)
 	if !ok {
 		sendJsonResponse(ctx, Err, "recommend UserSuitMap is empty. uid: %s", user_id)
@@ -61,10 +60,10 @@ func recommend(ctx *gin.Context) {
 	}
 
 	usl30, ok := UserUnSuit30Map.Load(user_id)
-	if !ok {
-		sendJsonResponse(ctx, Err, "recommend UserUnSuit30Map is empty. uid: %s", user_id)
-		return
-	}
+	//if !ok {
+	//	//sendJsonResponse(ctx, Err, "recommend UserUnSuit30Map is empty. uid: %s", user_id)
+	//	//return
+	//}
 
 	usl10, ok := UserUnSuit10Map.Load(user_id)
 	if !ok {
@@ -72,9 +71,9 @@ func recommend(ctx *gin.Context) {
 		return
 	}
 
-	suit := sl.([]*models.Book)
-	unsuit30 := usl30.([]*models.Book)
-	unsuit10 := usl10.([]*models.Book)
+	suit = sl.([]*models.Book)
+	unsuit30 = usl30.([]*models.Book)
+	unsuit10 = usl10.([]*models.Book)
 	var returnCount = ReturnCount
 	res := new(RecommendResponse)
 	suitLen := len(suit[(pageNum-1)*6:])

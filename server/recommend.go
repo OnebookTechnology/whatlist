@@ -55,7 +55,6 @@ func doRecommend(user *models.User) {
 		wg.Add(1)
 		go UnSuitRecommend(user, myUnSuitList, wg)
 		wg.Wait()
-		fmt.Println("wait ok")
 	}
 
 	user.NeedUpdateRecommend = false
