@@ -58,9 +58,6 @@ func (m *MysqlService) FindUser(userId string) (*models.User, error) {
 			u.Hobby = append(u.Hobby, hi)
 		}
 	}
-	if err != nil {
-		return nil, err
-	}
 	return u, nil
 }
 

@@ -35,12 +35,12 @@ func doRecommend(user *models.User) {
 		myUnSuitList := new(ListResult)
 
 		var wg = new(sync.WaitGroup)
-
+		fmt.Println("user hobby:", user.Hobby)
 		//区分匹配喜好的books和不匹配的books
 		for _, tagId := range CategoryArray {
 			bookList, ok := BookList[tagId]
 			if !ok {
-				fmt.Println("tagid:", tagId, "continue")
+				fmt.Println("tag:", tagId, "continue")
 				continue
 			}
 			if sliceIntContains(user.Hobby, tagId) {
