@@ -16,6 +16,17 @@ type TagResponse struct {
 	Field7 string   `json:"ratio,omitempty"`  //身高体重比例
 }
 
+type TagNumberResponse struct {
+	Hobby  []int `json:"hobby"`            //喜好id
+	Field1 int   `json:"age,omitempty"`    //年龄id
+	Field2 int   `json:"sex,omitempty"`    //性别
+	Field3 int   `json:"marry,omitempty"`  //婚姻状况id
+	Field4 int   `json:"edu,omitempty"`    //教育程度
+	Field5 int   `json:"income,omitempty"` //收入id
+	Field6 int   `json:"job,omitempty"`    //工作行业id
+	Field7 int   `json:"ratio,omitempty"`  //身高体重比例
+}
+
 func GetAllTags(ctx *gin.Context) {
 	crossDomain(ctx)
 	userId := ctx.Query("user_id")
@@ -38,6 +49,34 @@ func GetAllTags(ctx *gin.Context) {
 	res.Field4 = EduMap[user.Field4]
 	res.Field5 = IncomeMap[user.Field5]
 	res.Field6 = WorkMap[user.Field6]
+	//res.Field7 = WeightMap[user.Field7]
+
+	resp, _ := jsoniter.MarshalToString(res)
+	sendJsonResponse(ctx, OK, "%s", resp)
+}
+
+func GetAllTagsNumber(ctx *gin.Context) {
+	crossDomain(ctx)
+	userId := ctx.Query("user_id")
+	if userId == "" {
+		sendJsonResponse(ctx, Err, "GetAllTags needs user_id. ")
+		return
+	}
+	user, err := server.DB.FindUser(userId)
+	if err != nil {
+		sendJsonResponse(ctx, Err, "db error when FindUser. err: %s", err.Error())
+		return
+	}
+	var res = new(TagNumberResponse)
+	for i := range user.Hobby {
+		res.Hobby = append(res.Hobby, user.Hobby[i])
+	}
+	res.Field1 = user.Field1
+	res.Field2 = user.Field2
+	res.Field3 = user.Field3
+	res.Field4 = user.Field4
+	res.Field5 = user.Field5
+	res.Field6 = user.Field6
 	//res.Field7 = WeightMap[user.Field7]
 
 	resp, _ := jsoniter.MarshalToString(res)
