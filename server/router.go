@@ -14,6 +14,8 @@ func LoadRouter(router *gin.Engine) {
 	router.GET("/recommend", recommend)
 	router.GET("/sign", Sign)
 	router.GET("/update", UpdateUserData)
+	router.GET("/gettags", GetAllTags)
+	router.GET("/bookdetail", GetBookDetail)
 
 	router.OPTIONS("/word", func(c *gin.Context) {
 		crossDomain(c)

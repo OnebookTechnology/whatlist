@@ -21,7 +21,7 @@ type BookDao interface {
 	//FindBookByPrice(lo, hi uint64) ([]*models.Book, error)
 	// find all books
 	FindAllBooks() (map[int][]*models.Book, error)
-
+	FindBook(isbn uint64) (*models.Book, error)
 	//FindAllBooksByCatalogAndPriceOrderByOnlineTime(catalog, lo, hi, pageNum, pageItems int) ([]*models.BookDisplay, error)
 	//FindAllBooksByCatalogAndPriceOrderBySales(catalog, lo, hi, pageNum, pageItems int) ([]*models.BookDisplay, error)
 	//FindAllBooksByPriceOrderByOnlineTime(lo, hi, pageNum, pageItems int) ([]*models.BookDisplay, error)
