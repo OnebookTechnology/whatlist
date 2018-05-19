@@ -1,11 +1,12 @@
 package server
 
 import (
+	"database/sql"
 	"github.com/OnebookTechnology/whatlist/server/models"
 	"github.com/gin-gonic/gin"
 	"github.com/json-iterator/go"
 	"strconv"
-	"database/sql"
+	"fmt"
 )
 
 type RecommendResponse struct {
@@ -17,14 +18,22 @@ const ReturnCount = 10
 func recommend(ctx *gin.Context) {
 	crossDomain(ctx)
 	user_id := ctx.Query("user_id")
+	if user_id == "" {
+		sendJsonResponse(ctx, Err, "recommend need user_id")
+		return
+	}
 	pageNumStr := ctx.Query("page_num")
+	if pageNumStr == "" {
+		sendJsonResponse(ctx, Err, "recommend need page_num")
+		return
+	}
 	pageNum, err := strconv.ParseUint(pageNumStr, 10, 64)
 	if err != nil {
 		sendJsonResponse(ctx, Err, "recommend pageNum ParseUint err: %s", err.Error())
 		return
 	}
 	var user *models.User
-
+	fmt.Println(1)
 	u, ok := UserMap.Load(user_id)
 	if !ok {
 		//TODO：查SQL，获取user
@@ -41,10 +50,10 @@ func recommend(ctx *gin.Context) {
 	} else {
 		user = u.(*models.User)
 	}
-
+	fmt.Println(2)
 	// update recommend maps
 	doRecommend(user)
-
+	fmt.Println(3)
 	sl, ok := UserSuitMap.Load(user_id)
 	if !ok {
 		sendJsonResponse(ctx, Err, "recommend UserSuitMap is empty. uid: %s", user_id)
@@ -91,7 +100,7 @@ func recommend(ctx *gin.Context) {
 	if returnCount > 0 {
 		res.returnList = append(res.returnList, unsuit10[pageNum*5:pageNum*5+uint64(returnCount)]...)
 	}
-
+	fmt.Println(4)
 	response, err := jsoniter.MarshalToString(res)
 	if err != nil {
 		sendJsonResponse(ctx, Err, "recommend MarshalToString err: %s", err.Error())

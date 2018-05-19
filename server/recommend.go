@@ -4,6 +4,7 @@ import (
 	"github.com/OnebookTechnology/whatlist/server/models"
 	"sort"
 	"sync"
+	"fmt"
 )
 
 var UserMap sync.Map // map[string]*model.User
@@ -54,6 +55,7 @@ func doRecommend(user *models.User) {
 		wg.Add(1)
 		go UnSuitRecommend(user, myUnSuitList, wg)
 		wg.Wait()
+		fmt.Println("wait ok")
 	}
 
 	user.NeedUpdateRecommend = false
@@ -68,6 +70,7 @@ func SuitRecommend(user *models.User, mySuitList *ListResult, wg sync.WaitGroup)
 	//降序排序
 	sort.Sort(mySuitList)
 	UserSuitMap.Store(user.UserId, mySuitList)
+	fmt.Println("s done")
 	wg.Done()
 }
 
@@ -91,7 +94,7 @@ func UnSuitRecommend(user *models.User, myUnSuitList *ListResult, wg sync.WaitGr
 
 	sort.Sort(myUnSuit10List)
 	UserSuitMap.Store(user.UserId, myUnSuit10List)
-
+	fmt.Println("us done")
 	wg.Done()
 }
 
