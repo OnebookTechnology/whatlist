@@ -87,10 +87,10 @@ func UnSuitRecommend(user *models.User, myUnSuitList *ListResult, wg *sync.WaitG
 	}
 
 	sort.Sort(myUnSuit30List)
-	UserSuitMap.Store(user.UserId, myUnSuit30List)
+	UserUnSuit30Map.Store(user.UserId, myUnSuit30List)
 
 	sort.Sort(myUnSuit10List)
-	UserSuitMap.Store(user.UserId, myUnSuit10List)
+	UserUnSuit10Map.Store(user.UserId, myUnSuit10List)
 	wg.Done()
 }
 
