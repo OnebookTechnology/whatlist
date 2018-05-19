@@ -84,11 +84,14 @@ func recommend(ctx *gin.Context) {
 	}
 	returnCount -= suitLen
 
-	unsuit30Len := len(unsuit30[(pageNum-1)*3:])
-	if unsuit30Len < 3 {
-		res.returnList = append(res.returnList, unsuit30[(pageNum-1)*3:]...)
-	} else {
-		res.returnList = append(res.returnList, unsuit30[(pageNum-1)*3:(pageNum-1)*3+3]...)
+	var unsuit30Len int
+	if unsuit30 != nil {
+		unsuit30Len := len(unsuit30[(pageNum-1)*3:])
+		if unsuit30Len < 3 {
+			res.returnList = append(res.returnList, unsuit30[(pageNum-1)*3:]...)
+		} else {
+			res.returnList = append(res.returnList, unsuit30[(pageNum-1)*3:(pageNum-1)*3+3]...)
+		}
 	}
 
 	returnCount -= unsuit30Len
