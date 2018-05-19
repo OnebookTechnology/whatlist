@@ -74,7 +74,8 @@ func doRecommend(user *models.User) {
 
 func SuitRecommend(user *models.User, mySuitList *ListResult, wg *sync.WaitGroup) {
 	for i := range mySuitList.List {
-		mySuitList.Weight[i] = calculateWeightOfBook(user, mySuitList.List[i])
+		weight := calculateWeightOfBook(user, mySuitList.List[i])
+		mySuitList.Weight = append(mySuitList.Weight, weight)
 	}
 	//降序排序
 	sort.Sort(mySuitList)
