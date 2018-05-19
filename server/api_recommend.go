@@ -2,11 +2,11 @@ package server
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/OnebookTechnology/whatlist/server/models"
 	"github.com/gin-gonic/gin"
 	"github.com/json-iterator/go"
 	"strconv"
-	"fmt"
 )
 
 type RecommendResponse struct {

@@ -1,10 +1,10 @@
 package server
 
 import (
+	"fmt"
 	"github.com/OnebookTechnology/whatlist/server/models"
 	"sort"
 	"sync"
-	"fmt"
 )
 
 var UserMap sync.Map // map[string]*model.User
@@ -34,7 +34,7 @@ func doRecommend(user *models.User) {
 		mySuitList := new(ListResult)
 		myUnSuitList := new(ListResult)
 
-		var wg sync.WaitGroup
+		var wg = new(sync.WaitGroup)
 
 		//区分匹配喜好的books和不匹配的books
 		for _, tagId := range CategoryArray {
@@ -63,18 +63,17 @@ func doRecommend(user *models.User) {
 	return
 }
 
-func SuitRecommend(user *models.User, mySuitList *ListResult, wg sync.WaitGroup) {
+func SuitRecommend(user *models.User, mySuitList *ListResult, wg *sync.WaitGroup) {
 	for i := range mySuitList.List {
 		mySuitList.Weight[i] = calculateWeightOfBook(user, mySuitList.List[i])
 	}
 	//降序排序
 	sort.Sort(mySuitList)
 	UserSuitMap.Store(user.UserId, mySuitList)
-	fmt.Println("s done")
 	wg.Done()
 }
 
-func UnSuitRecommend(user *models.User, myUnSuitList *ListResult, wg sync.WaitGroup) {
+func UnSuitRecommend(user *models.User, myUnSuitList *ListResult, wg *sync.WaitGroup) {
 	//30% recommend and 10% recommend
 	myUnSuit30List := new(ListResult)
 	myUnSuit10List := new(ListResult)
@@ -94,7 +93,6 @@ func UnSuitRecommend(user *models.User, myUnSuitList *ListResult, wg sync.WaitGr
 
 	sort.Sort(myUnSuit10List)
 	UserSuitMap.Store(user.UserId, myUnSuit10List)
-	fmt.Println("us done")
 	wg.Done()
 }
 
