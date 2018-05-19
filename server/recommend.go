@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"github.com/OnebookTechnology/whatlist/server/models"
 	"sort"
 	"sync"
