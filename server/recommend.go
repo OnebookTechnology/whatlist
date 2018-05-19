@@ -24,6 +24,13 @@ func LoadAllBooks() error {
 	if err != nil {
 		return err
 	}
+
+	for k, v := range BookList {
+		fmt.Println("tagId:", k)
+		for i := range v {
+			fmt.Println(v[i].BookName)
+		}
+	}
 	return nil
 }
 
