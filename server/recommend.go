@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"github.com/OnebookTechnology/whatlist/server/models"
 	"sort"
 	"sync"
@@ -78,9 +79,11 @@ func UnSuitRecommend(user *models.User, myUnSuitList *ListResult, wg *sync.WaitG
 	for i := range myUnSuitList.List {
 		weight := calculateWeightOfBook(user, myUnSuitList.List[i])
 		if weight >= 10 {
+			fmt.Println(myUnSuitList.List[i].BookName, "->", "UnSuit30List")
 			myUnSuit30List.List = append(myUnSuit30List.List, myUnSuitList.List[i])
 			myUnSuit30List.Weight = append(myUnSuit30List.Weight, weight)
 		} else if weight >= 5 {
+			fmt.Println(myUnSuitList.List[i].BookName, "->", "UnSuit10List")
 			myUnSuit10List.List = append(myUnSuit10List.List, myUnSuitList.List[i])
 			myUnSuit10List.Weight = append(myUnSuit10List.Weight, weight)
 		}

@@ -96,13 +96,10 @@ func recommend(ctx *gin.Context) {
 
 	returnCount -= unsuit30Len
 
-	res.returnList = append(res.returnList, unsuit10.List[(pageNum-1):(pageNum-1)+1]...)
-	returnCount -= 1
+	res.returnList = append(res.returnList, unsuit10.List[(pageNum-1):]...)
+
 	//凑够10个
-	if returnCount > 0 {
-		res.returnList = append(res.returnList, unsuit10.List[pageNum*5:pageNum*5+uint64(returnCount)]...)
-	}
-	fmt.Println(4)
+	res.returnList = res.returnList[:10]
 	response, err := jsoniter.MarshalToString(res)
 	if err != nil {
 		sendJsonResponse(ctx, Err, "recommend MarshalToString err: %s", err.Error())
