@@ -108,6 +108,7 @@ func (m *MysqlService) FindAllBooks() (map[int][]*models.Book, error) {
 
 		if books, ok := bookMap[book.Category]; ok {
 			books = append(books, book)
+			bookMap[book.Category] = books
 		} else {
 			books = append(books, book)
 			bookMap[book.Category] = books
