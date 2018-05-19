@@ -23,7 +23,7 @@ func (m *MysqlService) UpdateUser(userId string, u *models.User) error {
 	}
 	var hobbyStr string
 	for i := range u.Hobby {
-		hobbyStr = hobbyStr + strconv.Itoa(u.Hobby[i]) + ","
+		hobbyStr = hobbyStr + strconv.Itoa(u.Hobby[i]-1) + ","
 	}
 
 	_, err = tx.Exec("UPDATE User SET hobby=?, field1=?, field2=?, field3=?, field4=?, field5=?, field6=?, field7=? WHERE user_id = ?",
