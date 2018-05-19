@@ -10,7 +10,7 @@ import (
 )
 
 type RecommendResponse struct {
-	returnList []*models.Book `json:"return_list"`
+	ReturnList []*models.Book `json:"return_list"`
 }
 
 const ReturnCount = 10
@@ -79,40 +79,40 @@ func recommend(ctx *gin.Context) {
 	res := new(RecommendResponse)
 	suitLen := len(suit.List[(pageNum-1)*6:])
 	if suitLen < 6 {
-		res.returnList = append(res.returnList, suit.List[(pageNum-1)*6:]...)
+		res.ReturnList = append(res.ReturnList, suit.List[(pageNum-1)*6:]...)
 	} else {
-		res.returnList = append(res.returnList, suit.List[(pageNum-1)*6:(pageNum-1)*6+6]...)
+		res.ReturnList = append(res.ReturnList, suit.List[(pageNum-1)*6:(pageNum-1)*6+6]...)
 	}
 	returnCount -= suitLen
 	fmt.Println("resultsuit:")
-	for i := range res.returnList {
-		fmt.Println(res.returnList[i].BookName)
+	for i := range res.ReturnList {
+		fmt.Println(res.ReturnList[i].BookName)
 	}
 	var unsuit30Len int
 	if unsuit30.List != nil {
 		unsuit30Len := len(unsuit30.List[(pageNum-1)*3:])
 		if unsuit30Len < 3 {
-			res.returnList = append(res.returnList, unsuit30.List[(pageNum-1)*3:]...)
+			res.ReturnList = append(res.ReturnList, unsuit30.List[(pageNum-1)*3:]...)
 		} else {
-			res.returnList = append(res.returnList, unsuit30.List[(pageNum-1)*3:(pageNum-1)*3+3]...)
+			res.ReturnList = append(res.ReturnList, unsuit30.List[(pageNum-1)*3:(pageNum-1)*3+3]...)
 		}
 	}
 	fmt.Println("result30:")
-	for i := range res.returnList {
-		fmt.Println(res.returnList[i].BookName)
+	for i := range res.ReturnList {
+		fmt.Println(res.ReturnList[i].BookName)
 	}
 	returnCount -= unsuit30Len
 
-	res.returnList = append(res.returnList, unsuit10.List[(pageNum-1):]...)
+	res.ReturnList = append(res.ReturnList, unsuit10.List[(pageNum-1)*pageNum:]...)
 	fmt.Println("result10:")
-	for i := range res.returnList {
-		fmt.Println(res.returnList[i].BookName)
+	for i := range res.ReturnList {
+		fmt.Println(res.ReturnList[i].BookName)
 	}
 	//凑够10个
-	res.returnList = res.returnList[:10]
+	res.ReturnList = res.ReturnList[:10]
 	fmt.Println("result:")
-	for i := range res.returnList {
-		fmt.Println(res.returnList[i].BookName)
+	for i := range res.ReturnList {
+		fmt.Println(res.ReturnList[i].BookName)
 	}
 	response, err := jsoniter.MarshalToString(res)
 	if err != nil {
