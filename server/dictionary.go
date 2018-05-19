@@ -112,16 +112,16 @@ const (
 )
 const (
 	//图书品类
-	CategoryChild     = iota //童书类
-	CategoryEducation        //教育类
-	CategoryNovel            //小说文学类
-	CategoryEconomic         //经济管理类
-	CategorySuccess          //成功与励志类
-	CategorySocial           //社科人文类
-	CategoryLife             //生活类
-	CategoryPhoto            //艺术摄影类
-	CategoryScience          //科技类
-	CategoryComputer         //计算机与互联网类
+	CategoryChild     = iota + 1 //童书类
+	CategoryEducation            //教育类
+	CategoryNovel                //小说文学类
+	CategoryEconomic             //经济管理类
+	CategorySuccess              //成功与励志类
+	CategorySocial               //社科人文类
+	CategoryLife                 //生活类
+	CategoryPhoto                //艺术摄影类
+	CategoryScience              //科技类
+	CategoryComputer             //计算机与互联网类
 
 )
 
