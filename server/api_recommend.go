@@ -6,11 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/json-iterator/go"
 	"strconv"
-	"fmt"
 )
 
 type RecommendResponse struct {
-	returnList []*models.Book
+	returnList []*models.Book `json:"return_list"`
 }
 
 const ReturnCount = 10
@@ -72,20 +71,11 @@ func recommend(ctx *gin.Context) {
 	}
 
 	suit = sl.(*ListResult)
-	fmt.Println("suitmap:")
-	for i := range suit.List {
-		fmt.Println(suit.List[i].BookName)
-	}
-	fmt.Println("unsuit30map:")
+
 	unsuit30 = usl30.(*ListResult)
-	for i := range unsuit30.List {
-		fmt.Println(unsuit30.List[i].BookName)
-	}
-	fmt.Println("unsuit10map:")
+
 	unsuit10 = usl10.(*ListResult)
-	for i := range unsuit10.List {
-		fmt.Println(unsuit10.List[i].BookName)
-	}
+
 	var returnCount = ReturnCount
 	res := new(RecommendResponse)
 	suitLen := len(suit.List[(pageNum-1)*6:])
