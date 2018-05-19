@@ -113,7 +113,7 @@ func (m *MysqlService) FindAllBooks() (map[int][]*models.Book, error) {
 			bookMap[book.Category] = books
 		}
 	}
-	return nil, err
+	return bookMap, err
 }
 
 func (m *MysqlService) AddBook(book *models.Book) error {

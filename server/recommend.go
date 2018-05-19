@@ -40,6 +40,7 @@ func doRecommend(user *models.User) {
 		for _, tagId := range CategoryArray {
 			bookList, ok := BookList[tagId]
 			if !ok {
+				fmt.Println("tagid:", tagId, "continue")
 				continue
 			}
 			if sliceIntContains(user.Hobby, tagId) {
