@@ -52,7 +52,7 @@ func recommend(ctx *gin.Context) {
 	// update recommend maps
 	doRecommend(user)
 
-	var suit, unsuit10, unsuit30 []*models.Book
+	var suit, unsuit10, unsuit30 *ListResult
 	sl, ok := UserSuitMap.Load(user_id)
 	if !ok {
 		sendJsonResponse(ctx, Err, "recommend UserSuitMap is empty. uid: %s", user_id)
@@ -71,36 +71,36 @@ func recommend(ctx *gin.Context) {
 		return
 	}
 
-	suit = sl.([]*models.Book)
-	unsuit30 = usl30.([]*models.Book)
-	unsuit10 = usl10.([]*models.Book)
+	suit = sl.(*ListResult)
+	unsuit30 = usl30.(*ListResult)
+	unsuit10 = usl10.(*ListResult)
 	var returnCount = ReturnCount
 	res := new(RecommendResponse)
-	suitLen := len(suit[(pageNum-1)*6:])
+	suitLen := len(suit.List[(pageNum-1)*6:])
 	if suitLen < 6 {
-		res.returnList = append(res.returnList, suit[(pageNum-1)*6:]...)
+		res.returnList = append(res.returnList, suit.List[(pageNum-1)*6:]...)
 	} else {
-		res.returnList = append(res.returnList, suit[(pageNum-1)*6:(pageNum-1)*6+6]...)
+		res.returnList = append(res.returnList, suit.List[(pageNum-1)*6:(pageNum-1)*6+6]...)
 	}
 	returnCount -= suitLen
 
 	var unsuit30Len int
-	if unsuit30 != nil {
-		unsuit30Len := len(unsuit30[(pageNum-1)*3:])
+	if unsuit30.List != nil {
+		unsuit30Len := len(unsuit30.List[(pageNum-1)*3:])
 		if unsuit30Len < 3 {
-			res.returnList = append(res.returnList, unsuit30[(pageNum-1)*3:]...)
+			res.returnList = append(res.returnList, unsuit30.List[(pageNum-1)*3:]...)
 		} else {
-			res.returnList = append(res.returnList, unsuit30[(pageNum-1)*3:(pageNum-1)*3+3]...)
+			res.returnList = append(res.returnList, unsuit30.List[(pageNum-1)*3:(pageNum-1)*3+3]...)
 		}
 	}
 
 	returnCount -= unsuit30Len
 
-	res.returnList = append(res.returnList, unsuit10[(pageNum-1):(pageNum-1)+1]...)
+	res.returnList = append(res.returnList, unsuit10.List[(pageNum-1):(pageNum-1)+1]...)
 	returnCount -= 1
 	//凑够10个
 	if returnCount > 0 {
-		res.returnList = append(res.returnList, unsuit10[pageNum*5:pageNum*5+uint64(returnCount)]...)
+		res.returnList = append(res.returnList, unsuit10.List[pageNum*5:pageNum*5+uint64(returnCount)]...)
 	}
 	fmt.Println(4)
 	response, err := jsoniter.MarshalToString(res)
