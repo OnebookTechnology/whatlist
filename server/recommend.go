@@ -78,6 +78,7 @@ func UnSuitRecommend(user *models.User, myUnSuitList *ListResult, wg *sync.WaitG
 	myUnSuit10List := new(ListResult)
 	for i := range myUnSuitList.List {
 		weight := calculateWeightOfBook(user, myUnSuitList.List[i])
+		fmt.Println(myUnSuitList.List[i].BookName, "weight:", weight)
 		if weight >= 10 {
 			fmt.Println(myUnSuitList.List[i].BookName, "->", "UnSuit30List")
 			myUnSuit30List.List = append(myUnSuit30List.List, myUnSuitList.List[i])
