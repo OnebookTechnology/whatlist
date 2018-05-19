@@ -44,8 +44,10 @@ func doRecommend(user *models.User) {
 				continue
 			}
 			if sliceIntContains(user.Hobby, tagId) {
+				fmt.Println("tag:", tagId, "to suitmap!")
 				mySuitList.List = append(mySuitList.List, bookList...)
 			} else {
+				fmt.Println("tag:", tagId, "to unsuitmap!")
 				myUnSuitList.List = append(myUnSuitList.List, bookList...)
 			}
 
@@ -80,7 +82,7 @@ func UnSuitRecommend(user *models.User, myUnSuitList *ListResult, wg *sync.WaitG
 	for i := range myUnSuitList.List {
 		weight := calculateWeightOfBook(user, myUnSuitList.List[i])
 		fmt.Println(myUnSuitList.List[i].BookName, "weight:", weight)
-		if weight >= 10 {
+		if weight >= 8 {
 			fmt.Println(myUnSuitList.List[i].BookName, "->", "UnSuit30List")
 			myUnSuit30List.List = append(myUnSuit30List.List, myUnSuitList.List[i])
 			myUnSuit30List.Weight = append(myUnSuit30List.Weight, weight)
