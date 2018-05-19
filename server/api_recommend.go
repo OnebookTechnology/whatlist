@@ -2,6 +2,7 @@ package server
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/OnebookTechnology/whatlist/server/models"
 	"github.com/gin-gonic/gin"
 	"github.com/json-iterator/go"
@@ -71,9 +72,7 @@ func recommend(ctx *gin.Context) {
 	}
 
 	suit = sl.(*ListResult)
-
 	unsuit30 = usl30.(*ListResult)
-
 	unsuit10 = usl10.(*ListResult)
 
 	var returnCount = ReturnCount
@@ -85,7 +84,10 @@ func recommend(ctx *gin.Context) {
 		res.returnList = append(res.returnList, suit.List[(pageNum-1)*6:(pageNum-1)*6+6]...)
 	}
 	returnCount -= suitLen
-
+	fmt.Println("resultsuit:")
+	for i := range res.returnList {
+		fmt.Println(res.returnList[i].BookName)
+	}
 	var unsuit30Len int
 	if unsuit30.List != nil {
 		unsuit30Len := len(unsuit30.List[(pageNum-1)*3:])
@@ -95,13 +97,23 @@ func recommend(ctx *gin.Context) {
 			res.returnList = append(res.returnList, unsuit30.List[(pageNum-1)*3:(pageNum-1)*3+3]...)
 		}
 	}
-
+	fmt.Println("result30:")
+	for i := range res.returnList {
+		fmt.Println(res.returnList[i].BookName)
+	}
 	returnCount -= unsuit30Len
 
 	res.returnList = append(res.returnList, unsuit10.List[(pageNum-1):]...)
-
+	fmt.Println("result10:")
+	for i := range res.returnList {
+		fmt.Println(res.returnList[i].BookName)
+	}
 	//凑够10个
 	res.returnList = res.returnList[:10]
+	fmt.Println("result:")
+	for i := range res.returnList {
+		fmt.Println(res.returnList[i].BookName)
+	}
 	response, err := jsoniter.MarshalToString(res)
 	if err != nil {
 		sendJsonResponse(ctx, Err, "recommend MarshalToString err: %s", err.Error())
