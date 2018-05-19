@@ -41,19 +41,23 @@ const (
 	Age85
 	Age80
 	Age70
+)
 
+const (
 	//性别
 	SexAny = iota
 	SexMan
 	SexWoman
-
+)
+const (
 	//婚姻状况
 	MarriageAny         = iota
 	MarriedWithChild    //已婚有子女
 	MarriedWithoutChild //已婚无子女
 	UnmarriedWithInLove //未婚恋爱中
 	UnmarriedWithSingle //未婚单身中
-
+)
+const (
 	//教育程度
 	EduAny = iota
 	EduPrimary
@@ -62,7 +66,8 @@ const (
 	EduCollege
 	EduMaster
 	EduDoctor
-
+)
+const (
 	//最小收入
 	IncomeAny = iota
 	IncomeUnder5k
@@ -71,7 +76,8 @@ const (
 	Income15k_30k
 	Income30k_50k
 	IncomeBeyond50k
-
+)
+const (
 	//工作行业
 	WorkAny = iota
 	Work1   //1、农、林、牧、渔业
@@ -87,7 +93,8 @@ const (
 	Work11  //11、文化、体育和娱乐业
 	Work12  //12、公共管理、社会保障和社会组织
 	WorkOther
-
+)
+const (
 	//身高体重比例
 	WeightAny = iota
 	UnderWeight
@@ -102,7 +109,8 @@ const (
 	MildObesityValue     = 30
 	ModerateObesityValue = 35
 	SevereObesityValue   = math.MaxInt8
-
+)
+const (
 	//图书品类
 	CategoryChild     = iota //童书类
 	CategoryEducation        //教育类
