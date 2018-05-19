@@ -102,49 +102,49 @@ func UnSuitRecommend(user *models.User, myUnSuitList *ListResult, wg *sync.WaitG
 func calculateWeightOfBook(user *models.User, book *models.Book) (weight int) {
 	// 计算权值
 	//Field1 年龄id范围
-	if user.Field1 == AgeAny {
+	if sliceIntContains(book.Field1, AgeAny) {
 		weight += 1
 	} else if sliceIntContains(book.Field1, user.Field1) {
 		weight += 3
 	}
 
 	//Field2 性别
-	if user.Field2 == SexAny {
+	if book.Field2 == SexAny {
 		weight += 1
 	} else if book.Field2 == user.Field2 {
 		weight += 3
 	}
 
 	//Field3 婚姻状况id
-	if user.Field3 == MarriageAny {
+	if sliceIntContains(book.Field3, MarriageAny) {
 		weight += 1
 	} else if sliceIntContains(book.Field3, user.Field3) {
 		weight += 3
 	}
 
 	//Field4 教育程度
-	if user.Field4 == AgeAny {
+	if sliceIntContains(book.Field4, EduAny) {
 		weight += 1
 	} else if sliceIntContains(book.Field4, user.Field4) {
 		weight += 3
 	}
 
 	//Field5 最小收入
-	if user.Field5 == IncomeAny {
+	if sliceIntContains(book.Field5, IncomeAny) {
 		weight += 1
 	} else if sliceIntContains(book.Field5, user.Field5) {
 		weight += 3
 	}
 
 	//Field6 工作行业id
-	if user.Field6 == WorkAny {
+	if sliceIntContains(book.Field6, WorkAny) {
 		weight += 1
 	} else if sliceIntContains(book.Field6, user.Field6) {
 		weight += 3
 	}
 
 	//Field7 身高体重比例
-	if user.Field7 == WeightAny {
+	if book.Field7 == WeightAny {
 		weight += 1
 	} else if book.Field7 == user.Field7 {
 		weight += 3
