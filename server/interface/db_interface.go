@@ -6,4 +6,5 @@ type ServerDB interface {
 	InitialDB(confPath string, tagName string) error
 	dao.UserDao
 	dao.BookDao
+	dao.BookListDao
 }
