@@ -18,14 +18,6 @@ func LoadRouter(router *gin.Engine) {
 	router.GET("/gettagsnum", GetAllTagsNumber)
 	router.GET("/bookdetail", GetBookDetail)
 
-	router.OPTIONS("/word", func(c *gin.Context) {
-		crossDomain(c)
-	})
-	router.OPTIONS("/addbook", func(c *gin.Context) {
-		crossDomain(c)
-	})
-	router.POST("/word", ParseWord)
-	router.POST("/addbook", AddBook)
 
 	router.GET("/latestlists", LatestLists)
 	router.GET("/listdetail", ListDetail)
