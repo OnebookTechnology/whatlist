@@ -8,11 +8,11 @@ import (
 func (m *MysqlService) GetList(listID uint64) (*models.List, error) {
 	list := new(models.List)
 	// 查询书单元信息
-	row := m.Db.QueryRow("SELECT l.`listID` ,l.`listName` ,l.`listAuthor` ,l.`listCategoryID` , c.`categoryName`," +
-	"l.`listIntro` ,l.`listImg`, l.`listCreateTime` ,l.`listLastEditTime` ,l.`listClickCount`" +
-	" FROM whatlist.`list` l" +
-	" LEFT JOIN `whatlist`.`category` c ON c.`categoryID` = l.`listCategoryID`" +
-	" WHERE l.`listID` = ?", listID)
+	row := m.Db.QueryRow("SELECT l.`listID` ,l.`listName` ,l.`listAuthor` ,l.`listCategoryID` , c.`categoryName`,"+
+		"l.`listIntro` ,l.`listImg`, l.`listCreateTime` ,l.`listLastEditTime` ,l.`listClickCount`"+
+		" FROM whatlist.`list` l"+
+		" LEFT JOIN `whatlist`.`category` c ON c.`categoryID` = l.`listCategoryID`"+
+		" WHERE l.`listID` = ?", listID)
 	err := row.Scan(&list.ListID, &list.ListName, &list.ListAuthor, &list.ListCategoryID, &list.ListCategoryName,
 		&list.ListIntro, &list.ListImg, &list.ListCreateTime, &list.ListLastEditTime, &list.ListClickCount)
 	if err != nil {
@@ -40,17 +40,18 @@ func (m *MysqlService) GetList(listID uint64) (*models.List, error) {
 	list.ListBooks = books
 	return list, nil
 }
+
 // 获得最新的六个书单
-func (m *MysqlService) GetLatestSixList()([]*models.List, error) {
+func (m *MysqlService) GetLatestSixList() ([]*models.List, error) {
 	var lists []*models.List
 	rows, err := m.Db.Query("SELECT l.`listID` ,l.`listName` ,l.`listImg`, l.`listClickCount`" +
-	" FROM `whatlist`.`list` l" +
-	" ORDER BY l.`listCreateTime` DESC" +
-	" LIMIT 6")
+		" FROM `whatlist`.`list` l" +
+		" ORDER BY l.`listCreateTime` DESC" +
+		" LIMIT 6")
 	if err != nil {
 		return nil, err
 	}
-	for rows.Next(){
+	for rows.Next() {
 		list := new(models.List)
 		err = rows.Scan(&list.ListID, &list.ListName, &list.ListImg, &list.ListClickCount)
 		if err != nil {
@@ -60,9 +61,9 @@ func (m *MysqlService) GetLatestSixList()([]*models.List, error) {
 	}
 	return lists, nil
 }
+
 // 获得推荐的六个书单
-func (m *MysqlService) GetRecommendSixList()([]*models.List, error) {
+func (m *MysqlService) GetRecommendSixList() ([]*models.List, error) {
 	var lists []*models.List
 	return lists, nil
 }
-

@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-func LatestLists (c *gin.Context){
+func LatestLists(c *gin.Context) {
 	lists, err := server.DB.GetLatestSixList()
 	if err != nil {
 		sendJsonResponse(c, Err, "GetLatestSixList error in LatestLists api. error: %s", err.Error())
@@ -21,7 +21,7 @@ func LatestLists (c *gin.Context){
 	return
 }
 
-func ListDetail (c *gin.Context){
+func ListDetail(c *gin.Context) {
 	str_listID := c.Query("listID")
 	listID, err := strconv.ParseUint(str_listID, 10, 64)
 	if err != nil {
