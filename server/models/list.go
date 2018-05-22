@@ -5,6 +5,7 @@ type List struct {
 	ListName         string  `json:"list_name"`           // 书单名称
 	ListAuthor       string  `json:"list_author"`         // 书单作者
 	ListCategoryID   uint64  `json:"list_category_id"`    // 书单分类ID
+	ListCategoryName string  `json:"list_category_name"`  // 书单分类名称
 	ListIntro        string  `json:"list_intro"`          // 书单简介
 	ListImg          string  `json:"list_img"`            // 书单图片
 	ListCreateTime   string  `json:"list_create_time"`    // 书单创建时间
