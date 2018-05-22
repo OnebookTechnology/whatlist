@@ -28,4 +28,5 @@ func LoadRouter(router *gin.Engine) {
 	router.POST("/addbook", AddBook)
 
 	router.GET("/latestlists", LatestLists)
+	router.GET("/listdetail", ListDetail)
 }
