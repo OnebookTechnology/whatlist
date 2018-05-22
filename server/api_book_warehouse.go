@@ -22,7 +22,7 @@ func LatestLists (c *gin.Context){
 }
 
 func ListDetail (c *gin.Context){
-	str_listID := c.Param("listID")
+	str_listID := c.Query("listID")
 	listID, err := strconv.ParseUint(str_listID, 10, 64)
 	if err != nil {
 		sendJsonResponse(c, Err, "Can not convert listID to uint64. error:%s, listID:%s",
