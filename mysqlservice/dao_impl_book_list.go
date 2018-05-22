@@ -61,7 +61,8 @@ func (m *MysqlService) GetLatestSixList()([]*models.List, error) {
 	return lists, nil
 }
 // 获得推荐的六个书单
-func (m *MysqlService) GetRecommendSixList()(*[]models.List, error) {
-	var lists *[]models.List
+func (m *MysqlService) GetRecommendSixList()([]*models.List, error) {
+	var lists []*models.List
 	return lists, nil
 }
+
