@@ -26,4 +26,6 @@ func LoadRouter(router *gin.Engine) {
 	})
 	router.POST("/word", ParseWord)
 	router.POST("/addbook", AddBook)
+
+	router.GET("/latestlists", LatestLists)
 }
