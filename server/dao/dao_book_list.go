@@ -4,9 +4,11 @@ import "github.com/OnebookTechnology/whatlist/server/models"
 
 type BookListDao interface {
 	// 根据书单ID获得书单内容
-	GetList(listID uint64) (*models.List, error)
+	GetListDetail(listID uint64) (*models.List, error)
 	// 获得最新的六个书单
-	GetLatestSixList() ([]*models.List, error)
+	GetLatestSixLists() ([]*models.List, error)
 	// 获得推荐的六个书单
-	GetRecommendSixList() ([]*models.List, error)
+	GetRecommendSixLists() ([]*models.List, error)
+	// 获得最热的六个书单
+	GetHeatSixLists() ([]*models.List, error)
 }

@@ -6,8 +6,9 @@ import (
 	"strconv"
 )
 
+// 获取最新书单API
 func LatestLists(c *gin.Context) {
-	lists, err := server.DB.GetLatestSixList()
+	lists, err := server.DB.GetLatestSixLists()
 	if err != nil {
 		sendJsonResponse(c, Err, "GetLatestSixList error in LatestLists api. error: %s", err.Error())
 		return
@@ -21,8 +22,25 @@ func LatestLists(c *gin.Context) {
 	return
 }
 
+// 获取最热书单API
+func HeatLists(c *gin.Context) {
+	lists, err := server.DB.GetHeatSixLists()
+	if err != nil {
+		sendJsonResponse(c, Err, "GetHeatSixLists error in HeatLists api. error: %s", err.Error())
+		return
+	}
+	rs, err := jsoniter.MarshalToString(lists)
+	if err != nil {
+		sendJsonResponse(c, Err, "MarshToString error in HeatLists api. error: %s", err.Error())
+		return
+	}
+	sendJsonResponse(c, OK, "%s", rs)
+	return
+}
+
+// 获取推荐书单API
 func RecommendLists(c *gin.Context) {
-	lists, err := server.DB.GetRecommendSixList()
+	lists, err := server.DB.GetRecommendSixLists()
 	if err != nil {
 		sendJsonResponse(c, Err, "GetRecommendSixList error in RecommendLists api. error: %s", err.Error())
 		return
@@ -36,6 +54,7 @@ func RecommendLists(c *gin.Context) {
 	return
 }
 
+// 获取指定书单详细信息API
 func ListDetail(c *gin.Context) {
 	str_listID := c.Query("listID")
 	listID, err := strconv.ParseUint(str_listID, 10, 64)
@@ -44,7 +63,7 @@ func ListDetail(c *gin.Context) {
 			err.Error(), str_listID)
 		return
 	}
-	list, err := server.DB.GetList(listID)
+	list, err := server.DB.GetListDetail(listID)
 	if err != nil {
 		sendJsonResponse(c, Err, "GetList error in GetListDetail api. error: %s", err.Error())
 		return

@@ -5,7 +5,7 @@ import (
 )
 
 // 根据书单ID,获得指定书单的内容
-func (m *MysqlService) GetList(listID uint64) (*models.List, error) {
+func (m *MysqlService) GetListDetail(listID uint64) (*models.List, error) {
 	list := new(models.List)
 	// 查询书单元信息
 	row := m.Db.QueryRow("SELECT l.`listID` ,l.`listName` ,l.`listAuthor` ,l.`listCategoryID` , c.`categoryName`,"+
@@ -42,7 +42,7 @@ func (m *MysqlService) GetList(listID uint64) (*models.List, error) {
 }
 
 // 获得最新的六个书单
-func (m *MysqlService) GetLatestSixList() ([]*models.List, error) {
+func (m *MysqlService) GetLatestSixLists() ([]*models.List, error) {
 	var lists []*models.List
 	rows, err := m.Db.Query("SELECT l.`listID` ,l.`listName` ,l.`listImg`, l.`listClickCount`" +
 		" FROM `whatlist`.`list` l" +
@@ -63,12 +63,33 @@ func (m *MysqlService) GetLatestSixList() ([]*models.List, error) {
 }
 
 // 获得推荐的六个书单
-func (m *MysqlService) GetRecommendSixList() ([]*models.List, error) {
+func (m *MysqlService) GetRecommendSixLists() ([]*models.List, error) {
 	var lists []*models.List
 	rows, err := m.Db.Query("SELECT l.`listID` , l.`listName` ,l.`listImg` ,l.`listClickCount` " +
 		"FROM `whatlist`.`recommendlist` r " +
 		"LEFT JOIN `whatlist`.`list` l ON r.`listID` = l.`listID` " +
 		"WHERE r.`isRecommending` = 1 LIMIT 6;")
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		list := new(models.List)
+		err = rows.Scan(&list.ListID, &list.ListName, &list.ListImg, &list.ListClickCount)
+		if err != nil {
+			return nil, err
+		}
+		lists = append(lists, list)
+	}
+	return lists, nil
+}
+
+// 获得最热的六个书单
+func (m *MysqlService) GetHeatSixLists() ([]*models.List, error) {
+	var lists []*models.List
+	rows, err := m.Db.Query("SELECT l.`listID` ,l.`listName` ,l.`listImg`, l.`listClickCount`" +
+		" FROM `whatlist`.`list` l" +
+		" ORDER BY l.`listClickCount` DESC" +
+		" LIMIT 6")
 	if err != nil {
 		return nil, err
 	}
