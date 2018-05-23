@@ -41,6 +41,7 @@ func doRecommend(user *models.User) {
 			if !ok {
 				continue
 			}
+
 			if sliceIntContains(user.Hobby, tagId) {
 				mySuitList.List = append(mySuitList.List, bookList...)
 			} else {

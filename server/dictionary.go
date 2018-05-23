@@ -133,22 +133,23 @@ var WeightMap = []string{"", "体重过轻", "正常体重", "轻微肥胖", "�
 
 const (
 	//图书品类
-	CategoryChild     = iota //童书类
-	CategoryEducation        //教育类
-	CategoryNovel            //小说文学类
-	CategoryEconomic         //经济管理类
-	CategorySuccess          //成功与励志类
-	CategorySocial           //社科人文类
-	CategoryLife             //生活类
-	CategoryPhoto            //艺术摄影类
-	CategoryScience          //科技类
-	CategoryComputer         //计算机与互联网类
+	CategoryAny       = iota
+	CategoryChild     //童书类
+	CategoryEducation //教育类
+	CategoryNovel     //小说文学类
+	CategoryEconomic  //经济管理类
+	CategorySuccess   //成功与励志类
+	CategorySocial    //社科人文类
+	CategoryLife      //生活类
+	CategoryPhoto     //艺术摄影类
+	CategoryScience   //科技类
+	CategoryComputer  //计算机与互联网类
 
 )
 
-var CategoryMap = []string{"童书类", "教育类", "小说文学类", "经济管理类", "成功与励志类", "社科人文类", "生活类", "艺术摄影类", "科技类", "计算机与互联网类"}
+var CategoryMap = []string{"随机", "童书类", "教育类", "小说文学类", "经济管理类", "成功与励志类", "社科人文类", "生活类", "艺术摄影类", "科技类", "计算机与互联网类"}
 
 var WeightRange = []float64{UnderWeightValue, NormalWeightValue, GeneralObesityValue, MildObesityValue,
 	ModerateObesityValue, SevereObesityValue}
-var CategoryArray = []int{CategoryChild, CategoryEducation, CategoryNovel, CategoryEconomic, CategorySuccess,
+var CategoryArray = []int{CategoryAny, CategoryChild, CategoryEducation, CategoryNovel, CategoryEconomic, CategorySuccess,
 	CategorySocial, CategoryLife, CategoryPhoto, CategoryScience, CategoryComputer}
