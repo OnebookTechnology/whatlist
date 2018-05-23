@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/json-iterator/go"
 	"strconv"
+	"database/sql"
 )
 
 // 获取最新书单API
@@ -101,6 +102,11 @@ func EveryDayRecommend(c *gin.Context) {
 		return
 	}
 	everyDayRecommend, err := server.DB.GetEveryDayRecommendList(index)
+	if err == sql.ErrNoRows {
+		// -3
+		sendJsonResponse(c, NoResultErr, "%s", "已浏览到最后一个每日推荐")
+		return
+	}
 	if err != nil {
 		sendJsonResponse(c, Err, "GetEveryDayRecommendList error in everyDayRecommend api. error: %s",
 			err.Error())
