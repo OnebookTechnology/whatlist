@@ -13,4 +13,6 @@ type BookListDao interface {
 	GetHeatSixLists() ([]*models.List, error)
 	// 获得大咖推荐书单
 	GetBigManRecommendLists() ([]*models.BigManRecommendList, error)
+	// 获得每日推荐书单
+	GetEveryDayRecommendList(index uint64) (*models.EveryDayRecommend, error)
 }

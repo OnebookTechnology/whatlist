@@ -93,5 +93,24 @@ func BigManRecommend(c *gin.Context) {
 }
 
 func EveryDayRecommend(c *gin.Context) {
-
+	index_str := c.Query("index")
+	index, err := strconv.ParseUint(index_str, 10, 64)
+	if err != nil {
+		sendJsonResponse(c, Err, "Can not convert index to uint64. error:%s, index:%s",
+			err.Error(), index_str)
+		return
+	}
+	everyDayRecommend, err := server.DB.GetEveryDayRecommendList(index)
+	if err != nil {
+		sendJsonResponse(c, Err, "GetEveryDayRecommendList error in everyDayRecommend api. error: %s",
+			err.Error())
+		return
+	}
+	rs, err := jsoniter.MarshalToString(everyDayRecommend)
+	if err != nil {
+		sendJsonResponse(c, Err, "MarshToString error in EveryDayRecommend api. error: %s", err.Error())
+		return
+	}
+	sendJsonResponse(c, OK, "%s", rs)
+	return
 }

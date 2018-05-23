@@ -123,3 +123,18 @@ func (m *MysqlService) GetBigManRecommendLists() ([]*models.BigManRecommendList,
 	}
 	return lists, nil
 }
+
+// 获得每日推荐书单
+func (m *MysqlService) GetEveryDayRecommendLists(index uint64) (*models.EveryDayRecommend, error) {
+	row := m.Db.QueryRow("SELECT e.`id` ,e.`recommendTime`,e.`imgUrl` ,e.`listID` , l.`listName` , l.`listBriefIntro` " +
+		"FROM `whatlist`.`everydayrecommend` e " +
+		"LEFT JOIN `whatlist`.`list` l ON e.`listID` = e.`listID` " +
+		"ORDER BY e.`recommendTime` DESC LIMIT ?,1", index)
+	everyDayRecommend := new(models.EveryDayRecommend)
+	err := row.Scan(&everyDayRecommend.ListID, &everyDayRecommend.RecommendTime, &everyDayRecommend.ImgUrl,
+		&everyDayRecommend.ID, &everyDayRecommend.ListName, &everyDayRecommend.ListBriefIntro)
+	if err != nil {
+		return nil, err
+	}
+	return everyDayRecommend, nil
+}
