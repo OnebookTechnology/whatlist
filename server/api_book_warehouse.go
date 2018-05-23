@@ -9,7 +9,9 @@ import (
 
 // 获取最新书单API
 func LatestLists(c *gin.Context) {
-	lists, err := server.DB.GetLatestSixLists()
+	index_str := c.Query("index")
+	index, err := strconv.ParseUint(index_str, 10, 64)
+	lists, err := server.DB.GetLatestSixLists(index)
 	if err != nil {
 		sendJsonResponse(c, Err, "GetLatestSixList error in LatestLists api. error: %s", err.Error())
 		return
@@ -41,7 +43,9 @@ func HeatLists(c *gin.Context) {
 
 // 获取推荐书单API
 func RecommendLists(c *gin.Context) {
-	lists, err := server.DB.GetRecommendSixLists()
+	index_str := c.Query("index")
+	index, err := strconv.ParseUint(index_str, 10, 64)
+	lists, err := server.DB.GetRecommendSixLists(index)
 	if err != nil {
 		sendJsonResponse(c, Err, "GetRecommendSixList error in RecommendLists api. error: %s", err.Error())
 		return
