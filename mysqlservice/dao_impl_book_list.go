@@ -107,7 +107,7 @@ func (m *MysqlService) GetHeatSixLists() ([]*models.List, error) {
 // 获得大咖推荐书单
 func (m *MysqlService) GetBigManRecommendLists() ([]*models.BigManRecommendList, error) {
 	var lists []*models.BigManRecommendList
-	rows, err := m.Db.Query("SELECT b.`id` ,b.`imgUrl` " +
+	rows, err := m.Db.Query("SELECT b.`id` ,b.`imgUrl`, b.`listID` " +
 		"FROM `whatlist`.`bigmanrecommend` b " +
 		"WHERE b.`isRecommending` = 1")
 	if err != nil {
@@ -115,7 +115,7 @@ func (m *MysqlService) GetBigManRecommendLists() ([]*models.BigManRecommendList,
 	}
 	for rows.Next() {
 		list := new(models.BigManRecommendList)
-		err = rows.Scan(&list.ID, &list.ImgUrl)
+		err = rows.Scan(&list.ID, &list.ImgUrl, &list.ListID)
 		if err != nil {
 			return nil, err
 		}
