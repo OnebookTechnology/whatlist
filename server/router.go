@@ -26,9 +26,10 @@ func LoadRouter(router *gin.Engine) {
 	router.GET("/recommendlists", RecommendLists)
 	// 书单详细信息路由
 	router.GET("/listdetail", ListDetail)
-
 	// 大咖推荐路由
 	router.GET("/bigmanrecommend", BigManRecommend)
 	// 每日书单路由
 	router.GET("/everydayrecommend", EveryDayRecommend)
+	// 轮播图
+	router.GET("/carousel", Carousel)
 }

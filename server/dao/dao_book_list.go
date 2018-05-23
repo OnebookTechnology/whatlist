@@ -15,4 +15,6 @@ type BookListDao interface {
 	GetBigManRecommendLists() ([]*models.BigManRecommendList, error)
 	// 获得每日推荐书单
 	GetEveryDayRecommendList(index uint64) (*models.EveryDayRecommend, error)
+	// 获得轮播图
+	GetCarousel() ([]*models.Carousel, error)
 }

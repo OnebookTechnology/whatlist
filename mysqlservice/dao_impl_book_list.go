@@ -44,10 +44,10 @@ func (m *MysqlService) GetListDetail(listID uint64) (*models.List, error) {
 // 获得最新的六个书单
 func (m *MysqlService) GetLatestSixLists(index uint64) ([]*models.List, error) {
 	var lists []*models.List
-	rows, err := m.Db.Query("SELECT l.`listID` ,l.`listName` ,l.`listImg`, l.`listClickCount`, l.`listBriefIntro` " +
-		" FROM `whatlist`.`list` l" +
-		" ORDER BY l.`listCreateTime` DESC" +
-		" LIMIT ?,6", index * 6)
+	rows, err := m.Db.Query("SELECT l.`listID` ,l.`listName` ,l.`listImg`, l.`listClickCount`, l.`listBriefIntro` "+
+		" FROM `whatlist`.`list` l"+
+		" ORDER BY l.`listCreateTime` DESC"+
+		" LIMIT ?,6", index*6)
 	if err != nil {
 		return nil, err
 	}
@@ -65,10 +65,10 @@ func (m *MysqlService) GetLatestSixLists(index uint64) ([]*models.List, error) {
 // 获得推荐的六个书单
 func (m *MysqlService) GetRecommendSixLists(index uint64) ([]*models.List, error) {
 	var lists []*models.List
-	rows, err := m.Db.Query("SELECT l.`listID` , l.`listName` ,l.`listImg` ,l.`listClickCount`, l.`listBriefIntro`  " +
-		"FROM `whatlist`.`recommendlist` r " +
-		"LEFT JOIN `whatlist`.`list` l ON r.`listID` = l.`listID` " +
-		"WHERE r.`isRecommending` = 1 LIMIT ?,6;", index * 6)
+	rows, err := m.Db.Query("SELECT l.`listID` , l.`listName` ,l.`listImg` ,l.`listClickCount`, l.`listBriefIntro`  "+
+		"FROM `whatlist`.`recommendlist` r "+
+		"LEFT JOIN `whatlist`.`list` l ON r.`listID` = l.`listID` "+
+		"WHERE r.`isRecommending` = 1 LIMIT ?,6;", index*6)
 	if err != nil {
 		return nil, err
 	}
@@ -137,4 +137,24 @@ func (m *MysqlService) GetEveryDayRecommendList(index uint64) (*models.EveryDayR
 		return nil, err
 	}
 	return everyDayRecommend, nil
+}
+
+// 获得轮播图
+func (m *MysqlService) GetCarousel() ([]*models.Carousel, error) {
+	var carousels []*models.Carousel
+	rows, err := m.Db.Query("SELECT c.`id` ,c.`imgUrl` ,c.`ISBN`  " +
+		"FROM `whatlist`.`carousel` c " +
+		"WHERE c.`isShowing` = 1")
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		c := new(models.Carousel)
+		err = rows.Scan(&c.ID, &c.ImgUrl, &c.ISBN)
+		if err != nil {
+			return nil, err
+		}
+		carousels = append(carousels, c)
+	}
+	return carousels, nil
 }

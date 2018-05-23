@@ -24,7 +24,6 @@ func LatestLists(c *gin.Context) {
 	sendJsonResponse(c, OK, "%s", rs)
 	return
 }
-
 // 获取最热书单API
 func HeatLists(c *gin.Context) {
 	lists, err := server.DB.GetHeatSixLists()
@@ -40,7 +39,6 @@ func HeatLists(c *gin.Context) {
 	sendJsonResponse(c, OK, "%s", rs)
 	return
 }
-
 // 获取推荐书单API
 func RecommendLists(c *gin.Context) {
 	index_str := c.Query("index")
@@ -58,7 +56,6 @@ func RecommendLists(c *gin.Context) {
 	sendJsonResponse(c, OK, "%s", rs)
 	return
 }
-
 // 获取指定书单详细信息API
 func ListDetail(c *gin.Context) {
 	str_listID := c.Query("listID")
@@ -81,7 +78,7 @@ func ListDetail(c *gin.Context) {
 	sendJsonResponse(c, OK, "%s", rs)
 	return
 }
-
+// 获取大咖推荐
 func BigManRecommend(c *gin.Context) {
 	lists, err := server.DB.GetBigManRecommendLists()
 	if err != nil {
@@ -96,7 +93,7 @@ func BigManRecommend(c *gin.Context) {
 	sendJsonResponse(c, OK, "%s", rs)
 	return
 }
-
+// 获取每日推荐
 func EveryDayRecommend(c *gin.Context) {
 	index_str := c.Query("index")
 	index, err := strconv.ParseUint(index_str, 10, 64)
@@ -119,6 +116,21 @@ func EveryDayRecommend(c *gin.Context) {
 	rs, err := jsoniter.MarshalToString(everyDayRecommend)
 	if err != nil {
 		sendJsonResponse(c, Err, "MarshToString error in EveryDayRecommend api. error: %s", err.Error())
+		return
+	}
+	sendJsonResponse(c, OK, "%s", rs)
+	return
+}
+// 获取轮播图
+func Carousel(c *gin.Context) {
+	carousels, err := server.DB.GetCarousel()
+	if err != nil {
+		sendJsonResponse(c, Err, "GetCarousel error in Carousel api. error: %s", err.Error())
+		return
+	}
+	rs, err := jsoniter.MarshalToString(carousels)
+	if err != nil {
+		sendJsonResponse(c, Err, "MarshToString error in Carousel api. error: %s", err.Error())
 		return
 	}
 	sendJsonResponse(c, OK, "%s", rs)
