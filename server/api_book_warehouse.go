@@ -21,6 +21,21 @@ func LatestLists(c *gin.Context) {
 	return
 }
 
+func RecommendLists(c *gin.Context) {
+	lists, err := server.DB.GetRecommendSixList()
+	if err != nil {
+		sendJsonResponse(c, Err, "GetRecommendSixList error in RecommendLists api. error: %s", err.Error())
+		return
+	}
+	rs, err := jsoniter.MarshalToString(lists)
+	if err != nil {
+		sendJsonResponse(c, Err, "MarshToString error in RecommendLists api. error: %s", err.Error())
+		return
+	}
+	sendJsonResponse(c, OK, "%s", rs)
+	return
+}
+
 func ListDetail(c *gin.Context) {
 	str_listID := c.Query("listID")
 	listID, err := strconv.ParseUint(str_listID, 10, 64)

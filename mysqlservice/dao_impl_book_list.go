@@ -65,5 +65,20 @@ func (m *MysqlService) GetLatestSixList() ([]*models.List, error) {
 // 获得推荐的六个书单
 func (m *MysqlService) GetRecommendSixList() ([]*models.List, error) {
 	var lists []*models.List
+	rows, err := m.Db.Query("SELECT l.`listID` , l.`listName` ,l.`listImg` ,l.`listClickCount` " +
+		"FROM `whatlist`.`recommendlist` r " +
+		"LEFT JOIN `whatlist`.`list` l ON r.`listID` = l.`listID` " +
+		"WHERE r.`isRecommending` = 1 LIMIT 6;")
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		list := new(models.List)
+		err = rows.Scan(&list.ListID, &list.ListName, &list.ListImg, &list.ListClickCount)
+		if err != nil {
+			return nil, err
+		}
+		lists = append(lists, list)
+	}
 	return lists, nil
 }

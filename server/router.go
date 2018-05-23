@@ -19,5 +19,6 @@ func LoadRouter(router *gin.Engine) {
 	router.GET("/bookdetail", GetBookDetail)
 
 	router.GET("/latestlists", LatestLists)
+	router.GET("/recommendlists", RecommendLists)
 	router.GET("/listdetail", ListDetail)
 }
