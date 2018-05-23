@@ -125,7 +125,7 @@ func (m *MysqlService) GetBigManRecommendLists() ([]*models.BigManRecommendList,
 }
 
 // 获得每日推荐书单
-func (m *MysqlService) GetEveryDayRecommendLists(index uint64) (*models.EveryDayRecommend, error) {
+func (m *MysqlService) GetEveryDayRecommendList(index uint64) (*models.EveryDayRecommend, error) {
 	row := m.Db.QueryRow("SELECT e.`id` ,e.`recommendTime`,e.`imgUrl` ,e.`listID` , l.`listName` , l.`listBriefIntro` " +
 		"FROM `whatlist`.`everydayrecommend` e " +
 		"LEFT JOIN `whatlist`.`list` l ON e.`listID` = e.`listID` " +
