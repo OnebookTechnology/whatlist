@@ -76,3 +76,22 @@ func ListDetail(c *gin.Context) {
 	sendJsonResponse(c, OK, "%s", rs)
 	return
 }
+
+func BigManRecommend(c *gin.Context) {
+	lists, err := server.DB.GetBigManRecommendLists()
+	if err != nil {
+		sendJsonResponse(c, Err, "GetBigManRecommendLists error in BigManRecommend api. error: %s", err.Error())
+		return
+	}
+	rs, err := jsoniter.MarshalToString(lists)
+	if err != nil {
+		sendJsonResponse(c, Err, "MarshToString error in BigManRecommend api. error: %s", err.Error())
+		return
+	}
+	sendJsonResponse(c, OK, "%s", rs)
+	return
+}
+
+func EveryDayRecommend(c *gin.Context) {
+
+}

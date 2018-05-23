@@ -18,8 +18,17 @@ func LoadRouter(router *gin.Engine) {
 	router.GET("/gettagsnum", GetAllTagsNumber)
 	router.GET("/bookdetail", GetBookDetail)
 
+	// 最新书单路由
 	router.GET("/latestlists", LatestLists)
+	// 最热书单路由
 	router.GET("/heatlists", HeatLists)
+	// 推荐书单路由
 	router.GET("/recommendlists", RecommendLists)
+	// 书单详细信息路由
 	router.GET("/listdetail", ListDetail)
+
+	// 大咖推荐路由
+	router.GET("/bigmanrecommend", BigManRecommend)
+	// 每日书单路由
+	router.GET("/everydayrecommend", EveryDayRecommend)
 }

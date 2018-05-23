@@ -44,7 +44,7 @@ func (m *MysqlService) GetListDetail(listID uint64) (*models.List, error) {
 // 获得最新的六个书单
 func (m *MysqlService) GetLatestSixLists() ([]*models.List, error) {
 	var lists []*models.List
-	rows, err := m.Db.Query("SELECT l.`listID` ,l.`listName` ,l.`listImg`, l.`listClickCount`" +
+	rows, err := m.Db.Query("SELECT l.`listID` ,l.`listName` ,l.`listImg`, l.`listClickCount`, l.`listBriefIntro` " +
 		" FROM `whatlist`.`list` l" +
 		" ORDER BY l.`listCreateTime` DESC" +
 		" LIMIT 6")
@@ -53,7 +53,7 @@ func (m *MysqlService) GetLatestSixLists() ([]*models.List, error) {
 	}
 	for rows.Next() {
 		list := new(models.List)
-		err = rows.Scan(&list.ListID, &list.ListName, &list.ListImg, &list.ListClickCount)
+		err = rows.Scan(&list.ListID, &list.ListName, &list.ListImg, &list.ListClickCount, &list.ListBriefIntro)
 		if err != nil {
 			return nil, err
 		}
@@ -65,7 +65,7 @@ func (m *MysqlService) GetLatestSixLists() ([]*models.List, error) {
 // 获得推荐的六个书单
 func (m *MysqlService) GetRecommendSixLists() ([]*models.List, error) {
 	var lists []*models.List
-	rows, err := m.Db.Query("SELECT l.`listID` , l.`listName` ,l.`listImg` ,l.`listClickCount` " +
+	rows, err := m.Db.Query("SELECT l.`listID` , l.`listName` ,l.`listImg` ,l.`listClickCount`, l.`listBriefIntro`  " +
 		"FROM `whatlist`.`recommendlist` r " +
 		"LEFT JOIN `whatlist`.`list` l ON r.`listID` = l.`listID` " +
 		"WHERE r.`isRecommending` = 1 LIMIT 6;")
@@ -74,7 +74,7 @@ func (m *MysqlService) GetRecommendSixLists() ([]*models.List, error) {
 	}
 	for rows.Next() {
 		list := new(models.List)
-		err = rows.Scan(&list.ListID, &list.ListName, &list.ListImg, &list.ListClickCount)
+		err = rows.Scan(&list.ListID, &list.ListName, &list.ListImg, &list.ListClickCount, &list.ListBriefIntro)
 		if err != nil {
 			return nil, err
 		}
@@ -86,7 +86,7 @@ func (m *MysqlService) GetRecommendSixLists() ([]*models.List, error) {
 // 获得最热的六个书单
 func (m *MysqlService) GetHeatSixLists() ([]*models.List, error) {
 	var lists []*models.List
-	rows, err := m.Db.Query("SELECT l.`listID` ,l.`listName` ,l.`listImg`, l.`listClickCount`" +
+	rows, err := m.Db.Query("SELECT l.`listID` ,l.`listName` ,l.`listImg`, l.`listClickCount`, l.`listBriefIntro` " +
 		" FROM `whatlist`.`list` l" +
 		" ORDER BY l.`listClickCount` DESC" +
 		" LIMIT 6")
@@ -95,7 +95,27 @@ func (m *MysqlService) GetHeatSixLists() ([]*models.List, error) {
 	}
 	for rows.Next() {
 		list := new(models.List)
-		err = rows.Scan(&list.ListID, &list.ListName, &list.ListImg, &list.ListClickCount)
+		err = rows.Scan(&list.ListID, &list.ListName, &list.ListImg, &list.ListClickCount, &list.ListBriefIntro)
+		if err != nil {
+			return nil, err
+		}
+		lists = append(lists, list)
+	}
+	return lists, nil
+}
+
+// 获得大咖推荐书单
+func (m *MysqlService) GetBigManRecommendLists() ([]*models.BigManRecommendList, error) {
+	var lists []*models.BigManRecommendList
+	rows, err := m.Db.Query("SELECT b.`id` ,b.`imgUrl` " +
+		"FROM `whatlist`.`bigmanrecommend` b " +
+		"WHERE b.`isRecommending` = 1")
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		list := new(models.BigManRecommendList)
+		err = rows.Scan(&list.ID, &list.ImgUrl)
 		if err != nil {
 			return nil, err
 		}
