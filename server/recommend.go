@@ -1,10 +1,10 @@
 package server
 
 import (
+	"fmt"
 	"github.com/OnebookTechnology/whatlist/server/models"
 	"sort"
 	"sync"
-	"fmt"
 )
 
 var UserMap sync.Map // map[string]*model.User
@@ -45,10 +45,10 @@ func doRecommend(user *models.User) {
 			fmt.Println("tag id:", tagId)
 			fmt.Println("user hobby:", user.Hobby)
 			if sliceIntContains(user.Hobby, tagId) {
-				fmt.Println("suit list:",bookList)
+				fmt.Println("suit list:", bookList)
 				mySuitList.List = append(mySuitList.List, bookList...)
 			} else {
-				fmt.Println("unsuit list:",bookList)
+				fmt.Println("unsuit list:", bookList)
 				myUnSuitList.List = append(myUnSuitList.List, bookList...)
 			}
 

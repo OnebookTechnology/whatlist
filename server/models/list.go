@@ -7,7 +7,7 @@ type List struct {
 	ListCategoryID   uint64  `json:"list_category_id,omitempty"`    // 书单分类ID
 	ListCategoryName string  `json:"list_category_name,omitempty"`  // 书单分类名称
 	ListIntro        string  `json:"list_intro,omitempty"`          // 书单简介
-	ListBriefIntro   string  `json:"list_brief_intro,omitempty"`              // 书单一句话简介
+	ListBriefIntro   string  `json:"list_brief_intro,omitempty"`    // 书单一句话简介
 	ListImg          string  `json:"list_img,omitempty"`            // 书单图片
 	ListCreateTime   string  `json:"list_create_time,omitempty"`    // 书单创建时间
 	ListLastEditTime string  `json:"list_last_edit_time,omitempty"` // 书单最后编辑时间
