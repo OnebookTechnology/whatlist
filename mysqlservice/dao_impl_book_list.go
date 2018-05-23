@@ -2,7 +2,6 @@ package mysql
 
 import (
 	"github.com/OnebookTechnology/whatlist/server/models"
-	"database/sql"
 )
 
 // 根据书单ID,获得指定书单的内容
