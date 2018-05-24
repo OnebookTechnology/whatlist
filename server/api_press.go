@@ -1,10 +1,10 @@
 package server
 
 import (
+	"database/sql"
 	"github.com/gin-gonic/gin"
 	"github.com/json-iterator/go"
 	"strconv"
-	"database/sql"
 )
 
 func GetPresses(c *gin.Context) {
