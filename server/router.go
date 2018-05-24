@@ -38,4 +38,9 @@ func LoadRouter(router *gin.Engine) {
 	router.GET("/everydayrecommend", EveryDayRecommend)
 	// 轮播图
 	router.GET("/carousel", Carousel)
+
+	// 发现
+	router.GET("/discover/get", GetDiscoverDetail)
+	router.POST("/discover/like/add", AddLikeNum)
+
 }

@@ -23,11 +23,11 @@ type BookDao interface {
 	FindAllBooks() (map[int][]*models.Book, error)
 	FindBook(isbn uint64) (*models.Book, error)
 	/*
-	task: 查询一本书是否被某用户喜欢
-	auth: cx
-	params: isbn图书唯一标识， userID用户唯一标识
-	return: 返回记录唯一标识，0则为未找到结果
-	 */
+		task: 查询一本书是否被某用户喜欢
+		auth: cx
+		params: isbn图书唯一标识， userID用户唯一标识
+		return: 返回记录唯一标识，0则为未找到结果
+	*/
 	IsBookInterested(isbn uint64, userID string) (uint64, error)
 	//FindAllBooksByCatalogAndPriceOrderByOnlineTime(catalog, lo, hi, pageNum, pageItems int) ([]*models.BookDisplay, error)
 	//FindAllBooksByCatalogAndPriceOrderBySales(catalog, lo, hi, pageNum, pageItems int) ([]*models.BookDisplay, error)
