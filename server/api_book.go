@@ -35,9 +35,9 @@ func GetBookDetail(ctx *gin.Context) {
 func AddInterestedBook(ctx *gin.Context) {
 	crossDomain(ctx)
 	isbnStr := ctx.Query("isbn")
-	userID := ctx.Query("userID")
+	userID := ctx.Query("user_id")
 	if isbnStr == "" || userID == "" {
-		sendJsonResponse(ctx, Err, "%s", "Empty params userID or isbn")
+		sendJsonResponse(ctx, Err, "%s", "Empty params user_id or isbn")
 	}
 	isbn, err := strconv.ParseUint(isbnStr, 10, 64)
 	if err != nil {
@@ -59,9 +59,9 @@ func AddInterestedBook(ctx *gin.Context) {
 func DeleteInterestedBook(ctx *gin.Context) {
 	crossDomain(ctx)
 	isbnStr := ctx.Query("isbn")
-	userID := ctx.Query("userID")
+	userID := ctx.Query("user_id")
 	if isbnStr == "" || userID == "" {
-		sendJsonResponse(ctx, Err, "%s", "Empty params userID or isbn")
+		sendJsonResponse(ctx, Err, "%s", "Empty params user_id or isbn")
 	}
 	isbn, err := strconv.ParseUint(isbnStr, 10, 64)
 	if err != nil {
@@ -75,16 +75,16 @@ func DeleteInterestedBook(ctx *gin.Context) {
 			err.Error())
 		return
 	}
-	sendJsonResponse(ctx, OK, "%s", "add interested book success")
+	sendJsonResponse(ctx, OK, "%s", "delete interested book success")
 	return
 }
 
 // 列出喜爱图书
 func InterestedBooks(ctx *gin.Context) {
 	crossDomain(ctx)
-	userID := ctx.Query("userID")
+	userID := ctx.Query("user_id")
 	if userID == "" {
-		sendJsonResponse(ctx, Err, "%s", "Empty params userID.")
+		sendJsonResponse(ctx, Err, "%s", "Empty params user_id.")
 		return
 	}
 	books, err := server.DB.GetInterestedBooksByUserID(userID)
