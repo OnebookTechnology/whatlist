@@ -155,7 +155,7 @@ params: userID 用户唯一表示符。
 */
 func (m *MysqlService) GetInterestedBooksByUserID(userID string) ([]*models.Book, error) {
 	var books []*models.Book
-	rows, err := m.Db.Query("SELECT b.`book_name` , b.`book_icon` "+
+	rows, err := m.Db.Query("SELECT b.`book_name` , b.`book_icon`, b.`isbn` "+
 		"FROM `whatlist`.`userlike` ul "+
 		"LEFT JOIN `whatlist`.`book` b ON b.`ISBN` = ul.`ISBN` "+
 		"WHERE ul.`user_id`  = ?", userID)
@@ -164,7 +164,7 @@ func (m *MysqlService) GetInterestedBooksByUserID(userID string) ([]*models.Book
 	}
 	for rows.Next() {
 		b := new(models.Book)
-		err = rows.Scan(&b.BookName, &b.BookIcon)
+		err = rows.Scan(&b.BookName, &b.BookIcon, &b.ISBN)
 		if err != nil {
 			return nil, err
 		}
