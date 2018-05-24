@@ -24,6 +24,7 @@ func LatestLists(c *gin.Context) {
 	sendJsonResponse(c, OK, "%s", rs)
 	return
 }
+
 // 获取最热书单API
 func HeatLists(c *gin.Context) {
 	lists, err := server.DB.GetHeatSixLists()
@@ -39,6 +40,7 @@ func HeatLists(c *gin.Context) {
 	sendJsonResponse(c, OK, "%s", rs)
 	return
 }
+
 // 获取推荐书单API
 func RecommendLists(c *gin.Context) {
 	index_str := c.Query("index")
@@ -56,6 +58,7 @@ func RecommendLists(c *gin.Context) {
 	sendJsonResponse(c, OK, "%s", rs)
 	return
 }
+
 // 获取指定书单详细信息API
 func ListDetail(c *gin.Context) {
 	str_listID := c.Query("listID")
@@ -78,6 +81,7 @@ func ListDetail(c *gin.Context) {
 	sendJsonResponse(c, OK, "%s", rs)
 	return
 }
+
 // 获取大咖推荐
 func BigManRecommend(c *gin.Context) {
 	lists, err := server.DB.GetBigManRecommendLists()
@@ -93,6 +97,7 @@ func BigManRecommend(c *gin.Context) {
 	sendJsonResponse(c, OK, "%s", rs)
 	return
 }
+
 // 获取每日推荐
 func EveryDayRecommend(c *gin.Context) {
 	index_str := c.Query("index")
@@ -121,6 +126,7 @@ func EveryDayRecommend(c *gin.Context) {
 	sendJsonResponse(c, OK, "%s", rs)
 	return
 }
+
 // 获取轮播图
 func Carousel(c *gin.Context) {
 	carousels, err := server.DB.GetCarousel()
