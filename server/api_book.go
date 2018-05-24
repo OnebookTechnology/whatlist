@@ -20,7 +20,7 @@ func GetBookDetail(ctx *gin.Context) {
 		sendJsonResponse(ctx, Err, "%s", "Empty params user_id")
 		return
 	}
- 	if err != nil {
+	if err != nil {
 		sendJsonResponse(ctx, Err, "GetBookDetail isbn is invalid. isbn:%s ", isbnStr)
 		return
 	}
@@ -69,7 +69,7 @@ func AddInterestedBook(ctx *gin.Context) {
 		flag = 0
 	}
 	if err != nil && err != sql.ErrNoRows {
-		sendJsonResponse(ctx, Err,  "IsBookInterested error in AddInterestedBook api. " +
+		sendJsonResponse(ctx, Err, "IsBookInterested error in AddInterestedBook api. "+
 			"Error: %s", err.Error())
 		return
 	}

@@ -163,13 +163,13 @@ func (m *MysqlService) GetCarousel() ([]*models.Carousel, error) {
 task：添加书单浏览量
 author：陈曦
 params：listID书单唯一标识符
- */
-func (m *MysqlService) AddListClickCount(listID uint64)(error) {
+*/
+func (m *MysqlService) AddListClickCount(listID uint64) error {
 	tx, err := m.Db.Begin()
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec("UPDATE `whatlist`.`list` l SET l.`listClickCount`  = l.`listClickCount`  + 1 " +
+	_, err = tx.Exec("UPDATE `whatlist`.`list` l SET l.`listClickCount`  = l.`listClickCount`  + 1 "+
 		"WHERE l.`listID` = ?", listID)
 	if err != nil {
 		rollBackErr := tx.Rollback()
