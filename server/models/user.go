@@ -11,6 +11,7 @@ type User struct {
 	Language            string  `json:"language"`
 	RegisterRank        int64   `json:"register_rank"`
 	Hobby               []int   `json:"hobby"`             //喜好id
+	InterestedBooks     []*Book `json:"interested_books"`   // 喜好图书
 	Field1              int     `json:"field_1,omitempty"` //年龄id
 	Field2              int     `json:"field_2,omitempty"` //性别
 	Field3              int     `json:"field_3,omitempty"` //婚姻状况id
