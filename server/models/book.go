@@ -35,16 +35,16 @@ type Book struct {
 	// 二级分类
 	SecondClassification uint16 `json:"second_classification,omitempty"`
 	// 书的总分
-	TotalScore uint32 `json:"total_score"`
+	TotalScore uint32 `json:"total_score,omitempty"`
 	// 书的评论次数
-	CommentTimes uint32 `json:"comment_times"`
+	CommentTimes uint32 `json:"comment_times,omitempty"`
 
-	BookIcon   string  `json:"book_icon"`
-	BookPic    string  `json:"book_pic"`
-	BookDetail string  `json:"book_detail"`
-	Discount   float64 `json:"discount,omitempty"`
-	RealPrice  float64 `json:"real_price,omitempty"`
-	Category   int     `json:"category"`
+	BookIcon   string  `json:"book_icon,omitempty"`
+	BookPic    string  `json:"book_pic,omitempty"`
+	BookDetail string  `json:"book_detail,omitempty"`
+	Discount   float64 `json:"discount,omitempty,omitempty"`
+	RealPrice  float64 `json:"real_price,omitempty,omitempty"`
+	Category   int     `json:"category,omitempty"`
 	Field1     []int   `json:"field_1,omitempty"` //年龄id范围
 	Field2     int     `json:"field_2,omitempty"` //性别
 	Field3     []int   `json:"field_3,omitempty"` //婚姻状况id

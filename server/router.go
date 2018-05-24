@@ -19,9 +19,9 @@ func LoadRouter(router *gin.Engine) {
 	router.GET("/bookdetail", GetBookDetail)
 
 	// 添加喜欢图书
-	router.GET("/addinterestedBook", AddInterestedBook)
+	router.GET("/addinterestedbook", AddInterestedBook)
 	// 删除喜欢图书
-	router.GET("/deleteinterestedBook", DeleteInterestedBook)
+	router.GET("/deleteinterestedbook", DeleteInterestedBook)
 	// 列出喜欢图书
 	router.GET("/interestedbooks", InterestedBooks)
 	// 最新书单路由
