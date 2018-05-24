@@ -110,7 +110,7 @@ return: 返回记录唯一标识，0则为未找到结果
 func (m *MysqlService) IsBookInterested(isbn uint64, userID string) (uint64, error) {
 	var flag uint64 = 0
 	row := m.Db.QueryRow("SELECT ul.`id` FROM `whatlist`.`userlike` ul " +
-		"WHERE ul.`ISBN` = ? AND ul.`user_id` = ? LIMIT 1")
+		"WHERE ul.`ISBN` = ? AND ul.`user_id` = ? LIMIT 1", isbn, userID)
 	err := row.Scan(&flag)
 	if err != nil {
 		return 0, err
