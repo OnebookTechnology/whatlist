@@ -2,7 +2,6 @@ package mysql
 
 import (
 	"github.com/OnebookTechnology/whatlist/server/models"
-	"github.com/json-iterator/go"
 	"strings"
 )
 
@@ -72,6 +71,75 @@ func (m *MysqlService) AddLikeNum(id int) error {
 	}
 
 	_, err = tx.Exec("UPDATE discover SET like_num=like_num+1 WHERE id = ?", id)
+	if err != nil {
+		return err
+	}
+	err = tx.Commit()
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	return nil
+}
+
+func (m *MysqlService) SubLikeNum(id int) error {
+	tx, err := m.Db.Begin()
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Exec("UPDATE discover SET like_num=like_num-1 WHERE id = ?", id)
+	if err != nil {
+		return err
+	}
+	err = tx.Commit()
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	return nil
+}
+
+// 获得是否已经点赞
+func (m *MysqlService) GetDiscoverDetailIsThumb(discoverId int, userId string) error {
+	row := m.Db.QueryRow("SELECT user_id, discover_id from thumbs_up_record "+
+		" WHERE user_id = ? AND discover_id = ?", userId, discoverId)
+
+	var uid string
+	var did int
+	err := row.Scan(&uid, &did)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *MysqlService) ThumbsUpDiscover(discoverId int, userId string) error {
+	tx, err := m.Db.Begin()
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Exec("INSERT INTO thumbs_up_record(user_id,discover_id) values (?,?)", userId, discoverId)
+	if err != nil {
+		return err
+	}
+	err = tx.Commit()
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	return nil
+}
+
+func (m *MysqlService) CancelThumbsUpDiscover(discoverId int, userId string) error {
+	tx, err := m.Db.Begin()
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Exec("DELETE FROM thumbs_up_record "+
+		" WHERE user_id = ? AND discover_id = ?", userId, discoverId)
 	if err != nil {
 		return err
 	}

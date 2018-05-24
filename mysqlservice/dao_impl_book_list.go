@@ -131,8 +131,8 @@ func (m *MysqlService) GetEveryDayRecommendList(index uint64) (*models.EveryDayR
 		"LEFT JOIN `whatlist`.`list` l ON l.`listID` = e.`listID` "+
 		"ORDER BY e.`recommendTime` DESC LIMIT ?,1", index)
 	everyDayRecommend := new(models.EveryDayRecommend)
-	err := row.Scan(&everyDayRecommend.ListID, &everyDayRecommend.RecommendTime, &everyDayRecommend.ImgUrl,
-		&everyDayRecommend.ID, &everyDayRecommend.ListName, &everyDayRecommend.ListBriefIntro)
+	err := row.Scan(&everyDayRecommend.ID, &everyDayRecommend.RecommendTime, &everyDayRecommend.ImgUrl,
+		&everyDayRecommend.ListID, &everyDayRecommend.ListName, &everyDayRecommend.ListBriefIntro)
 	if err != nil {
 		return nil, err
 	}

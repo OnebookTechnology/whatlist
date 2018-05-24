@@ -11,4 +11,5 @@ type Discover struct {
 	ReadNum     int      `json:"read_num"`
 	LikeNum     int      `json:"like_num"`
 	Picture     []string `json:"picture"`
+	IsThumb     bool     `json:"is_thumb,omitempty"`
 }
