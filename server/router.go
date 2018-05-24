@@ -18,6 +18,11 @@ func LoadRouter(router *gin.Engine) {
 	router.GET("/gettagsnum", GetAllTagsNumber)
 	router.GET("/bookdetail", GetBookDetail)
 
+	// 获得所有出版社
+	router.GET("/presses", GetPresses)
+	// 获得出版社推荐书单
+	router.GET("/pressrecommendlists", GetPressRecommendLists)
+
 	// 添加喜欢图书
 	router.GET("/addinterestedbook", AddInterestedBook)
 	// 删除喜欢图书

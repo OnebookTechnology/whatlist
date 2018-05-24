@@ -7,4 +7,5 @@ type ServerDB interface {
 	dao.UserDao
 	dao.BookDao
 	dao.BookListDao
+	dao.PressDao
 }
