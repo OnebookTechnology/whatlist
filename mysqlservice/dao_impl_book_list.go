@@ -158,3 +158,16 @@ func (m *MysqlService) GetCarousel() ([]*models.Carousel, error) {
 	}
 	return carousels, nil
 }
+
+/*
+task：添加书单浏览量
+author：陈曦
+params：listID书单唯一标识符
+ */
+func (m *MysqlService) AddListClickCount(listID uint64)(error) {
+	tx, err := m.Db.Begin()
+	if err != nil {
+		return err
+	}
+
+}

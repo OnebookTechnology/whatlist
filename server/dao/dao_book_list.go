@@ -17,4 +17,10 @@ type BookListDao interface {
 	GetEveryDayRecommendList(index uint64) (*models.EveryDayRecommend, error)
 	// 获得轮播图
 	GetCarousel() ([]*models.Carousel, error)
+	/*
+	task：添加书单浏览量
+	author：陈曦
+	params：listID书单唯一标识符
+	 */
+	AddListClickCount(listID uint64)(error)
 }
