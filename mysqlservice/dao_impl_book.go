@@ -100,3 +100,20 @@ func (m *MysqlService) AddBook(book *models.Book) error {
 	}
 	return nil
 }
+
+/*
+task: 查询一本书是否被某用户喜欢
+auth: cx
+params: isbn图书唯一标识， userID用户唯一标识
+return: 返回记录唯一标识，0则为未找到结果
+ */
+func (m *MysqlService) IsBookInterested(isbn uint64, userID string) (uint64, error) {
+	var flag uint64 = 0
+	row := m.Db.QueryRow("SELECT ul.`id` FROM `whatlist`.`userlike` ul " +
+		"WHERE ul.`ISBN` = ? AND ul.`user_id` = ? LIMIT 1")
+	err := row.Scan(&flag)
+	if err != nil {
+		return 0, err
+	}
+	return flag, nil
+}

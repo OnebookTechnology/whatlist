@@ -15,15 +15,33 @@ func GetBookDetail(ctx *gin.Context) {
 	crossDomain(ctx)
 	isbnStr := ctx.Query("isbn")
 	isbn, err := strconv.ParseUint(isbnStr, 10, 64)
-	if err != nil {
+	userID := ctx.Query("user_id")
+	if userID == "" {
+		sendJsonResponse(ctx, Err, "%s", "Empty params user_id")
+		return
+	}
+ 	if err != nil {
 		sendJsonResponse(ctx, Err, "GetBookDetail isbn is invalid. isbn:%s ", isbnStr)
 		return
 	}
 
 	book, err := server.DB.FindBook(isbn)
 	if err != nil {
-		sendJsonResponse(ctx, Err, "db error when FindBook. err: %s", err.Error())
+		sendJsonResponse(ctx, Err, "DB error when FindBook. err: %s", err.Error())
 		return
+	}
+
+	flag, err := server.DB.IsBookInterested(book.ISBN, userID)
+	if err == sql.ErrNoRows {
+		flag = 0
+	}
+	if err != nil && err != sql.ErrNoRows {
+		sendJsonResponse(ctx, Err, "DB error when IsBookInterested. Error: %s", err.Error())
+		return
+	}
+	// 如果flag>0,表示用户喜欢了这本书
+	if flag > 0 {
+		book.IsInterested = true
 	}
 
 	resp, _ := jsoniter.MarshalToString(book)
@@ -45,6 +63,23 @@ func AddInterestedBook(ctx *gin.Context) {
 			"Error: %s, isbn: %s", err.Error(), isbnStr)
 		return
 	}
+
+	flag, err := server.DB.IsBookInterested(isbn, userID)
+	if err == sql.ErrNoRows {
+		flag = 0
+	}
+	if err != nil && err != sql.ErrNoRows {
+		sendJsonResponse(ctx, Err,  "IsBookInterested error in AddInterestedBook api. " +
+			"Error: %s", err.Error())
+		return
+	}
+
+	// 如果flag>0，表示已经添加过喜欢了
+	if flag > 0 {
+		sendJsonResponse(ctx, Err, "Already added this book")
+		return
+	}
+
 	err = server.DB.AddInterestedBook(userID, isbn)
 	if err != nil {
 		sendJsonResponse(ctx, Err, "AddInterestedBook error in AddInterestedBook api. Error: %s",
@@ -62,6 +97,7 @@ func DeleteInterestedBook(ctx *gin.Context) {
 	userID := ctx.Query("user_id")
 	if isbnStr == "" || userID == "" {
 		sendJsonResponse(ctx, Err, "%s", "Empty params user_id or isbn")
+		return
 	}
 	isbn, err := strconv.ParseUint(isbnStr, 10, 64)
 	if err != nil {
