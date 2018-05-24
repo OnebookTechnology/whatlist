@@ -73,6 +73,10 @@ func ListDetail(c *gin.Context) {
 		sendJsonResponse(c, Err, "GetList error in GetListDetail api. error: %s", err.Error())
 		return
 	}
+	err = server.DB.AddListClickCount(listID)
+	if err != nil {
+		logger.Error("click count add failed in listID:", listID)
+	}
 	rs, err := jsoniter.MarshalToString(list)
 	if err != nil {
 		sendJsonResponse(c, Err, "MarshToString error in GetListDetail api. error: %s", err.Error())

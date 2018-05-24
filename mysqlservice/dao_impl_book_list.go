@@ -169,5 +169,18 @@ func (m *MysqlService) AddListClickCount(listID uint64)(error) {
 	if err != nil {
 		return err
 	}
-
+	_, err = tx.Exec("UPDATE `whatlist`.`list` l SET l.`listClickCount`  = l.`listClickCount`  + 1 " +
+		"WHERE l.`listID` = ?", listID)
+	if err != nil {
+		rollBackErr := tx.Rollback()
+		if rollBackErr != nil {
+			return rollBackErr
+		}
+		return err
+	}
+	err = tx.Commit()
+	if err != nil {
+		return err
+	}
+	return nil
 }
