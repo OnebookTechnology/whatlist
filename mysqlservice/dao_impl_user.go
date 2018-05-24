@@ -99,14 +99,14 @@ task: 添加一本喜爱的图书
 author: cx
 params: userID 用户唯一标识符，isbn 图书唯一标识符
 return: error 如果没有错误返回nil
- */
+*/
 func (m *MysqlService) AddInterestedBook(userID string, isbn uint64) error {
 	tx, err := m.Db.Begin()
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec("INSERT INTO " +
-		"`whatlist`.`userlike`(`user_id` ,`ISBN` ) " +
+	_, err = tx.Exec("INSERT INTO "+
+		"`whatlist`.`userlike`(`user_id` ,`ISBN` ) "+
 		"VALUES(?,?)", userID, isbn)
 	if err != nil {
 		return err
@@ -126,7 +126,7 @@ func (m *MysqlService) AddInterestedBook(userID string, isbn uint64) error {
 task: 删除一本喜爱的图书
 author: cx
 params: userID 用户唯一标识符，isbn 图书唯一标识符
- */
+*/
 func (m *MysqlService) DeleteInterestedBook(userID string, isbn uint64) error {
 	tx, err := m.Db.Begin()
 	if err != nil {
@@ -152,12 +152,12 @@ func (m *MysqlService) DeleteInterestedBook(userID string, isbn uint64) error {
 task: 查询指定用户的所有喜爱图书
 author: cx
 params: userID 用户唯一表示符。
- */
-func (m *MysqlService) GetInterestedBooksByUserID(userID string) ([]*models.Book ,error) {
+*/
+func (m *MysqlService) GetInterestedBooksByUserID(userID string) ([]*models.Book, error) {
 	var books []*models.Book
-	rows, err := m.Db.Query("SELECT b.`book_name` , b.`book_icon` " +
-		"FROM `whatlist`.`userlike` ul " +
-		"LEFT JOIN `whatlist`.`book` b ON b.`ISBN` = ul.`ISBN` " +
+	rows, err := m.Db.Query("SELECT b.`book_name` , b.`book_icon` "+
+		"FROM `whatlist`.`userlike` ul "+
+		"LEFT JOIN `whatlist`.`book` b ON b.`ISBN` = ul.`ISBN` "+
 		"WHERE ul.`user_id`  = ?", userID)
 	if err != nil {
 		return nil, err

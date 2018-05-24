@@ -1,10 +1,10 @@
 package server
 
 import (
+	"database/sql"
 	"github.com/gin-gonic/gin"
 	"github.com/json-iterator/go"
 	"strconv"
-	"database/sql"
 )
 
 func AddBook(c *gin.Context) {
@@ -41,7 +41,7 @@ func AddInterestedBook(ctx *gin.Context) {
 	}
 	isbn, err := strconv.ParseUint(isbnStr, 10, 64)
 	if err != nil {
-		sendJsonResponse(ctx, Err, "Can not convert isbn to uint in AddInterestedBook api. " +
+		sendJsonResponse(ctx, Err, "Can not convert isbn to uint in AddInterestedBook api. "+
 			"Error: %s, isbn: %s", err.Error(), isbnStr)
 		return
 	}
@@ -65,7 +65,7 @@ func DeleteInterestedBook(ctx *gin.Context) {
 	}
 	isbn, err := strconv.ParseUint(isbnStr, 10, 64)
 	if err != nil {
-		sendJsonResponse(ctx, Err, "Can not convert isbn to uint in AddInterestedBook api. " +
+		sendJsonResponse(ctx, Err, "Can not convert isbn to uint in AddInterestedBook api. "+
 			"Error: %s, isbn: %s", err.Error(), isbnStr)
 		return
 	}
@@ -78,7 +78,6 @@ func DeleteInterestedBook(ctx *gin.Context) {
 	sendJsonResponse(ctx, OK, "%s", "add interested book success")
 	return
 }
-
 
 // 列出喜爱图书
 func InterestedBooks(ctx *gin.Context) {
@@ -94,7 +93,7 @@ func InterestedBooks(ctx *gin.Context) {
 		return
 	}
 	if err != nil {
-		sendJsonResponse(ctx, Err, "GetInterestedBooksByUserID error in InterestedBooks api." +
+		sendJsonResponse(ctx, Err, "GetInterestedBooksByUserID error in InterestedBooks api."+
 			"Error: %s", err.Error())
 		return
 	}
