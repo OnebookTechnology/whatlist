@@ -80,11 +80,12 @@ func (m *MysqlService) FindBook(isbn uint64) (*models.Book, error) {
 	return book, nil
 }
 
-func (m *MysqlService) FindBookByCateGory(categoryId int) ([]*models.Book, error) {
+func (m *MysqlService) FindBookByCateGory(categoryId, pageNum, pageCount int) ([]*models.Book, error) {
 	var list []*models.Book
 	rows, err := m.Db.Query("SELECT ISBN,book_name,author_name,press,publication_time,print_time,format,paper,pack,"+
 		"suit,edition,table_of_content,book_brief_intro,author_intro,content_intro,editor_recommend,first_classification,"+
-		"second_classification,total_score,comment_times,book_icon,book_pic,book_detail,category from book where category=?", categoryId)
+		"second_classification,total_score,comment_times,book_icon,book_pic,book_detail,category from book where category=? "+
+		"LIMIT ?,?", categoryId, pageNum-1, pageCount)
 	if err != nil {
 		return nil, err
 	}

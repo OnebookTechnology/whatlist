@@ -124,7 +124,20 @@ func CategoryBooks(ctx *gin.Context) {
 		sendJsonResponse(ctx, Err, "%s", "invalid params category_id.")
 		return
 	}
-	books, err := server.DB.FindBookByCateGory(categoryId)
+	pageNumStr := ctx.Query("page_num")
+	pageNum, err := strconv.Atoi(pageNumStr)
+	if err != nil {
+		sendJsonResponse(ctx, Err, "%s", "invalid params page_num.")
+		return
+	}
+	pageCountStr := ctx.Query("page_count")
+	pageCount, err := strconv.Atoi(pageCountStr)
+	if err != nil {
+		sendJsonResponse(ctx, Err, "%s", "invalid params page_count.")
+		return
+	}
+
+	books, err := server.DB.FindBookByCateGory(categoryId, pageNum, pageCount)
 	if err != nil {
 		sendJsonResponse(ctx, Err, "db error when FindBookByCateGory."+
 			"Error: %s", err.Error())
