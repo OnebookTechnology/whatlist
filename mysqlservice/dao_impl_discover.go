@@ -38,7 +38,7 @@ func (m *MysqlService) GetDiscoverList(pageNum, pageCount int) ([]*models.Discov
 func (m *MysqlService) GetDiscoverDetail(id int) (*models.Discover, error) {
 	row := m.Db.QueryRow("SELECT u.`nick_name`,u.avatar_url ,d.discover_id, d.`title` ,d.`subtitle`,d.content, d.`picture`,d.`publish_time` ,d.`read_num` ,d.`like_num` "+
 		" FROM `discover` d LEFT JOIN `user` u ON d.`user_id` = u.`user_id` "+
-		" WHERE d.id = ?", id)
+		" WHERE d.discover_id = ?", id)
 
 	d := new(models.Discover)
 	var picStr string
