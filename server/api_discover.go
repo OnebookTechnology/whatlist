@@ -109,7 +109,8 @@ func GetDiscoverList(ctx *gin.Context) {
 		sendJsonResponse(ctx, Err, "invalid page_count: %s", pageCountStr)
 		return
 	}
-	list, err := server.DB.GetDiscoverList(pageNum, pageCount)
+	uid := ctx.Query("user_id")
+	list, err := server.DB.GetDiscoverList(uid, pageNum, pageCount)
 	if err != nil {
 		sendJsonResponse(ctx, Err, "db error when GetDiscoverList: %s", err.Error())
 		return

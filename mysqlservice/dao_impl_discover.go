@@ -1,12 +1,13 @@
 package mysql
 
 import (
+	"database/sql"
 	"github.com/OnebookTechnology/whatlist/server/models"
 	"strings"
 )
 
 // 获得发现内容
-func (m *MysqlService) GetDiscoverList(pageNum, pageCount int) ([]*models.Discover, error) {
+func (m *MysqlService) GetDiscoverList(userId string, pageNum, pageCount int) ([]*models.Discover, error) {
 	var discovers []*models.Discover
 	rows, err := m.Db.Query("SELECT u.`nick_name`,u.avatar_url ,d.discover_id, d.`title` ,d.`subtitle` ,d.`picture`,d.`publish_time` ,d.`read_num` ,d.`like_num` "+
 		" FROM `discover` d LEFT JOIN `user` u ON d.`user_id` = u.`user_id` "+
@@ -29,6 +30,15 @@ func (m *MysqlService) GetDiscoverList(pageNum, pageCount int) ([]*models.Discov
 			}
 		}
 
+		err = m.GetDiscoverDetailIsThumb(d.DiscoverId, userId)
+		if err != nil && err != sql.ErrNoRows {
+			return nil, err
+		}
+		if err == sql.ErrNoRows {
+			d.IsThumb = false
+		} else {
+			d.IsThumb = true
+		}
 		discovers = append(discovers, d)
 	}
 	return discovers, nil
