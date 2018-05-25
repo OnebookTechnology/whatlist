@@ -10,7 +10,7 @@ func (m *MysqlService) GetDiscoverList(pageNum, pageCount int) ([]*models.Discov
 	var discovers []*models.Discover
 	rows, err := m.Db.Query("SELECT u.`nick_name`,u.avatar_url ,d.id, d.`title` ,d.`subtitle` ,d.`picture`,d.`publish_time` ,d.`read_num` ,d.`like_num` "+
 		" FROM `discover` d LEFT JOIN `user` u ON d.`user_id` = u.`user_id` "+
-		" LIMIT ?,?", pageNum-1, (pageNum-1)*5)
+		" LIMIT ?,?", pageNum-1, (pageNum-1)*pageCount)
 	if err != nil {
 		return nil, err
 	}

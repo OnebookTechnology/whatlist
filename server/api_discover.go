@@ -105,12 +105,12 @@ func GetDiscoverList(ctx *gin.Context) {
 	}
 	list, err := server.DB.GetDiscoverList(pageNum, pageCount)
 	if err != nil {
-		sendJsonResponse(ctx, Err, "db error when GetDiscoverList.")
+		sendJsonResponse(ctx, Err, "db error when GetDiscoverList: %s", err.Error())
 		return
 	}
 	res, err := jsoniter.MarshalToString(list)
 	if err != nil {
-		sendJsonResponse(ctx, Err, "MarshalToString err when GetDiscoverList")
+		sendJsonResponse(ctx, Err, "MarshalToString err when GetDiscoverList. err %s", err.Error())
 		return
 	}
 	sendJsonResponse(ctx, OK, "%s", res)
