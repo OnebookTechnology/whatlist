@@ -14,6 +14,7 @@ func (m *MysqlService) FindListRecordByUserId(userId string, pageNum, pageCount 
 	if err != nil {
 		return nil, err
 	}
+	var tempMap = make(map[uint64]string)
 	for rows.Next() {
 		list := new(models.BrowseListRecord)
 		err = rows.Scan(&list.ListID, &list.ListName, &list.ListAuthor, &list.ListCategoryID,
@@ -21,7 +22,13 @@ func (m *MysqlService) FindListRecordByUserId(userId string, pageNum, pageCount 
 		if err != nil {
 			return nil, err
 		}
-		lists = append(lists, list)
+		if tempMap[list.ListID] != "" {
+			continue
+		} else {
+			lists = append(lists, list)
+			tempMap[list.ListID] = userId
+		}
+
 	}
 	return lists, nil
 }
@@ -35,13 +42,19 @@ func (m *MysqlService) FindBookRecordByUserId(userId string, pageNum, pageCount 
 	if err != nil {
 		return nil, err
 	}
+	var tempMap = make(map[uint64]string)
 	for rows.Next() {
 		list := new(models.BrowseBookRecord)
 		err = rows.Scan(&list.ISBN, &list.BookName, &list.AuthorName, &list.Press, &list.PublicationTime, &list.BookIcon, &list.UserId)
 		if err != nil {
 			return nil, err
 		}
-		lists = append(lists, list)
+		if tempMap[list.ISBN] != "" {
+			continue
+		} else {
+			lists = append(lists, list)
+			tempMap[list.ISBN] = userId
+		}
 	}
 	return lists, nil
 }

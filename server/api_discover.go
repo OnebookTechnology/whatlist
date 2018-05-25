@@ -16,16 +16,23 @@ func AddLikeNum(ctx *gin.Context) {
 		sendJsonResponse(ctx, Err, "invalid id: %s", idStr)
 		return
 	}
-	err = server.DB.ThumbsUpDiscover(id, uid)
-	if err != nil {
-		sendJsonResponse(ctx, Err, "db error when ThumbsUpDiscover. did: %s", idStr)
+	err = server.DB.GetDiscoverDetailIsThumb(id, uid)
+	if err != nil && err == sql.ErrNoRows {
+		err = server.DB.ThumbsUpDiscover(id, uid)
+		if err != nil {
+			sendJsonResponse(ctx, Err, "db error when ThumbsUpDiscover. err: %s", err.Error())
+			return
+		}
+		err = server.DB.AddLikeNum(id)
+		if err != nil {
+			sendJsonResponse(ctx, Err, "db error when AddLikeNum. err: %s", err.Error())
+			return
+		}
+	} else if err != nil {
+		sendJsonResponse(ctx, Err, "db error when AddLikeNum. err: %s", err.Error())
 		return
 	}
-	err = server.DB.AddLikeNum(id)
-	if err != nil {
-		sendJsonResponse(ctx, Err, "db error when AddLikeNum. did: %s", idStr)
-		return
-	}
+
 	sendJsonResponse(ctx, OK, "%s", "ok")
 }
 
