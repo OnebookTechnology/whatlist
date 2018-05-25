@@ -62,7 +62,7 @@ func (m *MysqlService) AddReadNum(id int) error {
 		return err
 	}
 
-	_, err = tx.Exec("UPDATE discover SET read_num=read_num+1 WHERE id = ?", id)
+	_, err = tx.Exec("UPDATE discover SET read_num=read_num+1 WHERE discover_id = ?", id)
 	if err != nil {
 		return err
 	}
@@ -80,7 +80,7 @@ func (m *MysqlService) AddLikeNum(id int) error {
 		return err
 	}
 
-	_, err = tx.Exec("UPDATE discover SET like_num=like_num+1 WHERE id = ?", id)
+	_, err = tx.Exec("UPDATE discover SET like_num=like_num+1 WHERE discover_id = ?", id)
 	if err != nil {
 		return err
 	}
@@ -98,7 +98,7 @@ func (m *MysqlService) SubLikeNum(id int) error {
 		return err
 	}
 
-	_, err = tx.Exec("UPDATE discover SET like_num=like_num-1 WHERE id = ?", id)
+	_, err = tx.Exec("UPDATE discover SET like_num=like_num-1 WHERE discover_id = ?", id)
 	if err != nil {
 		return err
 	}

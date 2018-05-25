@@ -62,8 +62,7 @@ func GetDiscoverDetail(ctx *gin.Context) {
 	}
 	err = server.DB.AddReadNum(id)
 	if err != nil {
-		logger.Error("db error when AddReadNum. id:", id)
-		return
+		logger.Error("db error when AddReadNum. err:", err, "id:", id)
 	}
 	detail, err := server.DB.GetDiscoverDetail(id)
 	if err != nil {
