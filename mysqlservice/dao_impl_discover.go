@@ -22,8 +22,13 @@ func (m *MysqlService) GetDiscoverList(pageNum, pageCount int) ([]*models.Discov
 			return nil, err
 		}
 		picStr = picStr[1 : len(picStr)-1]
+		if picStr != "" {
+			d.Picture = strings.Split(picStr, ",")
+			for i := range d.Picture {
+				d.Picture[i] = d.Picture[i][1 : len(picStr)-1]
+			}
+		}
 
-		d.Picture = strings.Split(picStr, ",")
 		discovers = append(discovers, d)
 	}
 	return discovers, nil
