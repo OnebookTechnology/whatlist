@@ -116,6 +116,31 @@ func DeleteInterestedBook(ctx *gin.Context) {
 }
 
 // 列出喜爱图书
+func CategoryBooks(ctx *gin.Context) {
+	crossDomain(ctx)
+	categoryIdStr := ctx.Query("category_id")
+	categoryId, err := strconv.Atoi(categoryIdStr)
+	if err != nil {
+		sendJsonResponse(ctx, Err, "%s", "invalid params category_id.")
+		return
+	}
+	books, err := server.DB.FindBookByCateGory(categoryId)
+	if err != nil {
+		sendJsonResponse(ctx, Err, "db error when FindBookByCateGory."+
+			"Error: %s", err.Error())
+		return
+	}
+	res, err := jsoniter.MarshalToString(books)
+	if err != nil {
+		sendJsonResponse(ctx, Err, "MarshalToString error.Error :%s",
+			err.Error())
+		return
+	}
+	sendJsonResponse(ctx, OK, "%s", res)
+	return
+}
+
+// 列出喜爱图书
 func InterestedBooks(ctx *gin.Context) {
 	crossDomain(ctx)
 	userID := ctx.Query("user_id")

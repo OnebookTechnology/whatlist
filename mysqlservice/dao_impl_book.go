@@ -80,6 +80,27 @@ func (m *MysqlService) FindBook(isbn uint64) (*models.Book, error) {
 	return book, nil
 }
 
+func (m *MysqlService) FindBookByCateGory(categoryId int) ([]*models.Book, error) {
+	var list []*models.Book
+	rows, err := m.Db.Query("SELECT ISBN,book_name,author_name,press,publication_time,print_time,format,paper,pack,"+
+		"suit,edition,table_of_content,book_brief_intro,author_intro,content_intro,editor_recommend,first_classification,"+
+		"second_classification,total_score,comment_times,book_icon,book_pic,book_detail,category from book where category=?", categoryId)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		book := new(models.Book)
+		err := rows.Scan(&book.ISBN, &book.BookName, &book.AuthorName, &book.Press, &book.PublicationTime, &book.PrintTime, &book.Format, &book.Paper, &book.Pack,
+			&book.Suit, &book.Edition, &book.TableOfContent, &book.BookBriefIntro, &book.AuthorIntro, &book.ContentIntro, &book.EditorRecommend, &book.FirstClassification,
+			&book.SecondClassification, &book.TotalScore, &book.CommentTimes, &book.BookIcon, &book.BookPic, &book.BookDetail, &book.Category)
+		if err != nil {
+			return nil, err
+		}
+		list = append(list, book)
+	}
+	return list, nil
+}
+
 func (m *MysqlService) AddBook(book *models.Book) error {
 	tx, err := m.Db.Begin()
 	if err != nil {

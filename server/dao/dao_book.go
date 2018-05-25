@@ -20,6 +20,8 @@ type BookDao interface {
 	//// 按照价格范围检索图书
 	//FindBookByPrice(lo, hi uint64) ([]*models.Book, error)
 	// find all books
+	// 分类书单
+	FindBookByCateGory(categoryId int) ([]*models.Book, error)
 	FindAllBooks() (map[int][]*models.Book, error)
 	FindBook(isbn uint64) (*models.Book, error)
 	/*
