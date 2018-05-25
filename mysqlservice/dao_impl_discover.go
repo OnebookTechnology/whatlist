@@ -8,7 +8,7 @@ import (
 // 获得发现内容
 func (m *MysqlService) GetDiscoverList(pageNum, pageCount int) ([]*models.Discover, error) {
 	var discovers []*models.Discover
-	rows, err := m.Db.Query("SELECT u.`nick_name`,u.avatar_url ,d.id, d.`title` ,d.`subtitle` ,d.`picture`,d.`publish_time` ,d.`read_num` ,d.`like_num` "+
+	rows, err := m.Db.Query("SELECT u.`nick_name`,u.avatar_url ,d.discover_id, d.`title` ,d.`subtitle` ,d.`picture`,d.`publish_time` ,d.`read_num` ,d.`like_num` "+
 		" FROM `discover` d LEFT JOIN `user` u ON d.`user_id` = u.`user_id` "+
 		" LIMIT ?,?", pageNum-1, (pageNum-1)*pageCount)
 	if err != nil {
@@ -31,7 +31,7 @@ func (m *MysqlService) GetDiscoverList(pageNum, pageCount int) ([]*models.Discov
 
 // 获得发现内容
 func (m *MysqlService) GetDiscoverDetail(id int) (*models.Discover, error) {
-	row := m.Db.QueryRow("SELECT u.`nick_name`,u.avatar_url ,d.id, d.`title` ,d.`subtitle`,d.content, d.`picture`,d.`publish_time` ,d.`read_num` ,d.`like_num` "+
+	row := m.Db.QueryRow("SELECT u.`nick_name`,u.avatar_url ,d.discover_id, d.`title` ,d.`subtitle`,d.content, d.`picture`,d.`publish_time` ,d.`read_num` ,d.`like_num` "+
 		" FROM `discover` d LEFT JOIN `user` u ON d.`user_id` = u.`user_id` "+
 		" WHERE d.id = ?", id)
 
