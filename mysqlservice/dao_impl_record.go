@@ -31,7 +31,7 @@ func (m *MysqlService) AddListRecord(userID string, listId uint64) error {
 		return err
 	}
 	_, err = tx.Exec("INSERT INTO `browse_list_record`(`user_id` ,`list_id` ) "+
-		"VALUES(?,?)", userID, isbn)
+		"VALUES(?,?)", userID, listId)
 	if err != nil {
 		return err
 	}
