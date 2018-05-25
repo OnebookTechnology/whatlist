@@ -47,7 +47,12 @@ func (m *MysqlService) GetDiscoverDetail(id int) (*models.Discover, error) {
 		return nil, err
 	}
 	picStr = picStr[1 : len(picStr)-1]
-	d.Picture = strings.Split(picStr, ",")
+	if picStr != "" {
+		d.Picture = strings.Split(picStr, ",")
+		for i := range d.Picture {
+			d.Picture[i] = d.Picture[i][1 : len(d.Picture[i])-1]
+		}
+	}
 	return d, nil
 }
 
