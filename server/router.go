@@ -51,4 +51,7 @@ func LoadRouter(router *gin.Engine) {
 	router.GET("/discover/like/add", AddLikeNum)
 	router.GET("/discover/like/sub", SubLikeNum)
 
+	//最近浏览
+	router.GET("/record/list", GetBrowseListRecord)
+	router.GET("/record/book", GetBrowseBookRecord)
 }

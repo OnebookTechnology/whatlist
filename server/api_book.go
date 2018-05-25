@@ -39,6 +39,11 @@ func GetBookDetail(ctx *gin.Context) {
 		sendJsonResponse(ctx, Err, "DB error when IsBookInterested. Error: %s", err.Error())
 		return
 	}
+	err = server.DB.AddBookRecord(userID, isbn)
+	if err != nil {
+		logger.Error("db error when AddBookRecord. err", err, "userId:", userID, "ISBN:", isbn)
+	}
+
 	// 如果flag>0,表示用户喜欢了这本书
 	if flag > 0 {
 		book.IsInterested = true
