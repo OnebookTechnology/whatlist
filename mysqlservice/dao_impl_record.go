@@ -10,7 +10,7 @@ func (m *MysqlService) FindListRecordByUserId(userId string, pageNum, pageCount 
 		"l.`listIntro` ,l.`listImg`, l.`listCreateTime` ,l.`listLastEditTime` ,l.`listClickCount` "+
 		"FROM `browse_list_record` r LEFT JOIN `list` l on l.`listID` =r.`list_id` "+
 		"WHERE r.`user_id` = ? ORDER BY r.`browse_time` desc "+
-		"LIMIT ?,?", userId, pageNum-1, pageCount)
+		"LIMIT ?,?", userId, (pageNum-1)*pageCount, pageCount)
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +38,7 @@ func (m *MysqlService) FindBookRecordByUserId(userId string, pageNum, pageCount 
 	rows, err := m.Db.Query("SELECT b.`ISBN` , b.`book_name` , b.`author_name` ,b.`press` ,b.`publication_time` ,b.`book_icon`,rr.`user_id` "+
 		"FROM `browse_book_record` rr LEFT JOIN `book` b on rr.`ISBN` = b.`ISBN` WHERE rr.`user_id` = ? "+
 		"ORDER BY rr.`browse_time` DESC "+
-		"LIMIT ?,?", userId, pageNum-1, pageCount)
+		"LIMIT ?,?", userId, (pageNum-1)*pageCount, pageCount)
 	if err != nil {
 		return nil, err
 	}
