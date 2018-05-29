@@ -6,7 +6,8 @@ import (
 	"time"
 )
 
-func LoadRouter(router *gin.Engine) {
+func LoadRouter(r *gin.Engine) {
+	router := r.Group("/whatlist")
 	router.GET("/whoami", func(context *gin.Context) {
 		context.String(http.StatusOK, "I am %s. Time,%s", server.ServerName, time.Now().String())
 	})
