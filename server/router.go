@@ -55,4 +55,5 @@ func LoadRouter(r *gin.Engine) {
 	//最近浏览
 	router.GET("/record/list", GetBrowseListRecord)
 	router.GET("/record/book", GetBrowseBookRecord)
+
 }

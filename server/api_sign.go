@@ -148,3 +148,32 @@ func UpdateUserData(ctx *gin.Context) {
 	sendJsonResponse(ctx, OK, "ok")
 	return
 }
+
+//
+//func checkSession(ctx *gin.Context) (*SessionInfo, error) {
+//	crossDomain(ctx)
+//	sessionKey := ctx.GetHeader("SESSION")
+//	if sessionKey == "" {
+//		sendJsonResponse(ctx, SessionTimeoutErr, "empty session")
+//		return nil, errors.New("empty session")
+//	}
+//	loginJson, err := server.Consist.Get(SessionPrefix + sessionKey)
+//	if err != nil {
+//		sendJsonResponse(ctx, GetObjErr, err.Error())
+//		return nil, err
+//	}
+//	if len(loginJson) == 0 {
+//		sendJsonResponse(ctx, SessionTimeoutErr, "empty session")
+//		return nil, errors.New("empty session")
+//	}
+//
+//	sessionInfo := new(SessionInfo)
+//	err = jsoniter.UnmarshalFromString(loginJson, sessionInfo)
+//
+//	if err != nil {
+//		sendJsonResponse(ctx, ReadRequestErr, "unmarshal login data err: %s data: %s", err.Error(), loginJson)
+//		return nil, err
+//	}
+//
+//	return sessionInfo, nil
+//}

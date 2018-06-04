@@ -32,6 +32,19 @@ const (
 	NoResultErr
 )
 
+type ClientType int
+
+const (
+	None ClientType = iota
+	WeChat
+)
+
+const (
+	VerifyCodePrefix = "/vcode/"
+	CaptchaPrefix    = "/captcha/"
+	SessionPrefix    = "/session/"
+)
+
 const (
 	//年龄范围
 	AgeAny = iota

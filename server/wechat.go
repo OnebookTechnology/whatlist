@@ -12,6 +12,7 @@ import (
 
 const AppId = "wx5ba9c2242e87bb4d"
 const AppSecret = "3e16e3057a29e3263033eb7111bf4ace"
+const WeChatKey = "onebooktechonebooktechonebooktec"
 
 type WeChatLoginInfo struct {
 	OpenId             string `json:"openid"`

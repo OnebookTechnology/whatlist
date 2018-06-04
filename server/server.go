@@ -42,10 +42,17 @@ type Server struct {
 	DB          _interface.ServerDB
 	HttpServer  *http.Server
 	TcpListener *net.TCPListener
+	Consist     _interface.Consistence
 
 	accessLog *os.File
 	errorLog  *os.File
 	Logger    *levelLogger.LevelLogger
+	XXTEAKey  string
+
+	//WeChat info
+	AppId     string
+	AppSecret string
+	MchId     string
 
 	closeChan chan bool
 }
@@ -121,7 +128,23 @@ func loadByConf(confPath string) error {
 	if err != nil {
 		return err
 	}
-
+	server.AppId, err = c.String("server", "app_id")
+	if err != nil {
+		return err
+	}
+	server.AppSecret, err = c.String("server", "app_secret")
+	if err != nil {
+		return err
+	}
+	server.MchId, err = c.String("server", "mch_id")
+	if err != nil {
+		return err
+	}
+	server.XXTEAKey, err = c.String("server", "xxtea_key")
+	if err != nil {
+		return err
+	}
+	server.domain = "www.onebooktech.com.cn"
 	return nil
 }
 
