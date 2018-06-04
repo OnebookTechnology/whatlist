@@ -3,6 +3,7 @@ package server
 import (
 	"bytes"
 	"encoding/xml"
+	"github.com/OnebookTechnology/whatlist/server/models"
 	"github.com/cxt90730/xxtea-go/xxtea"
 	"github.com/gin-gonic/gin"
 	"github.com/json-iterator/go"
@@ -33,7 +34,8 @@ type SessionInfo struct {
 func Pay(ctx *gin.Context) {
 	crossDomain(ctx)
 	var err error
-	openId := ctx.Query("user_id")
+	userId := ctx.Query("user_id")
+	businessType := ctx.Query("business_type")
 	//WeChatLoginInfo
 
 	body := ctx.Request.Body
@@ -51,23 +53,8 @@ func Pay(ctx *gin.Context) {
 		return
 	}
 
-	//fee := FenToYuan(req.TotalFee)
-	//balance, deposit, err := server.IdentityDB.FindUserBalanceAndDeposit(userLoginInfo.User.PhoneNumber)
-	//if err != nil {
-	//	sendJsonResponse(ctx, Err, "db error when FindUserBalanceAndDeposit phone: %d err: %s", userLoginInfo.User.PhoneNumber, err.Error())
-	//	return
-	//}
-	////Can not more than max balance
-	//if balance+deposit+fee >= MaxBalance {
-	//	sendJsonResponse(ctx, OutOfMaxBalanceErr, "Out of max balance! phone: %d", userLoginInfo.User.PhoneNumber)
-	//	return
-	//}
-
-	//phoneStr := strconv.FormatInt(int64(u.PhoneNumber), 10)
-	//nowStr := time.Now().Format("2006-01-02 15:04:05")
-
 	tradeNo := strconv.FormatInt(time.Now().Unix(), 10) + RandNumber(4)
-	uri := "trade_no=" + tradeNo + "&fee=" + strconv.Itoa(req.TotalFee)
+	uri := "trade_no=" + tradeNo + "&business_type=" + businessType + "&fee=" + strconv.Itoa(req.TotalFee)
 	token := xxtea.EncryptStdToURLString(uri, server.XXTEAKey)
 
 	req.AppId = server.AppId
@@ -75,7 +62,7 @@ func Pay(ctx *gin.Context) {
 	req.MchId = server.MchId
 	req.NonceStr = time.Now().Format("20060102150405")
 	req.NotifyUrl = "https://" + server.domain + "/railway/pay/callback/" + token
-	req.OpenId = openId
+	req.OpenId = userId
 	req.OutTradeNo = tradeNo
 	req.SpbillCreateIP = strings.Split(ctx.Request.RemoteAddr, ":")[0]
 	req.LimitPay = "no_credit"
@@ -141,20 +128,19 @@ func Pay(ctx *gin.Context) {
 	//	return
 	//}
 
-	//expense := &models.ExpenseCalender{
-	//	UserId:    userLoginInfo.User.PhoneNumber,
-	//	OrderID:   orderId,
-	//	Money:     FenToYuan(req.TotalFee),
-	//	Status:    models.Unpaid,
-	//	Channel:   models.WeChat,
-	//	StartTime: nowStr,
-	//}
+	expense := &models.ExpenseCalender{
+		UserId:    userId,
+		OrderID:   tradeNo,
+		Money:     FenToYuan(req.TotalFee),
+		Status:    models.Unpaid,
+		StartTime: nowFormat(),
+	}
 
-	//err = server.BusinessDB.AddExpenseCalendar(expense)
-	//if err != nil {
-	//	sendJsonResponse(ctx, Err, "db error when AddExpenseCalendar expense: %+v err: %s", expense, err.Error())
-	//	return
-	//}
+	err = server.DB.AddExpenseCalendar(expense)
+	if err != nil {
+		sendJsonResponse(ctx, Err, "db error when AddExpenseCalendar expense: %+v err: %s", expense, err.Error())
+		return
+	}
 	// response the request
 	res := &PayResponse{
 		AppId:     payResp.AppId.Value,
@@ -180,18 +166,13 @@ func PayCallback(ctx *gin.Context) {
 		return
 	}
 	paramsMap := getURIParams(uriStr)
-	orderIdStr := paramsMap["trade_no"]
-	phoneStr := paramsMap["phone"]
+	orderId := paramsMap["trade_no"]
+	businessType := paramsMap["business_type"]
 	feeStr := paramsMap["fee"]
 
-	if len(orderIdStr) == 0 || len(phoneStr) == 0 || len(feeStr) == 0 {
+	if len(orderId) == 0 || len(businessType) == 0 || len(feeStr) == 0 {
 		logger.Error("PayCallback lack of params err. paramsMap:", paramsMap)
 		sendJsonResponse(ctx, Err, "PayCallback lack of params err.")
-		return
-	}
-	phoneNumber, err := strconv.ParseUint(phoneStr, 10, 64)
-	if err != nil {
-		sendJsonResponse(ctx, Err, "PayCallback invalid phone number: %s", phoneStr)
 		return
 	}
 
@@ -202,29 +183,24 @@ func PayCallback(ctx *gin.Context) {
 	}
 	fee := FenToYuan(int(feeInt)) //to CHN ¥
 
-	logger.Info("%%% PayCallBack OrderID :", orderIdStr, "Phone:", phoneNumber, "Fee:", fee, "%%%")
-	//orderId, err := strconv.ParseUint(orderIdStr, 10, 64)
-	//if err != nil {
-	//	logger.Error("PayCallback OrderId ParseUint", orderIdStr, "err:", err)
-	//	sendJsonResponse(ctx, Err, "PayCallback OrderId ParseUint %s", orderIdStr)
-	//	return
-	//}
+	logger.Info("%%% PayCallBack OrderID :", orderId, "BusinessType:", businessType, "Fee:", fee, "%%%")
+
 	//TODO: LOCK orderId
-	//
-	//calander, err := server.DB.FindExpenseCalendarByOrderId(orderId)
-	//if err != nil {
-	//	sendJsonResponse(ctx, Err, "db error when FindExpenseCalendarByOrderId orderId: %s err: %s", orderIdStr, err.Error())
-	//	return
-	//}
-	//if calander.Status == models.Paid {
-	//	sendJsonResponse(ctx, OK, "paid")
-	//	return
-	//}
-	//err = server.DB.AfterPay(orderId, phoneNumber, models.Paid, fee)
-	//if err != nil {
-	//	sendJsonResponse(ctx, Err, "db error when AfterPay orderId: %s err: %s", orderIdStr, err.Error())
-	//	return
-	//}
+
+	calender, err := server.DB.FindExpenseCalendarByOrderId(orderId)
+	if err != nil {
+		sendJsonResponse(ctx, Err, "db error when FindExpenseCalendarByOrderId orderId: %s err: %s", orderId, err.Error())
+		return
+	}
+	if calender.Status == models.Paid {
+		sendJsonResponse(ctx, OK, "paid")
+		return
+	}
+	err = server.DB.UpdateExpenseCalendar(orderId, models.Paid)
+	if err != nil {
+		sendJsonResponse(ctx, Err, "db error when AfterPay orderId: %s err: %s", orderId, err.Error())
+		return
+	}
 
 	//TODO: Update Status
 	sendJsonResponse(ctx, OK, "ok")
