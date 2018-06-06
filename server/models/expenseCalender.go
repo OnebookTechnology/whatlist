@@ -8,7 +8,7 @@ type ExpenseCalender struct {
 	// cost money
 	Money float64 `json:"money"`
 
-	BusinessType BusinessType `json:"business_type"`
+	BusinessType string `json:"business_type"`
 	// order status 0-unpaid 1-paid
 	Status StatusExpense `json:"status"`
 	// order start time
@@ -30,8 +30,6 @@ const (
 	Unpaid StatusExpense = iota
 	Paid
 )
-
-type BusinessType string
 
 const (
 	BigMan = "BIGMAN"

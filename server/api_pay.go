@@ -131,11 +131,12 @@ func Pay(ctx *gin.Context) {
 	//}
 
 	expense := &models.ExpenseCalender{
-		UserId:    userId,
-		OrderID:   tradeNo,
-		Money:     FenToYuan(req.TotalFee),
-		Status:    models.Unpaid,
-		StartTime: nowFormat(),
+		UserId:       userId,
+		OrderID:      tradeNo,
+		Money:        FenToYuan(req.TotalFee),
+		Status:       models.Unpaid,
+		StartTime:    nowFormat(),
+		BusinessType: businessType,
 	}
 
 	err = server.DB.AddExpenseCalendar(expense)
