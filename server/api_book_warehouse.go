@@ -69,7 +69,7 @@ func ListDetail(c *gin.Context) {
 		return
 	}
 	userId := c.Query("user_id")
-	list, err := server.DB.GetListDetail(listID, true)
+	list, err := server.DB.GetListDetail(listID)
 	if err != nil {
 		sendJsonResponse(c, Err, "GetList error in GetListDetail api. error: %s", err.Error())
 		return
@@ -106,33 +106,23 @@ func ListBigManDetail(c *gin.Context) {
 	}
 	userId := c.Query("user_id")
 
+	list, err := server.DB.GetListDetail(listID)
+	if err != nil {
+		sendJsonResponse(c, Err, "GetList error in GetListDetail api. error: %s", err.Error())
+		return
+	}
+	list.IsPayed = true
+
 	//查询是否有购买过
 	_, err = server.DB.FindListPurchaseRecord(userId)
 	if err != nil {
 		//没买过，不返会书单目录
 		if err == sql.ErrNoRows {
-			list, err := server.DB.GetListDetail(listID, false)
-			if err != nil {
-				sendJsonResponse(c, Err, "GetList error in GetListDetail api. error: %s", err.Error())
-				return
-			}
-			rs, err := jsoniter.MarshalToString(list)
-			if err != nil {
-				sendJsonResponse(c, Err, "MarshToString error in GetListDetail api. error: %s", err.Error())
-				return
-			}
-			sendJsonResponse(c, NoResultErr, "%s", rs)
-			return
+			list.IsPayed = false
 		} else {
 			sendJsonResponse(c, Err, "FindListPurchaseRecord error in ListBigManDetail api. error: %s", err.Error())
 			return
 		}
-	}
-
-	list, err := server.DB.GetListDetail(listID, true)
-	if err != nil {
-		sendJsonResponse(c, Err, "GetList error in GetListDetail api. error: %s", err.Error())
-		return
 	}
 
 	err = server.DB.AddListClickCount(listID)

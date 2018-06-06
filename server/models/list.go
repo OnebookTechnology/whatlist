@@ -13,4 +13,5 @@ type List struct {
 	ListLastEditTime string  `json:"list_last_edit_time,omitempty"` // 书单最后编辑时间
 	ListClickCount   uint64  `json:"list_click_count,omitempty"`    // 书单点击量
 	ListBooks        []*Book `json:"list_books,omitempty"`          // 书单包含的图书
+	IsPayed          bool    `json:"is_payed"`                      // 是否支付过
 }
