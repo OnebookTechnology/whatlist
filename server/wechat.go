@@ -10,8 +10,6 @@ import (
 	"strconv"
 )
 
-const AppId = "wx5ba9c2242e87bb4d"
-const AppSecret = "3e16e3057a29e3263033eb7111bf4ace"
 const WeChatKey = "onebooktechonebooktechonebooktec"
 
 type WeChatLoginInfo struct {
@@ -96,8 +94,8 @@ func GetWeChatInfo(jsCode string) (*WeChatLoginInfo, error) {
 		"&secret=%s"+
 		"&js_code=%s"+
 		"&grant_type=authorization_code",
-		AppId, AppSecret, jsCode)
-	logger.Debug("get Wechat session. url:", url, "app:", AppId, "secret:", AppSecret, "code:", jsCode)
+		server.AppId, server.AppSecret, jsCode)
+	logger.Debug("get Wechat session. url:", url, "app:", server.AppId, "secret:", server.AppSecret, "code:", jsCode)
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
