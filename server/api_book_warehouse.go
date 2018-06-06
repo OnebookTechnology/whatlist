@@ -69,11 +69,72 @@ func ListDetail(c *gin.Context) {
 		return
 	}
 	userId := c.Query("user_id")
-	list, err := server.DB.GetListDetail(listID)
+	list, err := server.DB.GetListDetail(listID, true)
 	if err != nil {
 		sendJsonResponse(c, Err, "GetList error in GetListDetail api. error: %s", err.Error())
 		return
 	}
+	err = server.DB.AddListClickCount(listID)
+	if err != nil {
+		logger.Error("click count add failed in listID:", listID)
+	}
+
+	if userId != "" {
+		server.DB.AddListRecord(userId, listID)
+		if err != nil {
+			logger.Error("AddListRecord failed in listID:", listID, "userId:", userId)
+		}
+	}
+
+	rs, err := jsoniter.MarshalToString(list)
+	if err != nil {
+		sendJsonResponse(c, Err, "MarshToString error in GetListDetail api. error: %s", err.Error())
+		return
+	}
+	sendJsonResponse(c, OK, "%s", rs)
+	return
+}
+
+// 获取大咖书单详细信息API
+func ListBigManDetail(c *gin.Context) {
+	str_listID := c.Query("listID")
+	listID, err := strconv.ParseUint(str_listID, 10, 64)
+	if err != nil {
+		sendJsonResponse(c, Err, "Can not convert listID to uint64. error:%s, listID:%s",
+			err.Error(), str_listID)
+		return
+	}
+	userId := c.Query("user_id")
+
+	//查询是否有购买过
+	_, err = server.DB.FindListPurchaseRecord(userId)
+	if err != nil {
+		//没买过，不返会书单目录
+		if err == sql.ErrNoRows {
+			list, err := server.DB.GetListDetail(listID, false)
+			if err != nil {
+				sendJsonResponse(c, Err, "GetList error in GetListDetail api. error: %s", err.Error())
+				return
+			}
+			rs, err := jsoniter.MarshalToString(list)
+			if err != nil {
+				sendJsonResponse(c, Err, "MarshToString error in GetListDetail api. error: %s", err.Error())
+				return
+			}
+			sendJsonResponse(c, NoResultErr, "%s", rs)
+			return
+		} else {
+			sendJsonResponse(c, Err, "FindListPurchaseRecord error in ListBigManDetail api. error: %s", err.Error())
+			return
+		}
+	}
+
+	list, err := server.DB.GetListDetail(listID, true)
+	if err != nil {
+		sendJsonResponse(c, Err, "GetList error in GetListDetail api. error: %s", err.Error())
+		return
+	}
+
 	err = server.DB.AddListClickCount(listID)
 	if err != nil {
 		logger.Error("click count add failed in listID:", listID)

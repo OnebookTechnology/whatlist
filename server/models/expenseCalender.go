@@ -17,6 +17,13 @@ type ExpenseCalender struct {
 	EndTime string `json:"end_time"`
 }
 
+type ListPurchaseRecord struct {
+	// order id
+	OrderId string `json:"order_id"`
+	ListId  int    `json:"list_id"`
+	PayTime string `json:"pay_time"`
+}
+
 type StatusExpense int
 
 const (

@@ -38,6 +38,8 @@ func LoadRouter(r *gin.Engine) {
 	router.GET("/recommendlists", RecommendLists)
 	// 书单详细信息路由
 	router.GET("/listdetail", ListDetail)
+	// 大咖书单详细信息路由
+	router.GET("/listbigmandetail", ListBigManDetail)
 	// 大咖推荐路由
 	router.GET("/bigmanrecommend", BigManRecommend)
 	// 每日书单路由
@@ -56,4 +58,7 @@ func LoadRouter(r *gin.Engine) {
 	router.GET("/record/list", GetBrowseListRecord)
 	router.GET("/record/book", GetBrowseBookRecord)
 
+	//支付
+	router.POST("/pay/bigman", Pay)
+	router.GET("/pay/callback", PayCallback)
 }

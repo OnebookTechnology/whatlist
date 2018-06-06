@@ -4,7 +4,7 @@ import "github.com/OnebookTechnology/whatlist/server/models"
 
 type BookListDao interface {
 	// 根据书单ID获得书单内容
-	GetListDetail(listID uint64) (*models.List, error)
+	GetListDetail(listID uint64, withBooks bool) (*models.List, error)
 	// 获得最新的六个书单
 	GetLatestSixLists(index uint64) ([]*models.List, error)
 	// 获得推荐的六个书单

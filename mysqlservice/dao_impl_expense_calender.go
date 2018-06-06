@@ -23,7 +23,7 @@ func (m *MysqlService) AddExpenseCalendar(expense *models.ExpenseCalender) error
 	return nil
 }
 
-func (m *MysqlService) UpdateExpenseCalendar(orderId string, status models.StatusExpense) error {
+func (m *MysqlService) UpdateExpenseCalendar(userId, orderId string, listId int, status models.StatusExpense) error {
 	tx, err := m.Db.Begin()
 	if err != nil {
 		return err
@@ -33,6 +33,11 @@ func (m *MysqlService) UpdateExpenseCalendar(orderId string, status models.Statu
 	if err != nil {
 		return err
 	}
+	_, err = tx.Exec("INSERT INTO list_purchase_record VALUES(?,?,?)", orderId, listId, nowStr)
+	if err != nil {
+		return err
+	}
+
 	err = tx.Commit()
 	if err != nil {
 		tx.Rollback()
@@ -64,6 +69,17 @@ func (m *MysqlService) FindExpenseCalendarByOrderId(orderId string) (*models.Exp
 	row := m.Db.QueryRow("SELECT user_id,order_id,money,status,start_time,end_time,business_type FROM ExpenseCalender WHERE order_id=?", orderId)
 	ec := new(models.ExpenseCalender)
 	err := row.Scan(&ec.UserId, &ec.OrderID, &ec.Money, &ec.Status, &ec.StartTime, &ec.EndTime, &ec.BusinessType)
+	if err != nil {
+		return nil, err
+	}
+	return ec, nil
+}
+
+// find expense records by OrderId
+func (m *MysqlService) FindListPurchaseRecord(userId string) (*models.ListPurchaseRecord, error) {
+	row := m.Db.QueryRow("SELECT e.`order_id` FROM `list_purchase_record` r LEFT JOIN `expensecalender` e ON r.`order_id` = e.`order_id` where e.`userId`=?", userId)
+	ec := new(models.ListPurchaseRecord)
+	err := row.Scan(&ec.OrderId)
 	if err != nil {
 		return nil, err
 	}

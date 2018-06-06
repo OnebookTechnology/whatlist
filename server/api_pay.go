@@ -36,6 +36,7 @@ func Pay(ctx *gin.Context) {
 	var err error
 	userId := ctx.Query("user_id")
 	businessType := ctx.Query("business_type")
+	listId := ctx.Query("list_id")
 	//WeChatLoginInfo
 
 	body := ctx.Request.Body
@@ -54,14 +55,15 @@ func Pay(ctx *gin.Context) {
 	}
 
 	tradeNo := strconv.FormatInt(time.Now().Unix(), 10) + RandNumber(4)
-	uri := "trade_no=" + tradeNo + "&business_type=" + businessType + "&fee=" + strconv.Itoa(req.TotalFee)
+	uri := "trade_no=" + tradeNo + "&business_type=" + businessType + "&fee=" + strconv.Itoa(req.TotalFee) +
+		"&uid=" + userId + "&list_id=" + listId
 	token := xxtea.EncryptStdToURLString(uri, server.XXTEAKey)
 
 	req.AppId = server.AppId
 	req.Body = "onebooktech"
 	req.MchId = server.MchId
 	req.NonceStr = time.Now().Format("20060102150405")
-	req.NotifyUrl = "https://" + server.domain + "/railway/pay/callback/" + token
+	req.NotifyUrl = "https://" + server.domain + "/whatlist/pay/callback/" + token
 	req.OpenId = userId
 	req.OutTradeNo = tradeNo
 	req.SpbillCreateIP = strings.Split(ctx.Request.RemoteAddr, ":")[0]
@@ -169,10 +171,18 @@ func PayCallback(ctx *gin.Context) {
 	orderId := paramsMap["trade_no"]
 	businessType := paramsMap["business_type"]
 	feeStr := paramsMap["fee"]
+	listIdStr := paramsMap["list_id"]
+	userId := paramsMap["uid"]
 
-	if len(orderId) == 0 || len(businessType) == 0 || len(feeStr) == 0 {
+	if len(orderId) == 0 || len(businessType) == 0 || len(feeStr) == 0 || len(userId) == 0 {
 		logger.Error("PayCallback lack of params err. paramsMap:", paramsMap)
 		sendJsonResponse(ctx, Err, "PayCallback lack of params err.")
+		return
+	}
+
+	listId, err := strconv.ParseInt(listIdStr, 10, 64)
+	if err != nil {
+		sendJsonResponse(ctx, Err, "PayCallback invalid fee: %s", feeStr)
 		return
 	}
 
@@ -196,7 +206,7 @@ func PayCallback(ctx *gin.Context) {
 		sendJsonResponse(ctx, OK, "paid")
 		return
 	}
-	err = server.DB.UpdateExpenseCalendar(orderId, models.Paid)
+	err = server.DB.UpdateExpenseCalendar(userId, orderId, int(listId), models.Paid)
 	if err != nil {
 		sendJsonResponse(ctx, Err, "db error when AfterPay orderId: %s err: %s", orderId, err.Error())
 		return
