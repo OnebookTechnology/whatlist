@@ -18,6 +18,7 @@ func (m *MysqlService) AddExpenseCalendar(expense *models.ExpenseCalender) error
 	}
 	err = tx.Commit()
 	if err != nil {
+		tx.Rollback()
 		return err
 	}
 	return nil
