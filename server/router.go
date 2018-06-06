@@ -60,5 +60,5 @@ func LoadRouter(r *gin.Engine) {
 
 	//支付
 	router.POST("/pay/bigman", Pay)
-	router.POST("/pay/callback", PayCallback)
+	router.POST("/pay/callback/:token", PayCallback)
 }
