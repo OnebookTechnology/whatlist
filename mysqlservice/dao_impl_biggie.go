@@ -34,7 +34,7 @@ func (m *MysqlService) FindListsByBiggie(biggieId, pageNum, pageCount int) ([]*m
 
 func (m *MysqlService) FindLatestBiggie(pageNum, pageCount int) ([]*models.Biggie, error) {
 	var bs []*models.Biggie
-	rows, err := m.Db.Query("SELECT id,name,identity,intro,sendword,weight,signtime,image FROM biggie ORDER BY signtime DESC LIMIT ?",
+	rows, err := m.Db.Query("SELECT id,name,identity,intro,sendword,weight,signtime,image FROM biggie ORDER BY signtime DESC LIMIT ?,?",
 		(pageNum-1)*pageCount, pageCount)
 	if err != nil {
 		return nil, err
@@ -52,7 +52,7 @@ func (m *MysqlService) FindLatestBiggie(pageNum, pageCount int) ([]*models.Biggi
 
 func (m *MysqlService) FindRecommendBiggies(pageNum, pageCount int) ([]*models.Biggie, error) {
 	var bs []*models.Biggie
-	rows, err := m.Db.Query("SELECT b.id,b.name,b.identity,b.intro,b.sendword,b.weight,b.signtime,b.image,l.`list_name` "+
+	rows, err := m.Db.Query("SELECT b.id,b.name,b.identity,b.intro,b.sendword,b.weight,b.signtime,b.image,b.latest_list_id.`list_name` "+
 		"FROM biggie b LEFT JOIN biggielist l ON b.latest_list_id=l.list_id ORDER BY b.`weight` DESC LIMIT ?,?",
 		(pageNum-1)*pageCount, pageCount)
 	if err != nil {

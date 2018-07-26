@@ -101,6 +101,10 @@ func GetRecommendBiggie(ctx *gin.Context) {
 		return
 	}
 	bs, err := server.DB.FindRecommendBiggies(pageNum, pageCount)
+	if err != nil {
+		sendFailedResponse(ctx, Err, "db error when FindRecommendBiggies. err:", err)
+		return
+	}
 	res := &ResData{
 		Biggies: bs,
 	}
