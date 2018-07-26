@@ -35,12 +35,14 @@ type Response struct {
 
 //注册返回数据结构
 type ResData struct {
-	Biggies     []*models.Biggie     `json:"biggies,omitempty"`
-	Biggie      *models.Biggie       `json:"biggie,omitempty"`
-	BiggieLists []*models.BiggieList `json:"biggie_lists,omitempty"`
-	BiggieList  *models.BiggieList   `json:"biggie_list,omitempty"`
-	TotalCount  int                  `json:"total_count,omitempty"`
-	Name        string               `json:"name,omitempty"`
+	Biggies     []*models.Biggie      `json:"biggies,omitempty"`
+	Biggie      *models.Biggie        `json:"biggie,omitempty"`
+	BiggieLists []*models.BiggieList  `json:"biggie_lists,omitempty"`
+	BiggieList  *models.BiggieList    `json:"biggie_list,omitempty"`
+	BiggieBooks []*models.BiggieBooks `json:"biggie_books,omitempty"`
+	BiggieBook  *models.BiggieBooks   `json:"biggie_book,omitempty"`
+	TotalCount  int                   `json:"total_count,omitempty"`
+	Name        string                `json:"name,omitempty"`
 }
 
 func sendFailedResponse(ctx *gin.Context, code int, v ...interface{}) {

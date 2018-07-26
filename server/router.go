@@ -61,4 +61,13 @@ func LoadRouter(r *gin.Engine) {
 	//支付
 	router.POST("/pay/bigman", Pay)
 	router.POST("/pay/callback/:token", PayCallback)
+
+	biggieRouter := router.Group("/biggie")
+	{
+		biggieRouter.GET("/getlatest", GetLatestBiggie)
+		biggieRouter.GET("/get", GetBiggie)
+		biggieRouter.GET("/list/get", GetBiggieList)
+		biggieRouter.GET("/recommend", GetRecommendBiggie)
+		biggieRouter.GET("/listbooks", GetBiggieListBooks)
+	}
 }

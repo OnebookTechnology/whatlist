@@ -11,4 +11,5 @@ type ServerDB interface {
 	dao.PressDao
 	dao.RecordDao
 	dao.ExpenseCalendar
+	dao.BiggieDao
 }
