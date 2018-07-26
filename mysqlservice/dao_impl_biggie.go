@@ -3,7 +3,7 @@ package mysql
 import "github.com/OnebookTechnology/whatlist/server/models"
 
 func (m *MysqlService) FindBiggieById(id int) (*models.Biggie, error) {
-	row := m.Db.QueryRow("SELECT id,name,identity,intro,sendword,weight,signtime,image FROM biggie")
+	row := m.Db.QueryRow("SELECT id,name,identity,intro,sendword,weight,signtime,image FROM biggie WHERE id=?", id)
 
 	b := new(models.Biggie)
 	err := row.Scan(&b.Id, &b.Name, &b.Identity, &b.Intro, &b.Sendword, &b.Weight, &b.Signtime, &b.Image)
@@ -81,6 +81,25 @@ func (m *MysqlService) FindBiggieListBooks(listId int) ([]*models.BiggieBooks, e
 	for rows.Next() {
 		b := new(models.BiggieBooks)
 		err = rows.Scan(&b.ListId, &b.ISBN, &b.Recommend, &b.BookName, &b.AuthorName, &b.BookIcon)
+		if err != nil {
+			return nil, err
+		}
+		bs = append(bs, b)
+	}
+	return bs, nil
+}
+
+func (m *MysqlService) FindLatestBiggieList(pageNum, pageCount int) ([]*models.BiggieList, error) {
+	var bs []*models.BiggieList
+	rows, err := m.Db.Query("SELECT list_id, biggie_id, list_name, list_click_count, list_img "+
+		"FROM `biggielist` ORDER BY `list_create_time` DESC  LIMIT ?,?",
+		(pageNum-1)*pageCount, pageCount)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		b := new(models.BiggieList)
+		err = rows.Scan(&b.ListId, &b.BiggieId, &b.ListName, &b.ListClickCount, &b.ListImg)
 		if err != nil {
 			return nil, err
 		}

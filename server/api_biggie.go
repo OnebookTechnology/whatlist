@@ -129,6 +129,29 @@ func GetBiggieListBooks(ctx *gin.Context) {
 	return
 }
 
-func CollectBiggie(ctx *gin.Context) {
+func GetLatestBiggieList(ctx *gin.Context) {
 	crossDomain(ctx)
+	pageNumStr := ctx.Query("page_num")
+	pageNum, err := strconv.Atoi(pageNumStr)
+	if err != nil {
+		sendFailedResponse(ctx, Err, "parse page_num error:", err, "page_num:", pageNumStr)
+		return
+	}
+	pageCountStr := ctx.Query("page_count")
+	pageCount, err := strconv.Atoi(pageCountStr)
+	if err != nil {
+		sendFailedResponse(ctx, Err, "parse page_count error:", err, "page_count:", pageCountStr)
+		return
+	}
+
+	bs, err := server.DB.FindLatestBiggieList(pageNum, pageCount)
+	if err != nil {
+		sendFailedResponse(ctx, Err, "db error when FindRecommendBiggies. err:", err)
+		return
+	}
+	res := &ResData{
+		BiggieLists: bs,
+	}
+	sendSuccessResponse(ctx, res)
+	return
 }

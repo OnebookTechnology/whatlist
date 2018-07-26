@@ -8,4 +8,5 @@ type BiggieDao interface {
 	FindRecommendBiggies(pageNum, pageCount int) ([]*models.Biggie, error)
 	FindListsByBiggie(biggieId, pageNum, pageCount int) ([]*models.BiggieList, error)
 	FindBiggieListBooks(listId int) ([]*models.BiggieBooks, error)
+	FindLatestBiggieList(pageNum, pageCount int) ([]*models.BiggieList, error)
 }
