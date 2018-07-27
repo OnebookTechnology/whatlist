@@ -165,10 +165,12 @@ func (m *MysqlService) FindCollectBiggies(userId string) ([]*models.Biggie, erro
 	}
 	for rows.Next() {
 		b := new(models.Biggie)
-		err = rows.Scan(&b.Id, &b.Name, &b.Identity, &b.Image, &b.Intro, &b.CollectCount)
+		l := new(models.BiggieList)
+		err = rows.Scan(&b.Id, &b.Name, &b.Identity, &b.Image, &b.Intro, &b.CollectCount, &l.ListName)
 		if err != nil {
 			return nil, err
 		}
+		b.Lists = append(b.Lists, l)
 		bs = append(bs, b)
 	}
 	return bs, nil
