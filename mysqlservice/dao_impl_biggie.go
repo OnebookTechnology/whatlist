@@ -17,10 +17,11 @@ func (m *MysqlService) FindBiggieById(id int) (*models.Biggie, error) {
 }
 
 func (m *MysqlService) FindBiggieListById(listId int) (*models.BiggieList, error) {
-	row := m.Db.QueryRow("SELECT list_name, list_intro, list_create_time, list_click_count, list_img, list_price FROM biggielist WHERE list_id=?", listId)
+	row := m.Db.QueryRow("SELECT l.list_name, b.name, l.list_intro, l.list_create_time, l.list_click_count, l.list_img, l.list_price "+
+		"FROM biggielist l LEFT JOIN biggie b ON l.biggie_id=b.id WHERE l.list_id=?", listId)
 
 	b := new(models.BiggieList)
-	err := row.Scan(&b.ListName, &b.ListIntro, &b.ListCreateTime, &b.ListClickCount, &b.ListImg, &b.ListPrice)
+	err := row.Scan(&b.ListName, &b.BiggieName, &b.ListIntro, &b.ListCreateTime, &b.ListClickCount, &b.ListImg, &b.ListPrice)
 	if err != nil {
 		return nil, err
 	}
