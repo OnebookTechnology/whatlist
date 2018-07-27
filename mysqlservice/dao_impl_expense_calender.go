@@ -24,7 +24,7 @@ func (m *MysqlService) AddExpenseCalendar(expense *models.ExpenseCalender) error
 	return nil
 }
 
-func (m *MysqlService) UpdateExpenseCalendar(userId, orderId string, listId int, status models.StatusExpense) error {
+func (m *MysqlService) UpdateExpenseCalendar(userId, orderId string, listId, biggieId int, status models.StatusExpense, payType string) error {
 	tx, err := m.Db.Begin()
 	if err != nil {
 		return err
@@ -34,9 +34,18 @@ func (m *MysqlService) UpdateExpenseCalendar(userId, orderId string, listId int,
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec("INSERT INTO list_purchase_record VALUES(?,?,?)", orderId, listId, nowStr)
-	if err != nil {
-		return err
+
+	switch payType {
+	case "bigman":
+		_, err = tx.Exec("INSERT INTO list_purchase_record VALUES(?,?,?)", orderId, listId, nowStr)
+		if err != nil {
+			return err
+		}
+	case "subscribe":
+		_, err = tx.Exec("INSERT INTO biggiesubscriberecord(user_id,biggie_id,subscribe_time,order_id) VALUES(?,?,?,?,?)", userId, biggieId, nowStr, orderId)
+		if err != nil {
+			return err
+		}
 	}
 
 	err = tx.Commit()

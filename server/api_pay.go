@@ -37,6 +37,7 @@ func Pay(ctx *gin.Context) {
 	userId := ctx.Query("user_id")
 	businessType := ctx.Query("business_type")
 	listId := ctx.Query("list_id")
+	biggieId := ctx.Query("biggie_id")
 	//WeChatLoginInfo
 
 	body := ctx.Request.Body
@@ -56,7 +57,7 @@ func Pay(ctx *gin.Context) {
 
 	tradeNo := strconv.FormatInt(time.Now().Unix(), 10) + RandNumber(4)
 	uri := "trade_no=" + tradeNo + "&business_type=" + businessType + "&fee=" + strconv.Itoa(req.TotalFee) +
-		"&uid=" + userId + "&list_id=" + listId
+		"&uid=" + userId + "&list_id=" + listId + "bid=" + biggieId
 	token := xxtea.EncryptStdToURLString(uri, server.XXTEAKey)
 
 	req.AppId = server.AppId
@@ -174,6 +175,7 @@ func PayCallback(ctx *gin.Context) {
 	feeStr := paramsMap["fee"]
 	listIdStr := paramsMap["list_id"]
 	userId := paramsMap["uid"]
+	biggieIdStr := paramsMap["bid"]
 
 	if len(orderId) == 0 || len(businessType) == 0 || len(feeStr) == 0 || len(userId) == 0 {
 		logger.Error("PayCallback lack of params err. paramsMap:", paramsMap)
@@ -181,9 +183,21 @@ func PayCallback(ctx *gin.Context) {
 		return
 	}
 
+	if listIdStr == "" {
+		listIdStr = "0"
+	}
 	listId, err := strconv.ParseInt(listIdStr, 10, 64)
 	if err != nil {
-		sendJsonResponse(ctx, Err, "PayCallback invalid fee: %s", feeStr)
+		sendJsonResponse(ctx, Err, "PayCallback invalid listId: %s", listIdStr)
+		return
+	}
+
+	if biggieIdStr == "" {
+		biggieIdStr = "0"
+	}
+	biggieId, err := strconv.ParseInt(biggieIdStr, 10, 64)
+	if err != nil {
+		sendJsonResponse(ctx, Err, "PayCallback invalid biggieIdStr: %s", biggieIdStr)
 		return
 	}
 
@@ -207,7 +221,7 @@ func PayCallback(ctx *gin.Context) {
 		sendJsonResponse(ctx, OK, "paid")
 		return
 	}
-	err = server.DB.UpdateExpenseCalendar(userId, orderId, int(listId), models.Paid)
+	err = server.DB.UpdateExpenseCalendar(userId, orderId, int(listId), int(biggieId), models.Paid, businessType)
 	if err != nil {
 		sendJsonResponse(ctx, Err, "db error when AfterPay orderId: %s err: %s", orderId, err.Error())
 		return

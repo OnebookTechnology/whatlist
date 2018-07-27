@@ -151,6 +151,12 @@ func GetBiggieListBooks(ctx *gin.Context) {
 		isPayed = true
 	}
 
+	b, err := server.DB.FindBiggieListById(listId)
+	if err != nil {
+		sendFailedResponse(ctx, Err, "db error when FindBiggieListById. error: ", err.Error())
+		return
+	}
+
 	bs, err := server.DB.FindBiggieListBooks(listId)
 	if err != nil {
 		sendFailedResponse(ctx, Err, "db error when FindBiggieListBooks. error: ", err.Error())
@@ -164,6 +170,7 @@ func GetBiggieListBooks(ctx *gin.Context) {
 	}
 
 	res := &ResData{
+		BiggieList:  b,
 		BiggieBooks: bs,
 		IsPayed:     isPayed,
 	}

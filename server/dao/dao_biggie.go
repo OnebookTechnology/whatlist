@@ -4,6 +4,7 @@ import "github.com/OnebookTechnology/whatlist/server/models"
 
 type BiggieDao interface {
 	FindBiggieById(id int) (*models.Biggie, error)
+	FindBiggieListById(listId int) (*models.BiggieList, error)
 	FindLatestBiggie(pageNum, pageCount int) ([]*models.Biggie, error)
 	FindRecommendBiggies(pageNum, pageCount int) ([]*models.Biggie, error)
 	FindListsByBiggie(biggieId, pageNum, pageCount int) ([]*models.BiggieList, error)

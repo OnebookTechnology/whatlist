@@ -16,6 +16,17 @@ func (m *MysqlService) FindBiggieById(id int) (*models.Biggie, error) {
 	return b, nil
 }
 
+func (m *MysqlService) FindBiggieListById(listId int) (*models.BiggieList, error) {
+	row := m.Db.QueryRow("SELECT list_name, list_intro, list_create_time, list_click_count, list_img, list_price FROM biggielist WHERE list_id=?", listId)
+
+	b := new(models.BiggieList)
+	err := row.Scan(&b.ListName, &b.ListIntro, &b.ListCreateTime, &b.ListClickCount, &b.ListImg, &b.ListPrice)
+	if err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
 func (m *MysqlService) FindBiggieIsCollected(userId string, biggieId int) (string, error) {
 	row := m.Db.QueryRow("SELECT collect_time FROM biggiecollect WHERE user_id=? AND biggie_id=?", userId, biggieId)
 	var b string
