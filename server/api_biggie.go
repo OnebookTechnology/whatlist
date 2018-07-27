@@ -150,6 +150,17 @@ func GetBiggieListBooks(ctx *gin.Context) {
 	}
 
 	bs, err := server.DB.FindBiggieListBooks(listId)
+	if err != nil {
+		sendFailedResponse(ctx, Err, "db error when FindBiggieListBooks. error: ", err.Error())
+		return
+	}
+
+	err = server.DB.AddClickCount(listId)
+	if err != nil {
+		logger.Error("db error when AddClickCount. error: ", err.Error())
+		return
+	}
+
 	res := &ResData{
 		BiggieBooks: bs,
 	}

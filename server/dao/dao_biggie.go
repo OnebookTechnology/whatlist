@@ -14,4 +14,5 @@ type BiggieDao interface {
 	DeleteCollectBiggie(userId string, biggieId int) error
 	FindCollectBiggies(userId string) ([]*models.Biggie, error)
 	FindBiggieIsCollected(userId string, biggieId int) (string, error)
+	AddClickCount(listId int) error
 }

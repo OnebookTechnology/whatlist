@@ -104,15 +104,15 @@ func (m *MysqlService) FindBiggieListBooks(listId int) ([]*models.BiggieBooks, e
 
 func (m *MysqlService) FindLatestBiggieList(pageNum, pageCount int) ([]*models.BiggieList, error) {
 	var bs []*models.BiggieList
-	rows, err := m.Db.Query("SELECT list_id, biggie_id, list_name, list_click_count, list_img "+
-		"FROM `biggielist` ORDER BY `list_create_time` DESC  LIMIT ?,?",
+	rows, err := m.Db.Query("SELECT l.list_id, l.biggie_id, l.list_name, l.list_click_count, l.list_img, l.list_intro, l.list_price, b.name "+
+		"FROM `biggielist` l LEFT JOIN biggie b ON b.id= l.biggie_id ORDER BY l.`list_create_time` DESC  LIMIT ?,?",
 		(pageNum-1)*pageCount, pageCount)
 	if err != nil {
 		return nil, err
 	}
 	for rows.Next() {
 		b := new(models.BiggieList)
-		err = rows.Scan(&b.ListId, &b.BiggieId, &b.ListName, &b.ListClickCount, &b.ListImg)
+		err = rows.Scan(&b.ListId, &b.BiggieId, &b.ListName, &b.ListClickCount, &b.ListImg, &b.ListIntro, &b.ListPrice, &b.BiggieName)
 		if err != nil {
 			return nil, err
 		}
@@ -188,6 +188,31 @@ func (m *MysqlService) DeleteCollectBiggie(userId string, biggieId int) error {
 	err = tx.Commit()
 	if err != nil {
 		tx.Rollback()
+		return err
+	}
+	return nil
+}
+
+func (m *MysqlService) AddClickCount(listId int) error {
+	tx, err := m.Db.Begin()
+	if err != nil {
+		return err
+	}
+	_, err = tx.Exec("UPDATE biggielist SET list_click_count=list_click_count+1")
+	if err != nil {
+		err = tx.Rollback()
+		if err != nil {
+			return err
+		}
+		return err
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		err = tx.Rollback()
+		if err != nil {
+			return err
+		}
 		return err
 	}
 	return nil
