@@ -145,7 +145,7 @@ func (m *MysqlService) AddCollectBiggie(c *models.BiggieCollect) error {
 		}
 		return err
 	}
-	_, err = tx.Exec("UPDATE biggie SET collect_count=collect_count+1")
+	_, err = tx.Exec("UPDATE biggie SET collect_count=collect_count+1 WHERE id=?", c.BiggieId)
 	if err != nil {
 		err = tx.Rollback()
 		if err != nil {
@@ -209,7 +209,7 @@ func (m *MysqlService) AddClickCount(listId int) error {
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec("UPDATE biggielist SET list_click_count=list_click_count+1")
+	_, err = tx.Exec("UPDATE biggielist SET list_click_count=list_click_count+1 WHERE list_id=?", listId)
 	if err != nil {
 		err = tx.Rollback()
 		if err != nil {
