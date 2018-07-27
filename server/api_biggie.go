@@ -136,17 +136,19 @@ func GetBiggieListBooks(ctx *gin.Context) {
 		sendFailedResponse(ctx, Err, "parse list_id error:", err, "list_id:", idStr)
 		return
 	}
+
+	isPayed := false
 	//查询是否有购买过
 	_, err = server.DB.FindListPurchaseRecord(userId, listId)
 	if err != nil {
 		//没买过，不返会书单目录
-		if err == sql.ErrNoRows {
-			sendFailedResponse(ctx, NoResultErr, err.Error())
-			return
-		} else {
+		if err != sql.ErrNoRows {
 			sendFailedResponse(ctx, Err, "db error when FindListPurchaseRecord. error: ", err.Error())
 			return
+
 		}
+	} else {
+		isPayed = true
 	}
 
 	bs, err := server.DB.FindBiggieListBooks(listId)
@@ -163,6 +165,7 @@ func GetBiggieListBooks(ctx *gin.Context) {
 
 	res := &ResData{
 		BiggieBooks: bs,
+		IsPayed:     isPayed,
 	}
 	sendSuccessResponse(ctx, res)
 	return

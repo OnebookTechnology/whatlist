@@ -47,6 +47,7 @@ type ResData struct {
 	BiggieBooks []*models.BiggieBooks `json:"biggie_books,omitempty"`
 	BiggieBook  *models.BiggieBooks   `json:"biggie_book,omitempty"`
 	TotalCount  int                   `json:"total_count,omitempty"`
+	IsPayed     bool                  `json:"is_payed,omitempty"`
 	Name        string                `json:"name,omitempty"`
 }
 
