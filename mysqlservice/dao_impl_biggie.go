@@ -16,12 +16,12 @@ func (m *MysqlService) FindBiggieById(id int) (*models.Biggie, error) {
 	return b, nil
 }
 
-func (m *MysqlService) FindBiggieIsCollected(userId string, biggieId int) (*models.BiggieCollect, error) {
+func (m *MysqlService) FindBiggieIsCollected(userId string, biggieId int) (string, error) {
 	row := m.Db.QueryRow("SELECT collect_time FROM biggiecollect WHERE user_id=? AND biggie_id=?", userId, biggieId)
-	var b = new(models.BiggieCollect)
-	err := row.Scan(&b.CollectTime)
+	var b string
+	err := row.Scan(&b)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	return b, nil
 }

@@ -13,4 +13,5 @@ type BiggieDao interface {
 	AddCollectBiggie(collect *models.BiggieCollect) error
 	DeleteCollectBiggie(userId string, biggieId int) error
 	FindCollectBiggies(userId string) ([]*models.Biggie, error)
+	FindBiggieIsCollected(userId string, biggieId int) (string, error)
 }

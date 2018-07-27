@@ -36,6 +36,7 @@ func GetLatestBiggie(ctx *gin.Context) {
 
 func GetBiggie(ctx *gin.Context) {
 	crossDomain(ctx)
+	userId := ctx.Query("user_id")
 	idStr := ctx.Query("biggie_id")
 	biggieId, err := strconv.Atoi(idStr)
 	if err != nil {
@@ -50,6 +51,15 @@ func GetBiggie(ctx *gin.Context) {
 	}
 	b.IsCollect = false
 
+	_, err = server.DB.FindBiggieIsCollected(userId, biggieId)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			sendFailedResponse(ctx, Err, "db error when FindBiggieIsCollected. err:", err)
+			return
+		}
+	} else {
+		b.IsCollect = true
+	}
 	res := &ResData{
 		Biggie: b,
 	}
