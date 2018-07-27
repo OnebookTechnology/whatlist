@@ -156,7 +156,7 @@ func (m *MysqlService) AddCollectBiggie(c *models.BiggieCollect) error {
 
 func (m *MysqlService) FindCollectBiggies(userId string) ([]*models.Biggie, error) {
 	var bs []*models.Biggie
-	rows, err := m.Db.Query("SELECT b.id,b.name,b.identity,b.image,b.intro,b.collect_count FROM biggie b "+
+	rows, err := m.Db.Query("SELECT b.id,b.name,b.identity,b.image,b.intro,b.collect_count,l.list_name FROM biggie b "+
 		"LEFT JOIN biggiecollect bc ON b.id=bc.biggie_id "+
 		"LEFT JOIN biggielist l ON b.latest_list_id=l.list_id "+
 		"WHERE bc.user_id=? ORDER BY b.latest_list_id DESC", userId)
