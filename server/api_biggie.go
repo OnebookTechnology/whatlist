@@ -169,10 +169,16 @@ func GetBiggieListBooks(ctx *gin.Context) {
 		return
 	}
 
+	var isPayedStr string
+	if isPayed {
+		isPayedStr = "true"
+	} else {
+		isPayedStr = "false"
+	}
 	res := &ResData{
 		BiggieList:  b,
 		BiggieBooks: bs,
-		IsPayed:     isPayed,
+		IsPayed:     isPayedStr,
 	}
 	sendSuccessResponse(ctx, res)
 	return
