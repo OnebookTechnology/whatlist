@@ -15,7 +15,7 @@ func (m *MysqlService) FindBiggieById(id int) (*models.Biggie, error) {
 
 func (m *MysqlService) FindListsByBiggie(biggieId, pageNum, pageCount int) ([]*models.BiggieList, error) {
 	var bs []*models.BiggieList
-	rows, err := m.Db.Query("SELECT list_id,biggie_id,list_name,list_intro,list_create_time,list_click_count,list_img FROM `biggielist` WHERE `biggie_id` = ? "+
+	rows, err := m.Db.Query("SELECT list_id,biggie_id,list_name,list_intro,list_create_time,list_click_count,list_img, list_price FROM `biggielist` WHERE `biggie_id` = ? "+
 		"ORDER BY list_create_time DESC LIMIT ?,?",
 		biggieId, (pageNum-1)*pageCount, pageCount)
 	if err != nil {
@@ -23,7 +23,7 @@ func (m *MysqlService) FindListsByBiggie(biggieId, pageNum, pageCount int) ([]*m
 	}
 	for rows.Next() {
 		b := new(models.BiggieList)
-		err = rows.Scan(&b.ListId, &b.BiggieId, &b.ListName, &b.ListIntro, &b.ListCreateTime, &b.ListClickCount, &b.ListImg)
+		err = rows.Scan(&b.ListId, &b.BiggieId, &b.ListName, &b.ListIntro, &b.ListCreateTime, &b.ListClickCount, &b.ListImg, &b.ListPrice)
 		if err != nil {
 			return nil, err
 		}
@@ -106,4 +106,56 @@ func (m *MysqlService) FindLatestBiggieList(pageNum, pageCount int) ([]*models.B
 		bs = append(bs, b)
 	}
 	return bs, nil
+}
+
+func (m *MysqlService) AddCollectBiggie(collect *models.BiggieCollect) error {
+	tx, err := m.Db.Begin()
+	if err != nil {
+		return err
+	}
+	_, err = tx.Exec("INSERT INTO biggiecollect(user_id, biggie_id) VALUES(?,?)")
+	if err != nil {
+		return err
+	}
+	err = tx.Commit()
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	return nil
+}
+
+func (m *MysqlService) FindCollectBiggies(userId string) ([]*models.Biggie, error) {
+	var bs []*models.Biggie
+	rows, err := m.Db.Query("SELECT b.id,b.name,b.identity FROM biggie b "+
+		"LEFT JOIN biggiecollect bc ON b.id=bc.biggie_id WHERE bc.user_id=? ORDER BY b.latest_list_id DESC", userId)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		b := new(models.Biggie)
+		err = rows.Scan(&b.Id, &b.Name, &b.Identity)
+		if err != nil {
+			return nil, err
+		}
+		bs = append(bs, b)
+	}
+	return bs, nil
+}
+
+func (m *MysqlService) DeleteCollectBiggie(userId string, biggieId int) error {
+	tx, err := m.Db.Begin()
+	if err != nil {
+		return err
+	}
+	_, err = tx.Exec("DELETE FROM biggiecollect WHERE user_id=? and biggie_id=?", userId, biggieId)
+	if err != nil {
+		return err
+	}
+	err = tx.Commit()
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	return nil
 }

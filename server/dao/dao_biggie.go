@@ -9,4 +9,8 @@ type BiggieDao interface {
 	FindListsByBiggie(biggieId, pageNum, pageCount int) ([]*models.BiggieList, error)
 	FindBiggieListBooks(listId int) ([]*models.BiggieBooks, error)
 	FindLatestBiggieList(pageNum, pageCount int) ([]*models.BiggieList, error)
+
+	AddCollectBiggie(collect *models.BiggieCollect) error
+	DeleteCollectBiggie(userId string, biggieId int) error
+	FindCollectBiggies(userId string) ([]*models.Biggie, error)
 }

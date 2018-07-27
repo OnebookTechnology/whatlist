@@ -12,5 +12,5 @@ type ExpenseCalendar interface {
 	// find by order id
 	FindExpenseCalendarByOrderId(orderId string) (*models.ExpenseCalender, error)
 
-	FindListPurchaseRecord(userId string) (*models.ListPurchaseRecord, error)
+	FindListPurchaseRecord(userId string, listId int) (*models.ListPurchaseRecord, error)
 }

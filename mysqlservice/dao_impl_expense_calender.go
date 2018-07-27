@@ -77,8 +77,10 @@ func (m *MysqlService) FindExpenseCalendarByOrderId(orderId string) (*models.Exp
 }
 
 // find expense records by OrderId
-func (m *MysqlService) FindListPurchaseRecord(userId string) (*models.ListPurchaseRecord, error) {
-	row := m.Db.QueryRow("SELECT e.`order_id` FROM `list_purchase_record` r LEFT JOIN `expensecalender` e ON r.`order_id` = e.`order_id` where e.`user_id`=?", userId)
+func (m *MysqlService) FindListPurchaseRecord(userId string, listId int) (*models.ListPurchaseRecord, error) {
+	row := m.Db.QueryRow("SELECT e.`order_id`"+
+		"FROM `list_purchase_record` r LEFT JOIN `expensecalender` e ON r.`order_id` = e.`order_id` where e.`user_id`=? AND r.list_id=?",
+		userId, listId)
 	ec := new(models.ListPurchaseRecord)
 	err := row.Scan(&ec.OrderId)
 	if err != nil {

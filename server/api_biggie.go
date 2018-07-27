@@ -1,6 +1,8 @@
 package server
 
 import (
+	"database/sql"
+	"github.com/OnebookTechnology/whatlist/server/models"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
@@ -115,12 +117,26 @@ func GetRecommendBiggie(ctx *gin.Context) {
 
 func GetBiggieListBooks(ctx *gin.Context) {
 	crossDomain(ctx)
+	userId := ctx.Query("user_id")
 	idStr := ctx.Query("list_id")
 	listId, err := strconv.Atoi(idStr)
 	if err != nil {
 		sendFailedResponse(ctx, Err, "parse list_id error:", err, "list_id:", idStr)
 		return
 	}
+	//查询是否有购买过
+	_, err = server.DB.FindListPurchaseRecord(userId, listId)
+	if err != nil {
+		//没买过，不返会书单目录
+		if err == sql.ErrNoRows {
+			sendFailedResponse(ctx, NoResultErr, err.Error())
+			return
+		} else {
+			sendFailedResponse(ctx, Err, "db error when FindListPurchaseRecord. error: ", err.Error())
+			return
+		}
+	}
+
 	bs, err := server.DB.FindBiggieListBooks(listId)
 	res := &ResData{
 		BiggieBooks: bs,
@@ -154,4 +170,74 @@ func GetLatestBiggieList(ctx *gin.Context) {
 	}
 	sendSuccessResponse(ctx, res)
 	return
+}
+
+type CollectReq struct {
+	UserId   string `json:"user_id" form:"user_id"`
+	BiggieId int    `json:"biggie_id" form:"biggie_id"`
+	Page
+}
+
+func CollectBiggie(ctx *gin.Context) {
+	crossDomain(ctx)
+	var req CollectReq
+	if err := ctx.BindJSON(&req); err == nil {
+		c := &models.BiggieCollect{
+			UserId:   req.UserId,
+			BiggieId: req.BiggieId,
+		}
+		err := server.DB.AddCollectBiggie(c)
+		if err != nil {
+			sendFailedResponse(ctx, Err, "AddCollectBiggie err:", err)
+			return
+		}
+
+		sendSuccessResponse(ctx, nil)
+		return
+
+	} else {
+		sendFailedResponse(ctx, Err, "BindJSON err:", err)
+		return
+	}
+}
+
+func RemoveBiggie(ctx *gin.Context) {
+	crossDomain(ctx)
+	var req CollectReq
+	if err := ctx.BindJSON(&req); err == nil {
+		err := server.DB.DeleteCollectBiggie(req.UserId, req.BiggieId)
+		if err != nil {
+			sendFailedResponse(ctx, Err, "DeleteCollectBiggie err:", err)
+			return
+		}
+		sendSuccessResponse(ctx, nil)
+		return
+	} else {
+		sendFailedResponse(ctx, Err, "BindJSON err:", err)
+		return
+	}
+}
+
+func GetCollectBiggie(ctx *gin.Context) {
+	crossDomain(ctx)
+	var req CollectReq
+	if err := ctx.ShouldBindQuery(&req); err == nil {
+		bs, err := server.DB.FindCollectBiggies(req.UserId)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				sendFailedResponse(ctx, NoResultErr, "FindCollectBiggies err:", err)
+				return
+			}
+			sendFailedResponse(ctx, Err, "FindCollectBiggies err:", err)
+			return
+		}
+		res := &ResData{
+			Biggies: bs,
+		}
+		sendSuccessResponse(ctx, res)
+		return
+	} else {
+		sendFailedResponse(ctx, Err, "BindJSON err:", err)
+		return
+	}
 }

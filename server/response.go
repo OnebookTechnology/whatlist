@@ -13,6 +13,11 @@ type JsonResponse struct {
 	Message string `json:"message"`
 }
 
+type Page struct {
+	PageNum   int `json:"page_num,omitempty" form:"page_num"`
+	PageCount int `json:"page_count,omitempty" form:"page_count"`
+}
+
 func sendJsonResponse(ctx *gin.Context, code int, format string, values ...interface{}) {
 	retMsg := fmt.Sprintf(format, values...)
 	logger.Info("[", ctx.Request.URL, "]", "code:", code, "response:", retMsg, "Remote:", ctx.Request.RemoteAddr)

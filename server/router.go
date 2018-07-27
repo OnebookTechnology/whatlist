@@ -69,5 +69,9 @@ func LoadRouter(r *gin.Engine) {
 		biggieRouter.GET("/list/get", GetBiggieList)
 		biggieRouter.GET("/recommend", GetRecommendBiggie)
 		biggieRouter.GET("/listbooks", GetBiggieListBooks)
+		biggieRouter.GET("/latestlist", GetLatestBiggieList)
+		biggieRouter.POST("/collect/add", CollectBiggie)
+		biggieRouter.GET("/collect/get", GetCollectBiggie)
+		biggieRouter.DELETE("/colllect/delete", RemoveBiggie)
 	}
 }

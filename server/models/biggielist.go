@@ -8,5 +8,6 @@ type BiggieList struct {
 	ListCreateTime string  `json:"list_create_time"`
 	ListClickCount int     `json:"list_click_count"`
 	ListImg        string  `json:"list_img"`
+	ListPrice      float64 `json:"list_price"`
 	Books          []*Book `json:"books,omitempty"`
 }

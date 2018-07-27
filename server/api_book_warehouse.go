@@ -114,7 +114,7 @@ func ListBigManDetail(c *gin.Context) {
 	list.IsPayed = true
 
 	//查询是否有购买过
-	_, err = server.DB.FindListPurchaseRecord(userId)
+	_, err = server.DB.FindListPurchaseRecord(userId, int(listID))
 	if err != nil {
 		//没买过，不返会书单目录
 		if err == sql.ErrNoRows {
