@@ -1,6 +1,9 @@
 package mysql
 
-import "github.com/OnebookTechnology/whatlist/server/models"
+import (
+	"github.com/OnebookTechnology/whatlist/server/models"
+	"time"
+)
 
 func (m *MysqlService) FindBiggieById(id int) (*models.Biggie, error) {
 	row := m.Db.QueryRow("SELECT id,name,identity,intro,sendword,weight,signtime,image FROM biggie WHERE id=?", id)
@@ -113,7 +116,7 @@ func (m *MysqlService) AddCollectBiggie(c *models.BiggieCollect) error {
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec("INSERT INTO biggiecollect(user_id, biggie_id) VALUES(?,?)", c.UserId, c.BiggieId)
+	_, err = tx.Exec("INSERT INTO biggiecollect(user_id, biggie_id, collect_time) VALUES(?,?,?)", c.UserId, c.BiggieId, time.Now().Format("2006-01-02 15:04:05"))
 	if err != nil {
 		return err
 	}
