@@ -48,6 +48,8 @@ func GetBiggie(ctx *gin.Context) {
 		sendFailedResponse(ctx, Err, "db error when FindBiggieById. err:", err)
 		return
 	}
+	b.IsCollect = false
+
 	res := &ResData{
 		Biggie: b,
 	}

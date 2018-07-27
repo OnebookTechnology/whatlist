@@ -16,6 +16,16 @@ func (m *MysqlService) FindBiggieById(id int) (*models.Biggie, error) {
 	return b, nil
 }
 
+func (m *MysqlService) FindBiggieIsCollected(userId string, biggieId int) (*models.BiggieCollect, error) {
+	row := m.Db.QueryRow("SELECT collect_time FROM biggiecollect WHERE user_id=? AND biggie_id=?", userId, biggieId)
+	var b = new(models.BiggieCollect)
+	err := row.Scan(&b.CollectTime)
+	if err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
 func (m *MysqlService) FindListsByBiggie(biggieId, pageNum, pageCount int) ([]*models.BiggieList, error) {
 	var bs []*models.BiggieList
 	rows, err := m.Db.Query("SELECT list_id,biggie_id,list_name,list_intro,list_create_time,list_click_count,list_img, list_price FROM `biggielist` WHERE `biggie_id` = ? "+
@@ -130,14 +140,14 @@ func (m *MysqlService) AddCollectBiggie(c *models.BiggieCollect) error {
 
 func (m *MysqlService) FindCollectBiggies(userId string) ([]*models.Biggie, error) {
 	var bs []*models.Biggie
-	rows, err := m.Db.Query("SELECT b.id,b.name,b.identity FROM biggie b "+
+	rows, err := m.Db.Query("SELECT b.id,b.name,b.identity,b.image,b.intro FROM biggie b "+
 		"LEFT JOIN biggiecollect bc ON b.id=bc.biggie_id WHERE bc.user_id=? ORDER BY b.latest_list_id DESC", userId)
 	if err != nil {
 		return nil, err
 	}
 	for rows.Next() {
 		b := new(models.Biggie)
-		err = rows.Scan(&b.Id, &b.Name, &b.Identity)
+		err = rows.Scan(&b.Id, &b.Name, &b.Identity, &b.Image, &b.Intro)
 		if err != nil {
 			return nil, err
 		}

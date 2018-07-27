@@ -10,5 +10,6 @@ type Biggie struct {
 	Signtime     string        `json:"signtime"`
 	Image        string        `json:"image"`
 	LatestListId int           `json:"latest_list_id"`
+	IsCollect    bool          `json:"is_collect,omitempty"`
 	Lists        []*BiggieList `json:"lists,omitempty"`
 }
