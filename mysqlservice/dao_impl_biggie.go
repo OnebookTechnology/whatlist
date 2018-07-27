@@ -108,12 +108,12 @@ func (m *MysqlService) FindLatestBiggieList(pageNum, pageCount int) ([]*models.B
 	return bs, nil
 }
 
-func (m *MysqlService) AddCollectBiggie(collect *models.BiggieCollect) error {
+func (m *MysqlService) AddCollectBiggie(c *models.BiggieCollect) error {
 	tx, err := m.Db.Begin()
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec("INSERT INTO biggiecollect(user_id, biggie_id) VALUES(?,?)")
+	_, err = tx.Exec("INSERT INTO biggiecollect(user_id, biggie_id) VALUES(?,?)", c.UserId, c.BiggieId)
 	if err != nil {
 		return err
 	}

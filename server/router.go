@@ -72,6 +72,6 @@ func LoadRouter(r *gin.Engine) {
 		biggieRouter.GET("/latestlist", GetLatestBiggieList)
 		biggieRouter.POST("/collect/add", CollectBiggie)
 		biggieRouter.GET("/collect/get", GetCollectBiggie)
-		biggieRouter.DELETE("/colllect/delete", RemoveBiggie)
+		biggieRouter.DELETE("/collect/delete", RemoveBiggie)
 	}
 }
