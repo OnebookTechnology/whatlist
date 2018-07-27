@@ -57,7 +57,7 @@ func Pay(ctx *gin.Context) {
 
 	tradeNo := strconv.FormatInt(time.Now().Unix(), 10) + RandNumber(4)
 	uri := "trade_no=" + tradeNo + "&business_type=" + businessType + "&fee=" + strconv.Itoa(req.TotalFee) +
-		"&uid=" + userId + "&list_id=" + listId + "bid=" + biggieId
+		"&uid=" + userId + "&list_id=" + listId + "&bid=" + biggieId
 	token := xxtea.EncryptStdToURLString(uri, server.XXTEAKey)
 
 	req.AppId = server.AppId
