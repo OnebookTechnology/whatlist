@@ -38,9 +38,27 @@ func (m *MysqlService) FindBiggieIsCollected(userId string, biggieId int) (strin
 	return b, nil
 }
 
-func (m *MysqlService) FindListsByBiggie(biggieId, pageNum, pageCount int) ([]*models.BiggieList, error) {
+func (m *MysqlService) FindListsByBiggie(userId string, biggieId, pageNum, pageCount int) ([]*models.BiggieList, error) {
 	var bs []*models.BiggieList
-	rows, err := m.Db.Query("SELECT list_id,biggie_id,list_name,list_intro,list_create_time,list_click_count,list_img, list_price FROM `biggielist` WHERE `biggie_id` = ? "+
+	var lmap = make(map[int]string)
+	//查询支付过的list
+	rows2, err := m.Db.Query("SELECT l.list_id FROM `list_purchase_record` r LEFT JOIN `biggielist` l ON r.`list_id` = l.`list_id` "+
+		"LEFT JOIN `expensecalender` e ON e.`order_id` = r.`order_id` "+
+		"WHERE e.`status` = 1 AND e.`user_id` = ? AND l.`biggie_id` = ? ", userId, biggieId)
+	if err != nil {
+		return nil, err
+	}
+	for rows2.Next() {
+		var lid int
+		err = rows2.Scan(&lid)
+		if err != nil {
+			return nil, err
+		}
+		//已支付记录
+		lmap[lid] = userId
+	}
+
+	rows, err := m.Db.Query("SELECT l.list_id,l.biggie_id,l.list_name,l.list_intro,l.list_create_time,l.list_click_count,l.list_img, list_price FROM `biggielist` l WHERE `biggie_id` = ? "+
 		"ORDER BY list_create_time DESC LIMIT ?,?",
 		biggieId, (pageNum-1)*pageCount, pageCount)
 	if err != nil {
@@ -52,8 +70,13 @@ func (m *MysqlService) FindListsByBiggie(biggieId, pageNum, pageCount int) ([]*m
 		if err != nil {
 			return nil, err
 		}
+		if lmap[b.ListId] != "" {
+			b.IsPayed = true
+		}
 		bs = append(bs, b)
+
 	}
+
 	return bs, nil
 }
 

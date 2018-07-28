@@ -69,6 +69,7 @@ func GetBiggie(ctx *gin.Context) {
 
 func GetBiggieList(ctx *gin.Context) {
 	crossDomain(ctx)
+	userId := ctx.Query("user_id")
 	idStr := ctx.Query("biggie_id")
 	biggieId, err := strconv.Atoi(idStr)
 	if err != nil {
@@ -88,7 +89,7 @@ func GetBiggieList(ctx *gin.Context) {
 		return
 	}
 
-	bs, err := server.DB.FindListsByBiggie(biggieId, pageNum, pageCount)
+	bs, err := server.DB.FindListsByBiggie(userId, biggieId, pageNum, pageCount)
 	if err != nil {
 		sendFailedResponse(ctx, Err, "db error when FindLatestBiggie. err:", err)
 		return
