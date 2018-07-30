@@ -5,6 +5,7 @@ import (
 	"github.com/OnebookTechnology/whatlist/server/models"
 	"github.com/gin-gonic/gin"
 	"strconv"
+	"fmt"
 )
 
 func GetLatestBiggie(ctx *gin.Context) {
@@ -256,6 +257,7 @@ func GetCollectBiggie(ctx *gin.Context) {
 	crossDomain(ctx)
 	var req CollectReq
 	if err := ctx.ShouldBindQuery(&req); err == nil {
+		fmt.Println(req.UserId, req.PageNum, req.PageCount)
 		bs, err := server.DB.FindCollectBiggies(req.UserId, req.PageNum, req.PageCount)
 		if err != nil {
 			if err == sql.ErrNoRows {
