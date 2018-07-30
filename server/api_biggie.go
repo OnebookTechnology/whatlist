@@ -256,7 +256,7 @@ func GetCollectBiggie(ctx *gin.Context) {
 	crossDomain(ctx)
 	var req CollectReq
 	if err := ctx.ShouldBindQuery(&req); err == nil {
-		bs, err := server.DB.FindCollectBiggies(req.UserId)
+		bs, err := server.DB.FindCollectBiggies(req.UserId, req.PageNum, req.PageCount)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				sendFailedResponse(ctx, NoResultErr, "FindCollectBiggies err:", err)
