@@ -54,7 +54,7 @@ func (m *MysqlService) FindListsByBiggie(userId string, biggieId, pageNum, pageC
 		if err != nil {
 			return nil, err
 		}
-		//已支付记录
+		//所有已支付记录
 		lmap[lid] = userId
 	}
 
@@ -189,12 +189,12 @@ func (m *MysqlService) AddCollectBiggie(c *models.BiggieCollect) error {
 	return nil
 }
 
-func (m *MysqlService) FindCollectBiggies(userId string) ([]*models.Biggie, error) {
+func (m *MysqlService) FindCollectBiggies(userId string, pageNum, pageCount int) ([]*models.Biggie, error) {
 	var bs []*models.Biggie
 	rows, err := m.Db.Query("SELECT b.id,b.name,b.identity,b.image,b.intro,b.collect_count,l.list_name FROM biggie b "+
 		"LEFT JOIN biggiecollect bc ON b.id=bc.biggie_id "+
 		"LEFT JOIN biggielist l ON b.latest_list_id=l.list_id "+
-		"WHERE bc.user_id=? ORDER BY b.latest_list_id DESC", userId)
+		"WHERE bc.user_id=? ORDER BY b.latest_list_id DESC LIMIT ?,?", userId, (pageNum-1)*pageCount, pageCount)
 	if err != nil {
 		return nil, err
 	}
