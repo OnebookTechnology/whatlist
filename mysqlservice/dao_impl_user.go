@@ -73,11 +73,11 @@ func (m *MysqlService) UpdateLoveVal(userId string, val int) error {
 
 // 查找用户
 func (m *MysqlService) FindUser(userId string) (*models.User, error) {
-	row := m.Db.QueryRow("SELECT user_id, hobby,field1, field2, field3, field4, field5, field6, field7 FROM User WHERE user_id=?",
+	row := m.Db.QueryRow("SELECT user_id, love_val, hobby,field1, field2, field3, field4, field5, field6, field7 FROM User WHERE user_id=?",
 		userId)
 	u := new(models.User)
 	var hobbies string
-	err := row.Scan(&u.UserId, &hobbies, &u.Field1, &u.Field2, &u.Field3, &u.Field4, &u.Field5, &u.Field6, &u.Field7)
+	err := row.Scan(&u.UserId, &u.LoveVal, &hobbies, &u.Field1, &u.Field2, &u.Field3, &u.Field4, &u.Field5, &u.Field6, &u.Field7)
 	if err != nil {
 		return nil, err
 	}
