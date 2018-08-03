@@ -223,10 +223,15 @@ func PayCallback(ctx *gin.Context) {
 	}
 	err = server.DB.UpdateExpenseCalendar(userId, orderId, int(listId), int(biggieId), models.Paid, businessType)
 	if err != nil {
-		sendJsonResponse(ctx, Err, "db error when AfterPay orderId: %s err: %s", orderId, err.Error())
+		sendJsonResponse(ctx, Err, "db error when UpdateExpenseCalendar orderId: %s err: %s", orderId, err.Error())
 		return
 	}
 
+	err = server.DB.UpdateLoveVal(userId, int(calender.Money*10))
+	if err != nil {
+		sendJsonResponse(ctx, Err, "db error when UpdateLoveVal orderId: %s err: %s", orderId, err.Error())
+		return
+	}
 	//TODO: Update Status
 	sendJsonResponse(ctx, OK, "ok")
 }

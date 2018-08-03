@@ -29,11 +29,43 @@ func (m *MysqlService) UpdateUser(userId string, u *models.User) error {
 	_, err = tx.Exec("UPDATE User SET hobby=?, field1=?, field2=?, field3=?, field4=?, field5=?, field6=?, field7=? WHERE user_id = ?",
 		hobbyStr[:len(hobbyStr)-1], u.Field1, u.Field2, u.Field3, u.Field4, u.Field5, u.Field6, u.Field7, userId)
 	if err != nil {
+		rollBackErr := tx.Rollback()
+		if rollBackErr != nil {
+			return rollBackErr
+		}
 		return err
 	}
 	err = tx.Commit()
 	if err != nil {
-		tx.Rollback()
+		rollBackErr := tx.Rollback()
+		if rollBackErr != nil {
+			return rollBackErr
+		}
+		return err
+	}
+	return nil
+}
+
+// 更新爱心值
+func (m *MysqlService) UpdateLoveVal(userId string, val int) error {
+	tx, err := m.Db.Begin()
+	if err != nil {
+		return err
+	}
+	_, err = tx.Exec("UPDATE User SET love_val=love_val + ?, WHERE user_id = ?", val, userId)
+	if err != nil {
+		rollBackErr := tx.Rollback()
+		if rollBackErr != nil {
+			return rollBackErr
+		}
+		return err
+	}
+	err = tx.Commit()
+	if err != nil {
+		rollBackErr := tx.Rollback()
+		if rollBackErr != nil {
+			return rollBackErr
+		}
 		return err
 	}
 	return nil

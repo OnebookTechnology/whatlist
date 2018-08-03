@@ -32,6 +32,10 @@ func (m *MysqlService) UpdateExpenseCalendar(userId, orderId string, listId, big
 	nowStr := time.Now().Format("2006-01-02 15:04:05")
 	_, err = tx.Exec("UPDATE ExpenseCalender SET status=?, end_time=? WHERE order_id=?", status, nowStr, orderId)
 	if err != nil {
+		rollBackErr := tx.Rollback()
+		if rollBackErr != nil {
+			return rollBackErr
+		}
 		return err
 	}
 
@@ -39,18 +43,29 @@ func (m *MysqlService) UpdateExpenseCalendar(userId, orderId string, listId, big
 	case "bigman":
 		_, err = tx.Exec("INSERT INTO list_purchase_record VALUES(?,?,?)", orderId, listId, nowStr)
 		if err != nil {
+			rollBackErr := tx.Rollback()
+			if rollBackErr != nil {
+				return rollBackErr
+			}
 			return err
 		}
 	case "subscribe":
 		_, err = tx.Exec("INSERT INTO biggiesubscriberecord(user_id,biggie_id,subscribe_time,order_id) VALUES(?,?,?,?,?)", userId, biggieId, nowStr, orderId)
 		if err != nil {
+			rollBackErr := tx.Rollback()
+			if rollBackErr != nil {
+				return rollBackErr
+			}
 			return err
 		}
 	}
 
 	err = tx.Commit()
 	if err != nil {
-		tx.Rollback()
+		rollBackErr := tx.Rollback()
+		if rollBackErr != nil {
+			return rollBackErr
+		}
 		return err
 	}
 	return nil

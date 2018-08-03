@@ -32,4 +32,6 @@ type UserDao interface {
 		return:
 	*/
 	GetInterestedBooksByUserID(userID string) ([]*models.Book, error)
+
+	UpdateLoveVal(userId string, val int) error
 }

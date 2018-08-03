@@ -10,6 +10,7 @@ type User struct {
 	Country             string  `json:"country"`
 	Language            string  `json:"language"`
 	RegisterRank        int64   `json:"register_rank"`
+	LoveVal             int     `json:"love_val"`          //爱心值
 	Hobby               []int   `json:"hobby"`             //喜好id
 	InterestedBooks     []*Book `json:"interested_books"`  // 喜好图书
 	Field1              int     `json:"field_1,omitempty"` //年龄id

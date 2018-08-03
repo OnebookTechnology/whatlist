@@ -2,10 +2,10 @@ package server
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/OnebookTechnology/whatlist/server/models"
 	"github.com/gin-gonic/gin"
 	"strconv"
-	"fmt"
 )
 
 func GetLatestBiggie(ctx *gin.Context) {
