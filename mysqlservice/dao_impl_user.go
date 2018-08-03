@@ -177,7 +177,6 @@ func (m *MysqlService) DeleteInterestedBook(userID string, isbn uint64) error {
 		return err
 	}
 	return nil
-	return nil
 }
 
 /*
