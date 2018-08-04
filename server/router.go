@@ -74,4 +74,9 @@ func LoadRouter(r *gin.Engine) {
 		biggieRouter.GET("/collect/get", GetCollectBiggie)
 		biggieRouter.DELETE("/collect/delete", RemoveBiggie)
 	}
+
+	addressRouter := router.Group("/address")
+	{
+		addressRouter.POST("/add", AddAddress)
+	}
 }

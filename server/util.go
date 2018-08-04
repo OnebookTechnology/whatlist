@@ -54,6 +54,10 @@ func nowTimestampMs() int64 {
 	return nowTimestamp() * 1000
 }
 
+func nowTimestampString() string {
+	return strconv.FormatInt(time.Now().Unix(), 10)
+}
+
 func doMD5FromString(s string) string {
 	hash := md5.New()
 	hash.Write([]byte(s))
