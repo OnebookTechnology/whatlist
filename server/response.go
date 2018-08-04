@@ -40,15 +40,20 @@ type Response struct {
 
 //注册返回数据结构
 type ResData struct {
-	Biggies     []*models.Biggie      `json:"biggies,omitempty"`
-	Biggie      *models.Biggie        `json:"biggie,omitempty"`
-	BiggieLists []*models.BiggieList  `json:"biggie_lists,omitempty"`
-	BiggieList  *models.BiggieList    `json:"biggie_list,omitempty"`
-	BiggieBooks []*models.BiggieBooks `json:"biggie_books,omitempty"`
-	BiggieBook  *models.BiggieBooks   `json:"biggie_book,omitempty"`
-	TotalCount  int                   `json:"total_count,omitempty"`
-	IsPayed     bool                  `json:"is_payed,omitempty"`
-	Name        string                `json:"name,omitempty"`
+	Biggies      []*models.Biggie          `json:"biggies,omitempty"`
+	Biggie       *models.Biggie            `json:"biggie,omitempty"`
+	BiggieLists  []*models.BiggieList      `json:"biggie_lists,omitempty"`
+	BiggieList   *models.BiggieList        `json:"biggie_list,omitempty"`
+	BiggieBooks  []*models.BiggieBooks     `json:"biggie_books,omitempty"`
+	BiggieBook   *models.BiggieBooks       `json:"biggie_book,omitempty"`
+	Addresses    []*models.UserAddressInfo `json:"addresses,omitempty"`
+	Address      *models.UserAddressInfo   `json:"address,omitempty"`
+	OrderDetails []*models.BookOrderDetail `json:"order_details,omitempty"`
+	OrderDetail  *models.BookOrderDetail   `json:"order_detail,omitempty"`
+
+	TotalCount int    `json:"total_count,omitempty"`
+	IsPayed    bool   `json:"is_payed,omitempty"`
+	Name       string `json:"name,omitempty"`
 }
 
 func sendFailedResponse(ctx *gin.Context, code int, v ...interface{}) {

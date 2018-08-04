@@ -3,7 +3,7 @@ package mysql
 import "github.com/OnebookTechnology/whatlist/server/models"
 
 //添加地址
-func (m *MysqlService) AddMallAddressInfo(info *models.UserAddressInfo) error {
+func (m *MysqlService) AddAddressInfo(info *models.UserAddressInfo) error {
 	tx, err := m.Db.Begin()
 	if err != nil {
 		return err
@@ -42,12 +42,24 @@ func (m *MysqlService) FindDefaultAddressByUserId(userId string) (*models.UserAd
 	return info, nil
 }
 
+//查询默认地址
+func (m *MysqlService) FindAddressById(addressId int) (*models.UserAddressInfo, error) {
+	row := m.Db.QueryRow("SELECT address_id, user_id, receiver_number, receiver_name, receiver_address, is_default, create_time "+
+		"FROM useraddressinfo WHERE address_id=?", addressId)
+	info := new(models.UserAddressInfo)
+	err := row.Scan(&info.AddressId, &info.UserId, &info.ReceiverNumber, &info.ReceiverName, &info.ReceiverAddress, &info.IsDefault, &info.CreateTime)
+	if err != nil {
+		return nil, err
+	}
+	return info, nil
+}
+
 //查询所有地址
-func (m *MysqlService) ListAllAddressInfoByUserId(userId string) ([]*models.UserAddressInfo, error) {
+func (m *MysqlService) ListAllAddressInfoByUserId(userId string, pageNum, pageCount int) ([]*models.UserAddressInfo, error) {
 	rows, err := m.Db.Query("SELECT address_id, user_id, receiver_number, receiver_name, receiver_address, is_default, create_time "+
 		"FROM useraddressinfo "+
 		"WHERE user_id=? "+
-		"ORDER BY is_default DESC, create_time asc ", userId)
+		"ORDER BY is_default DESC, create_time asc LIMIT ?,? ", userId, (pageNum-1)*pageCount, pageCount)
 	if err != nil {
 		return nil, err
 	}
@@ -68,8 +80,8 @@ func (m *MysqlService) UpdateAddressInfo(info *models.UserAddressInfo) error {
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec("UPDATE useraddressinfo SET receiver_number=?, receiver_name=?, receiver_address=? WHERE address_id=?",
-		info.ReceiverNumber, info.ReceiverName, info.ReceiverAddress, info.AddressId)
+	_, err = tx.Exec("UPDATE useraddressinfo SET receiver_number=?, receiver_name=?, receiver_address=?, create_time=? WHERE address_id=?",
+		info.ReceiverNumber, info.ReceiverName, info.ReceiverAddress, info.CreateTime, info.AddressId)
 	if err != nil {
 		rollBackErr := tx.Rollback()
 		if rollBackErr != nil {
