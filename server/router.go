@@ -86,4 +86,12 @@ func LoadRouter(r *gin.Engine) {
 		addressRouter.POST("/update/default", UpdateMallAddressInfoToDefault)
 	}
 
+	orderRouter := router.Group("/order")
+	{
+		orderRouter.POST("/add", AddBookOrder)
+		orderRouter.GET("/get", FindOrderDetail)
+		orderRouter.GET("/get_all", FindOrders)
+
+	}
+
 }

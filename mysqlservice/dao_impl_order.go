@@ -9,8 +9,9 @@ func (m *MysqlService) AddBookOrder(o *models.BookOrder, bookISBNS []int64) erro
 		return err
 	}
 	_, err = tx.Exec("INSERT INTO bookorder(order_id, user_id, address_id, origin_money, discount, order_money,order_status, "+
-		" order_begin_time, order_update_time) VALUES(?,?,?,?,?,?,?,?,?)",
-		o.OrderId, o.UserId, o.AddressId, o.OriginMoney, o.Discount, o.OrderMoney, o.OrderStatus, o.OrderBeginTime, o.OrderBeginTime)
+		" order_begin_time, order_update_time, remark) VALUES(?,?,?,?,?,?,?,?,?,?)",
+		o.OrderId, o.UserId, o.AddressId, o.OriginMoney, o.Discount, o.OrderMoney, o.OrderStatus,
+		o.OrderBeginTime, o.OrderBeginTime, o.Remark)
 	if err != nil {
 		rollBackErr := tx.Rollback()
 		if rollBackErr != nil {
@@ -66,7 +67,7 @@ func (m *MysqlService) FindOrdersByUserId(userId string, pageNum, pageItems int)
 }
 
 // 根据orderId查询所有订单图书内容
-func (m *MysqlService) FindBooksByOrderId(orderId int) ([]*models.Book, error) {
+func (m *MysqlService) FindBooksByOrderId(orderId int64) ([]*models.Book, error) {
 	rows, err := m.Db.Query("SELECT b.`ISBN` ,b.`book_name`, b.`book_icon`, b.`price`   FROM `book` b "+
 		"LEFT JOIN `bookorderdetail` d ON b.`ISBN` = d.`ISBN` WHERE d.`order_id` = ?", orderId)
 	if err != nil {
@@ -85,7 +86,7 @@ func (m *MysqlService) FindBooksByOrderId(orderId int) ([]*models.Book, error) {
 }
 
 // 根据orderId查询所有订单内容
-func (m *MysqlService) FindOrderDetailByOrderId(orderId int) (*models.BookOrderDetail, error) {
+func (m *MysqlService) FindOrderDetailByOrderId(orderId int64) (*models.BookOrderDetail, error) {
 	row := m.Db.QueryRow("SELECT bo.`order_id` , bo.`origin_money` ,bo.`discount` ,bo.`order_money` ,bo.`order_status`,"+
 		"bo.`tracking_number` ,bo.`freight` ,bo.`remark` ,bo.`order_begin_time`, bo.`order_update_time`,"+
 		"a.`receiver_number` , a.`receiver_name` , a.`receiver_address` "+

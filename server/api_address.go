@@ -5,26 +5,7 @@ import (
 	"fmt"
 	"github.com/OnebookTechnology/whatlist/server/models"
 	"github.com/gin-gonic/gin"
-	//"strconv"
-	"github.com/json-iterator/go"
 )
-
-//func GetLatestBiggie(ctx *gin.Context) {
-//	crossDomain(ctx)
-//pageNumStr := ctx.Query("page_num")
-//pageNum, err := strconv.Atoi(pageNumStr)
-//if err != nil {
-//sendFailedResponse(ctx, Err, "parse page_num error:", err, "page_num:", pageNumStr)
-//return
-//}
-//pageCountStr := ctx.Query("page_count")
-//pageCount, err := strconv.Atoi(pageCountStr)
-//if err != nil {
-//sendFailedResponse(ctx, Err, "parse page_count error:", err, "page_count:", pageCountStr)
-//return
-//}
-//
-//}
 
 type AddressReq struct {
 	UserId          string `json:"user_id" form:"user_id"`
@@ -46,7 +27,7 @@ func AddAddress(ctx *gin.Context) {
 			ReceiverNumber:  req.ReceiverNumber,
 			ReceiverName:    req.ReceiverName,
 			ReceiverAddress: req.ReceiverAddress,
-			CreateTime:      nowTimestampString(),
+			CreateTime:      nowFormat(),
 		}
 
 		address, err := server.DB.FindDefaultAddressByUserId(c.UserId)
@@ -130,7 +111,7 @@ func UpdateAddressInfo(ctx *gin.Context) {
 			ReceiverNumber:  req.ReceiverNumber,
 			ReceiverName:    req.ReceiverName,
 			ReceiverAddress: req.ReceiverAddress,
-			CreateTime:      nowTimestampString(),
+			CreateTime:      nowFormat(),
 		}
 
 		err := server.DB.UpdateAddressInfo(c)

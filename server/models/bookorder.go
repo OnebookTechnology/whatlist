@@ -1,7 +1,7 @@
 package models
 
 type BookOrder struct {
-	OrderId         int     `json:"order_id"`
+	OrderId         int64   `json:"order_id"`
 	UserId          string  `json:"user_id"`
 	AddressId       int     `json:"address_id"`
 	OriginMoney     float64 `json:"origin_money"`
