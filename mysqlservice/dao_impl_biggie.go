@@ -252,3 +252,29 @@ func (m *MysqlService) AddClickCount(listId int) error {
 	}
 	return nil
 }
+
+func (m *MysqlService) AddBiggieListRecord(orderId string, listId int) error {
+	nowStr := time.Now().Format("2006-01-02 15:04:05")
+	tx, err := m.Db.Begin()
+	if err != nil {
+		return err
+	}
+	_, err = tx.Exec("INSERT INTO list_purchase_record VALUES(?,?,?)", orderId, listId, nowStr)
+	if err != nil {
+		rollBackErr := tx.Rollback()
+		if rollBackErr != nil {
+			return rollBackErr
+		}
+		return err
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		err = tx.Rollback()
+		if err != nil {
+			return err
+		}
+		return err
+	}
+	return nil
+}

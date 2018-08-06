@@ -83,15 +83,17 @@ func LoadRouter(r *gin.Engine) {
 		addressRouter.POST("/update", UpdateAddressInfo)
 		addressRouter.DELETE("/delete", DeleteAddressInfo)
 		addressRouter.GET("/get/all", ListAllAddressInfo)
-		addressRouter.POST("/update/default", UpdateMallAddressInfoToDefault)
+		addressRouter.POST("/update/default", UpdateAddressInfoToDefault)
 	}
 
 	orderRouter := router.Group("/order")
 	{
 		orderRouter.POST("/add", AddBookOrder)
+		orderRouter.POST("/update", UpdateOrder)
 		orderRouter.GET("/get", FindOrderDetail)
 		orderRouter.GET("/get_all", FindOrders)
-
+		orderRouter.DELETE("/delete", DeleteOrder)
+		orderRouter.POST("/paycallback/:token", OrderPayCallback)
 	}
 
 }

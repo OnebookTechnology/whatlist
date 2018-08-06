@@ -170,7 +170,7 @@ func ListAllAddressInfo(ctx *gin.Context) {
 	}
 }
 
-func UpdateMallAddressInfoToDefault(ctx *gin.Context) {
+func UpdateAddressInfoToDefault(ctx *gin.Context) {
 	crossDomain(ctx)
 	var req AddressReq
 	if err := ctx.BindJSON(&req); err == nil {

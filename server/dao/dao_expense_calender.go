@@ -6,7 +6,7 @@ type ExpenseCalendar interface {
 	// add expense record
 	AddExpenseCalendar(expense *models.ExpenseCalender) error
 
-	UpdateExpenseCalendar(userId, orderId string, listId, biggieId int, status models.StatusExpense, payType string) error
+	UpdateExpenseCalendar(expense *models.ExpenseCalender) error
 	// find one user all expense records
 	FindAllExpenseCalendar(userId string) ([]*models.ExpenseCalender, error)
 	// find by order id

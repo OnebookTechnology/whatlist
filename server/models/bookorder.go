@@ -3,6 +3,7 @@ package models
 type BookOrder struct {
 	OrderId         int64   `json:"order_id"`
 	UserId          string  `json:"user_id"`
+	ListId          int     `json:"list_id"`
 	AddressId       int     `json:"address_id"`
 	OriginMoney     float64 `json:"origin_money"`
 	Discount        float64 `json:"discount"`
@@ -16,7 +17,8 @@ type BookOrder struct {
 }
 
 const (
-	OrderReviewing = iota
+	OrderCreated = iota
+	OrderReviewing
 	OrderHandled
 	OrderSending
 	OrderFinished

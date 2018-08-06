@@ -32,8 +32,8 @@ const (
 )
 
 const (
-	BiggieListPay   = "bigman"
-	BiggieSubscribe = "subscribe"
+	BiggieListPay = "bigman"
+	BiggieBook    = "book"
 )
 
 const (

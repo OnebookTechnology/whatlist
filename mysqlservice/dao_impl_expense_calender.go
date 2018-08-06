@@ -6,13 +6,13 @@ import (
 )
 
 // add expense record
-func (m *MysqlService) AddExpenseCalendar(expense *models.ExpenseCalender) error {
+func (m *MysqlService) AddExpenseCalendar(e *models.ExpenseCalender) error {
 	tx, err := m.Db.Begin()
 	if err != nil {
 		return err
 	}
 	_, err = tx.Exec("INSERT INTO ExpenseCalender(order_id, user_id,money,business_type, status,start_time,end_time) VALUES(?,?,?,?,?,?,?)",
-		expense.OrderID, expense.UserId, expense.Money, expense.BusinessType, expense.Status, expense.StartTime, expense.EndTime)
+		e.OrderID, e.UserId, e.Money, e.BusinessType, e.Status, e.StartTime, e.EndTime)
 	if err != nil {
 		return err
 	}
@@ -24,40 +24,19 @@ func (m *MysqlService) AddExpenseCalendar(expense *models.ExpenseCalender) error
 	return nil
 }
 
-func (m *MysqlService) UpdateExpenseCalendar(userId, orderId string, listId, biggieId int, status models.StatusExpense, payType string) error {
+func (m *MysqlService) UpdateExpenseCalendar(e *models.ExpenseCalender) error {
 	tx, err := m.Db.Begin()
 	if err != nil {
 		return err
 	}
 	nowStr := time.Now().Format("2006-01-02 15:04:05")
-	_, err = tx.Exec("UPDATE ExpenseCalender SET status=?, end_time=? WHERE order_id=?", status, nowStr, orderId)
+	_, err = tx.Exec("UPDATE ExpenseCalender SET status=?, end_time=? WHERE order_id=?", e.Status, nowStr, e.OrderID)
 	if err != nil {
 		rollBackErr := tx.Rollback()
 		if rollBackErr != nil {
 			return rollBackErr
 		}
 		return err
-	}
-
-	switch payType {
-	case "bigman":
-		_, err = tx.Exec("INSERT INTO list_purchase_record VALUES(?,?,?)", orderId, listId, nowStr)
-		if err != nil {
-			rollBackErr := tx.Rollback()
-			if rollBackErr != nil {
-				return rollBackErr
-			}
-			return err
-		}
-	case "subscribe":
-		_, err = tx.Exec("INSERT INTO biggiesubscriberecord(user_id,biggie_id,subscribe_time,order_id) VALUES(?,?,?,?,?)", userId, biggieId, nowStr, orderId)
-		if err != nil {
-			rollBackErr := tx.Rollback()
-			if rollBackErr != nil {
-				return rollBackErr
-			}
-			return err
-		}
 	}
 
 	err = tx.Commit()
