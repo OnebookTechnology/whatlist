@@ -338,9 +338,9 @@ func CalculateBookOrderPrice(ctx *gin.Context) {
 			sendFailedResponse(ctx, Err, "invalid BookISBNS err:", err)
 			return
 		}
-		discount := 1000 - 50*c
-		if discount < 800 {
-			discount = 800
+		discount := 100 - 5*c
+		if discount < 80 {
+			discount = 80
 		}
 
 		a := new(models.BookOrderDetail)
