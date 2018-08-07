@@ -108,7 +108,7 @@ func (m *MysqlService) DeleteBookOrder(o *models.BookOrder) error {
 
 // 根据userId查询所有商城订单， 按发起时间排序, 分页
 func (m *MysqlService) FindOrdersByUserId(userId string, pageNum, pageItems int) ([]*models.BookOrderDetail, error) {
-	rows, err := m.Db.Query("SELECT b.`order_id` ,b.`order_money` ,b.`order_status`, b.`order_begin_time` , b.list_id"+
+	rows, err := m.Db.Query("SELECT b.`order_id` ,b.`order_money` ,b.`order_status`, b.`order_begin_time` , b.list_id "+
 		"FROM `bookorder` b ORDER BY b.`order_begin_time` DESC LIMIT ?,?", userId, (pageNum-1)*pageItems, pageItems)
 	if err != nil {
 		return nil, err
