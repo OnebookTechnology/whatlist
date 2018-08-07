@@ -121,14 +121,14 @@ func (m *MysqlService) FindRecommendBiggies(pageNum, pageCount int) ([]*models.B
 
 func (m *MysqlService) FindBiggieListBooks(listId int) ([]*models.BiggieBooks, error) {
 	var bs []*models.BiggieBooks
-	rows, err := m.Db.Query("SELECT bb.`list_id` , bb.`ISBN` , bb.`recommend` , b.`book_name`, b.`author_name` , b.`book_icon` "+
+	rows, err := m.Db.Query("SELECT bb.`list_id` , bb.`ISBN` , bb.`recommend` , b.`book_name`, b.`author_name` , b.`book_icon`, b.`price` "+
 		"FROM `biggiebooks` bb LEFT JOIN `book` b ON bb.`ISBN` = b.`ISBN` WHERE bb.`list_id` = ?", listId)
 	if err != nil {
 		return nil, err
 	}
 	for rows.Next() {
 		b := new(models.BiggieBooks)
-		err = rows.Scan(&b.ListId, &b.ISBN, &b.Recommend, &b.BookName, &b.AuthorName, &b.BookIcon)
+		err = rows.Scan(&b.ListId, &b.ISBN, &b.Recommend, &b.BookName, &b.AuthorName, &b.BookIcon, &b.BookPrice)
 		if err != nil {
 			return nil, err
 		}
