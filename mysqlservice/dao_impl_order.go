@@ -8,10 +8,11 @@ func (m *MysqlService) AddBookOrder(o *models.BookOrder, bookISBNS []int64) erro
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec("INSERT INTO bookorder(order_id, user_id, list_id, address_id, origin_money, discount, order_money, order_status, "+
-		" order_begin_time, order_update_time, remark) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
-		o.OrderId, o.UserId, o.ListId, o.AddressId, o.OriginMoney, o.Discount, o.OrderMoney, o.OrderStatus,
-		o.OrderBeginTime, o.OrderBeginTime, o.Remark)
+	_, err = tx.Exec("INSERT INTO bookorder(order_id, user_id, list_id, origin_money, discount, order_money, order_status, "+
+		" order_begin_time, order_update_time, remark, user_name, postal_code, province_name, city_name, country_name, detail_info, national_code, tel_number) "+
+		"VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+		o.OrderId, o.UserId, o.ListId, o.OriginMoney, o.Discount, o.OrderMoney, o.OrderStatus,
+		o.OrderBeginTime, o.OrderBeginTime, o.Remark, o.UserName, o.PostalCode, o.ProvinceName, o.CityName, o.CountryName, o.DetailInfo, o.NationalCode, o.TrackingNumber)
 	if err != nil {
 		rollBackErr := tx.Rollback()
 		if rollBackErr != nil {
@@ -108,8 +109,7 @@ func (m *MysqlService) DeleteBookOrder(o *models.BookOrder) error {
 // 根据userId查询所有商城订单， 按发起时间排序, 分页
 func (m *MysqlService) FindOrdersByUserId(userId string, pageNum, pageItems int) ([]*models.BookOrderDetail, error) {
 	rows, err := m.Db.Query("SELECT b.`order_id` ,b.`order_money` ,b.`order_status`, b.`order_begin_time` , b.list_id"+
-		"FROM `bookorder` b LEFT JOIN `useraddressinfo` u ON b.`address_id` = u.`address_id` "+
-		"WHERE b.`user_id` = ? ORDER BY b.`order_begin_time` DESC LIMIT ?,?", userId, (pageNum-1)*pageItems, pageItems)
+		"FROM `bookorder` b ORDER BY b.`order_begin_time` DESC LIMIT ?,?", userId, (pageNum-1)*pageItems, pageItems)
 	if err != nil {
 		return nil, err
 	}
@@ -151,14 +151,14 @@ func (m *MysqlService) FindBooksByOrderId(orderId int64) ([]*models.Book, error)
 // 根据orderId查询所有订单内容
 func (m *MysqlService) FindOrderDetailByOrderId(orderId int64) (*models.BookOrderDetail, error) {
 	row := m.Db.QueryRow("SELECT bo.`order_id` , bo.`origin_money` ,bo.`discount` ,bo.`order_money` ,bo.`order_status`, bo.list_id,"+
-		"bo.`tracking_number` ,bo.`freight` ,bo.`remark` ,bo.`order_begin_time`, bo.`order_update_time`,"+
-		"a.`receiver_number` , a.`receiver_name` , a.`receiver_address` "+
-		"FROM `bookorder` bo LEFT JOIN `useraddressinfo` a ON bo.`address_id` = a.`address_id` WHERE bo.`order_id`=?", orderId)
+		"bo.`tracking_number` ,bo.`freight` ,bo.`remark` ,bo.`order_begin_time`, bo.`order_update_time`,bo.user_name, "+
+		"bo.postal_code, bo.province_name, bo.city_name, bo.country_name, bo.detail_info, bo.national_code, bo.tel_number"+
+		"FROM `bookorder` bo  WHERE bo.`order_id`=?", orderId)
 
 	order := new(models.BookOrderDetail)
 	err := row.Scan(&order.OrderId, &order.OriginMoney, &order.Discount, &order.OrderMoney, &order.OrderStatus, &order.ListId,
-		&order.TrackingNumber, &order.Freight, &order.Remark, &order.OrderBeginTime, &order.OrderUpdateTime,
-		&order.ReceiverNumber, &order.ReceiverName, &order.ReceiverAddress)
+		&order.TrackingNumber, &order.Freight, &order.Remark, &order.OrderBeginTime, &order.OrderUpdateTime, &order.UserName,
+		&order.PostalCode, &order.ProvinceName, &order.CityName, &order.CountryName, &order.DetailInfo, &order.NationalCode, &order.TelNumber)
 	if err != nil {
 		return nil, err
 	}

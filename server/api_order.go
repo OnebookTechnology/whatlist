@@ -47,12 +47,11 @@ func AddBookOrder(ctx *gin.Context) {
 		o := &models.BookOrder{
 			UserId:          req.UserId,
 			OrderId:         orderId,
-			AddressId:       req.AddressId,
 			ListId:          req.ListId,
 			OriginMoney:     req.OriginMoney,
 			Discount:        req.Discount,
 			OrderMoney:      req.OrderMoney,
-			OrderStatus:     models.OrderCreated,
+			OrderStatus:     models.OrderWaitPay,
 			OrderBeginTime:  nowFormat(),
 			OrderUpdateTime: nowFormat(),
 			Remark:          req.Remark,
@@ -142,7 +141,7 @@ func AddBookOrder(ctx *gin.Context) {
 			return
 		}
 		// response the request
-		res := &PayResponse{
+		payRes := &PayResponse{
 			AppId:     payResp.AppId.Value,
 			TimeStamp: strconv.FormatInt(time.Now().Unix(), 10),
 			NonceStr:  payResp.NonceStr.Value,
@@ -151,16 +150,16 @@ func AddBookOrder(ctx *gin.Context) {
 			Sign:      payResp.Sign.Value,
 		}
 
-		data, _ := jsoniter.MarshalToString(res)
-		sendJsonResponse(ctx, OK, "%s", data)
-		return
-
 		err = server.DB.AddBookOrder(o, req.BookISBNS)
 		if err != nil {
 			sendFailedResponse(ctx, Err, "AddMallAddressInfo err:", err)
 			return
 		}
-		sendSuccessResponse(ctx, nil)
+
+		res := &ResData{
+			PayResponse: payRes,
+		}
+		sendSuccessResponse(ctx, res)
 		return
 	} else {
 		sendFailedResponse(ctx, Err, "BindJSON err:", err)

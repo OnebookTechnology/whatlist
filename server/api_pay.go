@@ -175,7 +175,6 @@ func PayCallback(ctx *gin.Context) {
 	feeStr := paramsMap["fee"]
 	listIdStr := paramsMap["list_id"]
 	userId := paramsMap["uid"]
-	biggieIdStr := paramsMap["bid"]
 
 	if len(orderId) == 0 || len(businessType) == 0 || len(feeStr) == 0 || len(userId) == 0 {
 		logger.Error("PayCallback lack of params err. paramsMap:", paramsMap)
@@ -186,20 +185,8 @@ func PayCallback(ctx *gin.Context) {
 	if listIdStr == "" {
 		listIdStr = "0"
 	}
-	listId, err := strconv.ParseInt(listIdStr, 10, 64)
-	if err != nil {
-		sendJsonResponse(ctx, Err, "PayCallback invalid listId: %s", listIdStr)
-		return
-	}
 
-	if biggieIdStr == "" {
-		biggieIdStr = "0"
-	}
-	biggieId, err := strconv.ParseInt(biggieIdStr, 10, 64)
-	if err != nil {
-		sendJsonResponse(ctx, Err, "PayCallback invalid biggieIdStr: %s", biggieIdStr)
-		return
-	}
+	listId, _ := strconv.Atoi(listIdStr)
 
 	feeInt, err := strconv.ParseInt(feeStr, 10, 64)
 	if err != nil {
@@ -221,9 +208,21 @@ func PayCallback(ctx *gin.Context) {
 		sendJsonResponse(ctx, OK, "paid")
 		return
 	}
-	err = server.DB.UpdateExpenseCalendar(userId, orderId, int(listId), int(biggieId), models.Paid, businessType)
+
+	e := &models.ExpenseCalender{
+		UserId:  userId,
+		OrderID: orderId,
+	}
+
+	err = server.DB.UpdateExpenseCalendar(e)
 	if err != nil {
 		sendJsonResponse(ctx, Err, "db error when UpdateExpenseCalendar orderId: %s err: %s", orderId, err.Error())
+		return
+	}
+
+	err = server.DB.AddBiggieListRecord(orderId, listId)
+	if err != nil {
+		sendJsonResponse(ctx, Err, "db error when AddBiggieListRecord orderId: %s err: %s", orderId, err.Error())
 		return
 	}
 
@@ -234,6 +233,7 @@ func PayCallback(ctx *gin.Context) {
 	}
 	//TODO: Update Status
 	sendJsonResponse(ctx, OK, "ok")
+
 }
 
 func genSign(req *WeChatPayRequest) string {

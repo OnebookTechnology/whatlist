@@ -16,4 +16,5 @@ type BiggieDao interface {
 	FindCollectBiggies(userId string, pageNum, pageCount int) ([]*models.Biggie, error)
 	FindBiggieIsCollected(userId string, biggieId int) (string, error)
 	AddClickCount(listId int) error
+	AddBiggieListRecord(orderId string, listId int) error
 }

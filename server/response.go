@@ -50,6 +50,7 @@ type ResData struct {
 	Address      *models.UserAddressInfo   `json:"address,omitempty"`
 	OrderDetails []*models.BookOrderDetail `json:"order_details,omitempty"`
 	OrderDetail  *models.BookOrderDetail   `json:"order_detail,omitempty"`
+	PayResponse  *PayResponse              `json:"pay_response,omitempty"`
 
 	TotalCount int    `json:"total_count,omitempty"`
 	IsPayed    bool   `json:"is_payed,omitempty"`
