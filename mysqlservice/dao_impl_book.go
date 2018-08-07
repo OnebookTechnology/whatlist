@@ -84,7 +84,7 @@ func (m *MysqlService) CalculatePrice(ISBNs []int64) (float64, error) {
 	var isbns string
 	var sum float64
 	for _, isbn := range ISBNs {
-		isbns = strconv.FormatInt(isbn, 10) + ","
+		isbns += strconv.FormatInt(isbn, 10) + ","
 	}
 	row := m.Db.QueryRow("SELECT SUM(`price`)  FROM `book` WHERE ISBN IN (?)", isbns[:len(isbns)-1])
 	err := row.Scan(&sum)
