@@ -30,13 +30,15 @@ type BookOrderReq struct {
 	Remark          string  `json:"remark"`
 	OrderBeginTime  string  `json:"order_begin_time"`
 	OrderUpdateTime string  `json:"order_update_time"`
+	IsAll           bool    `json:"is_all"`
+	models.WxAddress
 	Page
 }
 
 func AddBookOrder(ctx *gin.Context) {
 	crossDomain(ctx)
 	var req BookOrderReq
-	if err := ctx.BindJSON(&req); err == nil {
+	if err := ctx.ShouldBindJSON(&req); err == nil {
 		orderIdStr := nowTimestampString() + RandNumber(4)
 		orderId, err := strconv.ParseInt(orderIdStr, 10, 64)
 		if err != nil {
@@ -329,7 +331,6 @@ func CalculateBookOrderPrice(ctx *gin.Context) {
 	if err := ctx.ShouldBindJSON(&req); err == nil {
 		originMoney, err := server.DB.CalculatePrice(req.BookISBNS)
 		if err != nil {
-
 			sendFailedResponse(ctx, Err, "CalculatePrice err:", err)
 			return
 		}
@@ -341,6 +342,9 @@ func CalculateBookOrderPrice(ctx *gin.Context) {
 		discount := 100 - 5*c
 		if discount < 80 {
 			discount = 80
+		}
+		if req.IsAll {
+			discount = 70
 		}
 
 		a := new(models.BookOrderDetail)
