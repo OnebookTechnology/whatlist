@@ -7,7 +7,6 @@ import (
 	"github.com/OnebookTechnology/whatlist/server/models"
 	"github.com/cxt90730/xxtea-go/xxtea"
 	"github.com/gin-gonic/gin"
-	"github.com/json-iterator/go"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -58,8 +57,14 @@ func AddBookOrder(ctx *gin.Context) {
 			Remark:          req.Remark,
 		}
 
-		s, _ := jsoniter.MarshalToString(o)
-		uri := "s=" + s
+		err = server.DB.AddBookOrder(o, req.BookISBNS)
+		if err != nil {
+			sendFailedResponse(ctx, Err, "AddMallAddressInfo err:", err)
+			return
+		}
+
+		uri := "uid=" + req.UserId +
+			"&oid=" + orderIdStr
 		token := xxtea.EncryptStdToURLString(uri, server.XXTEAKey)
 
 		wxReq := new(WeChatPayRequest)
@@ -151,12 +156,6 @@ func AddBookOrder(ctx *gin.Context) {
 			Sign:      payResp.Sign.Value,
 		}
 
-		err = server.DB.AddBookOrder(o, req.BookISBNS)
-		if err != nil {
-			sendFailedResponse(ctx, Err, "AddMallAddressInfo err:", err)
-			return
-		}
-
 		res := &ResData{
 			PayResponse: payRes,
 		}
@@ -178,21 +177,26 @@ func OrderPayCallback(ctx *gin.Context) {
 		return
 	}
 	paramsMap := getURIParams(uriStr)
-	info := paramsMap["s"]
+	userId := paramsMap["uid"]
+	orderIdStr := paramsMap["oid"]
 
-	if info == "" {
-		logger.Error("MallPayCallBack lack of params err. paramsMap:", paramsMap)
-		sendJsonResponse(ctx, Err, "MallPayCallBack lack of params err.")
+	if userId == "" || orderIdStr == "" {
+		logger.Error("PayCallBack lack of params err. paramsMap:", paramsMap)
+		sendJsonResponse(ctx, Err, "PayCallBack lack of params err.")
 		return
 	}
 
-	order := new(models.BookOrder)
-	jsoniter.UnmarshalFromString(info, order)
+	orderId, _ := strconv.ParseInt(orderIdStr, 10, 64)
+	order, err := server.DB.FindOrderDetailByOrderId(orderId)
+	if err != nil {
+		logger.Error("db error when FindOrderDetailByOrderId. paramsMap:", paramsMap)
+		sendJsonResponse(ctx, Err, "db error when FindOrderDetailByOrderId. ")
+		return
+	}
 
 	logger.Info("%%% MallPayCallBack OrderID :", order.OrderId, "userId:", order.UserId, "Fee:", order.OrderMoney, "%%%")
 	//TODO: LOCK orderId
 
-	orderIdStr := strconv.FormatInt(order.OrderId, 10)
 	calender, err := server.DB.FindExpenseCalendarByOrderId(orderIdStr)
 	if err != nil {
 		sendJsonResponse(ctx, Err, "db error when FindExpenseCalendarByOrderId orderId: %s err: %s", orderIdStr, err.Error())
