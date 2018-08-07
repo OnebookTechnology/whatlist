@@ -35,4 +35,6 @@ type BookDao interface {
 	//FindAllBooksByCatalogAndPriceOrderBySales(catalog, lo, hi, pageNum, pageItems int) ([]*models.BookDisplay, error)
 	//FindAllBooksByPriceOrderByOnlineTime(lo, hi, pageNum, pageItems int) ([]*models.BookDisplay, error)
 	//FindAllBooksByPriceOrderBySales(lo, hi, pageNum, pageItems int) ([]*models.BookDisplay, error)
+
+	CalculatePrice(ISBNs []int64) (float64, error)
 }

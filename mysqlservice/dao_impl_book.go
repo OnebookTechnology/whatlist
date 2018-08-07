@@ -80,6 +80,20 @@ func (m *MysqlService) FindBook(isbn uint64) (*models.Book, error) {
 	return book, nil
 }
 
+func (m *MysqlService) CalculatePrice(ISBNs []int64) (float64, error) {
+	var isbns string
+	var sum float64
+	for _, isbn := range ISBNs {
+		isbns = strconv.FormatInt(isbn, 10) + ","
+	}
+	row := m.Db.QueryRow("SELECT SUM(`price`)  FROM `book` WHERE ISBN IN (?)", isbns[:len(isbns)-1])
+	err := row.Scan(&sum)
+	if err != nil {
+		return 0.00, err
+	}
+	return sum, nil
+}
+
 func (m *MysqlService) FindBookByCateGory(categoryId, pageNum, pageCount int) ([]*models.Book, error) {
 	var list []*models.Book
 	rows, err := m.Db.Query("SELECT ISBN,book_name,author_name,press,publication_time,print_time,format,paper,pack,"+

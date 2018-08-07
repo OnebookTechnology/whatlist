@@ -21,7 +21,6 @@ type BookOrderReq struct {
 	BookISBNS       []int64 `json:"book_isbns"`
 	OrderId         int64   `json:"order_id" form:"order_id"`
 	ListId          int     `json:"list_id"`
-	AddressId       int     `json:"address_id"`
 	OriginMoney     float64 `json:"origin_money"`
 	Discount        float64 `json:"discount"`
 	OrderMoney      float64 `json:"order_money"`
@@ -315,6 +314,42 @@ func FindOrders(ctx *gin.Context) {
 		}
 		res := &ResData{
 			OrderDetails: a,
+		}
+		sendSuccessResponse(ctx, res)
+		return
+	} else {
+		sendFailedResponse(ctx, Err, "BindJSON err:", err)
+		return
+	}
+}
+
+func CalculateBookOrderPrice(ctx *gin.Context) {
+	crossDomain(ctx)
+	var req BookOrderReq
+	if err := ctx.ShouldBindQuery(&req); err == nil {
+		originMoney, err := server.DB.CalculatePrice(req.BookISBNS)
+		if err != nil {
+
+			sendFailedResponse(ctx, Err, "CalculatePrice err:", err)
+			return
+		}
+		c := len(req.BookISBNS)
+		if c == 0 {
+			sendFailedResponse(ctx, Err, "invalid BookISBNS err:", err)
+			return
+		}
+		discount := 1000 - 50*c
+		if discount < 800 {
+			discount = 800
+		}
+
+		a := new(models.BookOrderDetail)
+		a.OriginMoney = originMoney
+		a.Discount = FenToYuan(discount)
+		a.OrderMoney = FenToYuan(YuanToFen(originMoney * a.Discount))
+
+		res := &ResData{
+			OrderDetail: a,
 		}
 		sendSuccessResponse(ctx, res)
 		return
