@@ -90,6 +90,7 @@ func (m *MysqlService) CalculatePrice(ISBNs []int64) (float64, error) {
 	fmt.Println(isbns)
 	row := m.Db.QueryRow("SELECT SUM(`price`)  FROM `book` WHERE ISBN IN (?)", isbns[:len(isbns)-1])
 	err := row.Scan(&sum)
+	fmt.Println(sum)
 	if err != nil {
 		return 0.00, err
 	}
