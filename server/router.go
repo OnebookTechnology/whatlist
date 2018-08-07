@@ -93,7 +93,7 @@ func LoadRouter(r *gin.Engine) {
 		orderRouter.GET("/get", FindOrderDetail)
 		orderRouter.GET("/get_all", FindOrders)
 		orderRouter.DELETE("/delete", DeleteOrder)
-		orderRouter.GET("/calc", CalculateBookOrderPrice)
+		orderRouter.POST("/calc", CalculateBookOrderPrice)
 		orderRouter.POST("/paycallback/:token", OrderPayCallback)
 	}
 

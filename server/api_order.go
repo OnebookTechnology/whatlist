@@ -326,7 +326,7 @@ func FindOrders(ctx *gin.Context) {
 func CalculateBookOrderPrice(ctx *gin.Context) {
 	crossDomain(ctx)
 	var req BookOrderReq
-	if err := ctx.ShouldBindQuery(&req); err == nil {
+	if err := ctx.ShouldBindJSON(&req); err == nil {
 		originMoney, err := server.DB.CalculatePrice(req.BookISBNS)
 		if err != nil {
 
