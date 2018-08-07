@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"fmt"
 	"github.com/OnebookTechnology/whatlist/server/models"
 	"strconv"
 	"strings"
@@ -86,6 +87,7 @@ func (m *MysqlService) CalculatePrice(ISBNs []int64) (float64, error) {
 	for _, isbn := range ISBNs {
 		isbns += strconv.FormatInt(isbn, 10) + ","
 	}
+	fmt.Println(isbns)
 	row := m.Db.QueryRow("SELECT SUM(`price`)  FROM `book` WHERE ISBN IN (?)", isbns[:len(isbns)-1])
 	err := row.Scan(&sum)
 	if err != nil {
