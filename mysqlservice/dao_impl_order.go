@@ -150,9 +150,9 @@ func (m *MysqlService) FindBooksByOrderId(orderId int64) ([]*models.Book, error)
 
 // 根据orderId查询所有订单内容
 func (m *MysqlService) FindOrderDetailByOrderId(orderId int64) (*models.BookOrderDetail, error) {
-	row := m.Db.QueryRow("SELECT bo.`order_id` , bo.`origin_money` ,bo.`discount` ,bo.`order_money` ,bo.`order_status`, bo.list_id,"+
+	row := m.Db.QueryRow("SELECT bo.`order_id` , bo.`origin_money` ,bo.`discount` ,bo.`order_money` ,bo.`order_status`, bo.list_id, "+
 		"bo.`tracking_number` ,bo.`freight` ,bo.`remark` ,bo.`order_begin_time`, bo.`order_update_time`,bo.user_name, "+
-		"bo.postal_code, bo.province_name, bo.city_name, bo.country_name, bo.detail_info, bo.national_code, bo.tel_number"+
+		"bo.postal_code, bo.province_name, bo.city_name, bo.country_name, bo.detail_info, bo.national_code, bo.tel_number "+
 		"FROM `bookorder` bo  WHERE bo.`order_id`=?", orderId)
 
 	order := new(models.BookOrderDetail)
