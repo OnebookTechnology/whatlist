@@ -212,6 +212,7 @@ func PayCallback(ctx *gin.Context) {
 	e := &models.ExpenseCalender{
 		UserId:  userId,
 		OrderID: orderId,
+		Status:  models.Paid,
 	}
 
 	err = server.DB.UpdateExpenseCalendar(e)
